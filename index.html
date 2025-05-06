@@ -6,131 +6,91 @@
   <style>
     body {
       margin: 0;
-      font-family: Helvetica, sans-serif;
-      background-color: #fefefe;
-      color: #111;
+      font-family: sans-serif;
+      background-color: #fff;
+      color: #000;
     }
 
     header {
       text-align: center;
-      padding: 20px;
-      background: linear-gradient(to bottom, #eaeaff, #ffffff);
+      padding: 40px 20px 10px;
     }
 
-    .logo {
-      font-family: 'Times New Roman', serif;
-      font-size: 2.5rem;
-      color: #0000ff;
+    header h1 {
+      font-size: 32px;
       font-weight: bold;
+      letter-spacing: 1px;
+      color: #000;
     }
 
     nav {
-      font-size: 14px;
-      margin-top: 10px;
+      text-align: center;
+      margin-bottom: 30px;
     }
 
     nav a {
-      margin: 0 10px;
+      margin: 0 12px;
       text-decoration: none;
-      color: #333;
-    }
-
-    .hero {
-      width: 100%;
-      max-height: 600px;
-      overflow: hidden;
-    }
-
-    .hero img {
-      width: 100%;
-      object-fit: cover;
-    }
-
-    .section {
-      padding: 40px 20px;
-    }
-
-    .section-title {
-      font-size: 1.5rem;
-      margin-bottom: 20px;
-      border-bottom: 1px solid #ccc;
-      display: inline-block;
-    }
-
-    .products, .lookbook {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-
-    .product, .look {
-      text-align: center;
-    }
-
-    .product img, .look img {
-      width: 100%;
-      max-width: 300px;
-      height: auto;
-      border: 1px solid #eee;
-    }
-
-    .product h4 {
-      margin: 10px 0 5px;
+      color: #000;
       font-size: 14px;
+      letter-spacing: 1px;
     }
 
-    .product p {
-      font-size: 13px;
-      color: #666;
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    section {
+      padding: 80px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      border-top: 1px solid #eee;
+    }
+
+    section h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    section p {
+      font-size: 14px;
+      color: #444;
     }
   </style>
 </head>
 <body>
 
+  <!-- Header and Nav -->
   <header>
-    <div class="logo">Indistinct Scene</div>
-    <nav>
-      <a href="#home">Home</a> /
-      <a href="#shop">Shop</a> /
-      <a href="#lookbook">Lookbook</a> /
-      <a href="#contact">Boards</a>
-    </nav>
+    <h1>Indistinct Scene</h1>
   </header>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#shop">Shop</a>
+    <a href="#lookbook">Lookbook</a>
+    <a href="#boards">Boards</a>
+  </nav>
 
-  <div class="hero">
-    <img src="https://your-hero-image-url.jpg" alt="Hero Banner">
-  </div>
+  <!-- Sections -->
+  <section id="home">
+    <h2>Home</h2>
+    <p>Welcome to Indistinct Scene — a minimalist experience.</p>
+  </section>
 
-  <div class="section" id="shop">
-    <div class="section-title">All Products</div>
-    <div class="products">
-      <div class="product">
-        <img src="https://your-image-url.jpg" alt="Crust Hat">
-        <h4>CRUST HAT</h4>
-        <p>$420.00 USD</p>
-      </div>
-      <div class="product">
-        <img src="https://your-image-url.jpg" alt="Twink Tee Black">
-        <h4>TWINK TEE BLACK</h4>
-        <p>$330.00 USD</p>
-      </div>
-      <div class="product">
-        <img src="https://your-image-url.jpg" alt="Twink Tee Red">
-        <h4>TWINK TEE RED</h4>
-        <p>$330.00 USD</p>
-      </div>
-    </div>
-  </div>
+  <section id="shop">
+    <h2>Shop</h2>
+    <p>Shop our curated pieces. This is a placeholder — you can add product images and prices here.</p>
+  </section>
 
-  <div class="section" id="lookbook">
-    <div class="section-title">SS25 Lookbook</div>
-    <div class="lookbook">
-      <div class="look"><img src="https://your-look1.jpg" alt="Look 1"></div>
-      <div class="look"><img src="https://your-look2.jpg" alt="Look 2"></div>
-      <div class="look"><img src="https://your-look3.jpg" alt="Look 3"></div>
-      <div class="look"><img src="https://your-look4.jpg" alt="Look 4"></div>
-    </div>
-  </div>
+  <section id="lookbook">
+    <h2>Lookbook</h2>
+    <p>Browse the latest seasonal visuals. Add your styled photos here.</p>
+  </section>
+
+  <section id="boards">
+    <h2>Boards</h2>
+    <p>Inspiration, thoughts, and visual diaries. This space is yours to shape.</p>
+  </section>
 
 </body>
 </html>
