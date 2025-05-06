@@ -2,152 +2,134 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>IndistinctScene</title>
+  <title>Indistinct Scene</title>
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
-      background: #fff;
-      color: #000;
+      font-family: Helvetica, sans-serif;
+      background-color: #fefefe;
+      color: #111;
     }
 
-    /* Top nav */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      border-bottom: 1px solid #ddd;
-      position: sticky;
-      top: 0;
-      background: white;
-      z-index: 1000;
+    header {
+      text-align: center;
+      padding: 20px;
+      background: linear-gradient(to bottom, #eaeaff, #ffffff);
     }
 
-    /* Left logo & dropdown */
-    .dropdown {
-      position: relative;
-      display: inline-block;
-    }
-
-    .dropbtn {
-      background: none;
-      border: none;
-      font-size: 18px;
+    .logo {
+      font-family: 'Times New Roman', serif;
+      font-size: 2.5rem;
+      color: #0000ff;
       font-weight: bold;
-      cursor: pointer;
     }
 
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: white;
-      min-width: 160px;
-      box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
-      z-index: 1;
+    nav {
+      font-size: 14px;
       margin-top: 10px;
     }
 
-    .dropdown-content a {
-      color: black;
-      padding: 10px 16px;
+    nav a {
+      margin: 0 10px;
       text-decoration: none;
-      display: block;
+      color: #333;
     }
 
-    .dropdown-content a:hover {
-      background-color: #f0f0f0;
+    .hero {
+      width: 100%;
+      max-height: 600px;
+      overflow: hidden;
     }
 
-    .dropdown:hover .dropdown-content {
-      display: block;
+    .hero img {
+      width: 100%;
+      object-fit: cover;
     }
 
-    /* Table of contents A-Z */
-    .toc {
+    .section {
+      padding: 40px 20px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ccc;
+      display: inline-block;
+    }
+
+    .products, .lookbook {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .product, .look {
+      text-align: center;
+    }
+
+    .product img, .look img {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      border: 1px solid #eee;
+    }
+
+    .product h4 {
+      margin: 10px 0 5px;
       font-size: 14px;
     }
 
-    .toc a {
-      margin: 0 4px;
-      text-decoration: none;
-      color: black;
-    }
-
-    .toc a:hover {
-      text-decoration: underline;
-    }
-
-    /* Image gallery (stacked) */
-    .gallery {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 30px auto;
-      gap: 30px;
-      max-width: 800px;
-    }
-
-    .gallery img {
-      width: 100%;
-      height: auto;
-      border-radius: 6px;
+    .product p {
+      font-size: 13px;
+      color: #666;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation -->
-  <div class="navbar">
-    <!-- Left: Logo + Dropdown -->
-    <div class="dropdown">
-      <button class="dropbtn">Indistinct Scene</button>
-      <div class="dropdown-content">
-        <a href="#home">Home</a>
-        <a href="#projects">Projects</a>
-        <a href="#contact">Contact</a>
-      </div>
-    </div>
+  <header>
+    <div class="logo">Indistinct Scene</div>
+    <nav>
+      <a href="#home">Home</a> /
+      <a href="#shop">Shop</a> /
+      <a href="#lookbook">Lookbook</a> /
+      <a href="#contact">Boards</a>
+    </nav>
+  </header>
 
-    <!-- Right: Table of Contents -->
-    <div class="toc">
-      A-Z:
-      <a href="#A">A</a>
-      <a href="#B">B</a>
-      <a href="#C">C</a>
-      <a href="#D">D</a>
-      <a href="#E">E</a>
-      <a href="#F">F</a>
-      <a href="#G">G</a>
-      <a href="#H">H</a>
-      <a href="#I">I</a>
-      <a href="#J">J</a>
-      <a href="#K">K</a>
-      <a href="#L">L</a>
-      <a href="#M">M</a>
-      <a href="#N">N</a>
-      <a href="#O">O</a>
-      <a href="#P">P</a>
-      <a href="#Q">Q</a>
-      <a href="#R">R</a>
-      <a href="#S">S</a>
-      <a href="#T">T</a>
-      <a href="#U">U</a>
-      <a href="#V">V</a>
-      <a href="#W">W</a>
-      <a href="#X">X</a>
-      <a href="#Y">Y</a>
-      <a href="#Z">Z</a>
+  <div class="hero">
+    <img src="https://your-hero-image-url.jpg" alt="Hero Banner">
+  </div>
+
+  <div class="section" id="shop">
+    <div class="section-title">All Products</div>
+    <div class="products">
+      <div class="product">
+        <img src="https://your-image-url.jpg" alt="Crust Hat">
+        <h4>CRUST HAT</h4>
+        <p>$420.00 USD</p>
+      </div>
+      <div class="product">
+        <img src="https://your-image-url.jpg" alt="Twink Tee Black">
+        <h4>TWINK TEE BLACK</h4>
+        <p>$330.00 USD</p>
+      </div>
+      <div class="product">
+        <img src="https://your-image-url.jpg" alt="Twink Tee Red">
+        <h4>TWINK TEE RED</h4>
+        <p>$330.00 USD</p>
+      </div>
     </div>
   </div>
 
-  <!-- Image Section -->
-  <div class="gallery">
-    <figure>
-      <img src="IMG_0985.jpeg" alt="Beach">
-      <figcaption>Mexico, Playa Del Carmen</figcaption>
-    </figure>
-    <!-- Add more like this -->
+  <div class="section" id="lookbook">
+    <div class="section-title">SS25 Lookbook</div>
+    <div class="lookbook">
+      <div class="look"><img src="https://your-look1.jpg" alt="Look 1"></div>
+      <div class="look"><img src="https://your-look2.jpg" alt="Look 2"></div>
+      <div class="look"><img src="https://your-look3.jpg" alt="Look 3"></div>
+      <div class="look"><img src="https://your-look4.jpg" alt="Look 4"></div>
+    </div>
   </div>
 
 </body>
