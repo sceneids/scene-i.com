@@ -14,22 +14,21 @@
   color: black;
 }
 
-    .revolve-wrapper {
+.revolve-wrapper {
   position: fixed;
-  top: 50px;
-  left: 50px;
-  width: 0;
-  height: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   perspective: 1000px;
   z-index: 1000;
 }
 
 @keyframes revolve {
   0% {
-    transform: rotateY(0deg);
+    transform: rotateY(0deg) translateZ(150px);
   }
   100% {
-    transform: rotateY(360deg);
+    transform: rotateY(360deg) translateZ(150px);
   }
 }
 
@@ -37,11 +36,10 @@ header {
   font-size: 24px;
   font-weight: bold;
   color: red;
-  transform: translateX(100px);
+  white-space: nowrap;
   animation: revolve 10s linear infinite;
-  transform-origin: left center;
   transform-style: preserve-3d;
-}i
+}
 
     nav {
       font-size: 18px;
