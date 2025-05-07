@@ -6,19 +6,22 @@
   <title>Indistinct Scene</title>
   <style>
     body {
-      margin: 0;
-      padding: 40px;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background-color: white;
-      color: black;
-    }
+  margin: 0;
+  padding: 80px 40px 40px 40px; /* more space at the top for fixed header */
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: white;
+  color: black;
+}
 
     header {
-      font-size: 24px;
-      font-weight: bold;
-      color: red;
-      margin-bottom: 10px;
-    }
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: red;
+  z-index: 1000;
+}
 
     nav {
       font-size: 18px;
