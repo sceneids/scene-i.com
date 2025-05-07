@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 60px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: white;
+      color: black;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .gallery-grid img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery-grid">
+    <img src="IMG_001.jpeg" alt="Image 1">
+    <img src="IMG_002.jpeg" alt="Image 2">
+    <img src="IMG_003.jpeg" alt="Image 3">
+    <img src="IMG_004.jpeg" alt="Image 4">
+    <!-- Add more images as needed -->
+  </div>
+</body>
+</html>
