@@ -16,19 +16,18 @@
 
 .revolve-wrapper {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  perspective: 1000px;
+  top: 20px;
+  left: 20px;
+  perspective: 800px;
   z-index: 1000;
 }
 
 @keyframes revolve {
   0% {
-    transform: rotateY(0deg) translateZ(150px);
+    transform: rotateY(0deg);
   }
   100% {
-    transform: rotateY(360deg) translateZ(150px);
+    transform: rotateY(360deg);
   }
 }
 
@@ -37,7 +36,7 @@ header {
   font-weight: bold;
   color: red;
   white-space: nowrap;
-  animation: revolve 10s linear infinite;
+  animation: revolve 8s linear infinite;
   transform-style: preserve-3d;
 }
 
