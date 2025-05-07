@@ -14,29 +14,34 @@
   color: black;
 }
 
-    @keyframes rotate3D {
+    .revolve-wrapper {
+  position: fixed;
+  top: 50px;
+  left: 50px;
+  width: 0;
+  height: 0;
+  perspective: 1000px;
+  z-index: 1000;
+}
+
+@keyframes revolve {
   0% {
-    transform: rotateX(0deg) rotateY(0deg);
-  }
-  50% {
-    transform: rotateX(180deg) rotateY(180deg);
+    transform: rotateY(0deg);
   }
   100% {
-    transform: rotateX(360deg) rotateY(360deg);
+    transform: rotateY(360deg);
   }
 }
 
 header {
-  position: fixed;
-  top: 20px;
-  left: 20px;
   font-size: 24px;
   font-weight: bold;
   color: red;
-  z-index: 1000;
-  animation: rotate3D 10s infinite linear;
+  transform: translateX(100px);
+  animation: revolve 10s linear infinite;
+  transform-origin: left center;
   transform-style: preserve-3d;
-}
+}i
 
     nav {
       font-size: 18px;
@@ -81,7 +86,9 @@ header {
   </style>
 </head>
 <body>
-  <header>INDISTINCT SCENE</header>
+  <div class="revolve-wrapper">
+    <header>INDISTINCT SCENE</header>
+  </div>
   <nav>
     <a href="#" onclick="showSection('home')">HOME</a>
     <a href="#" onclick="showSection('shop')">SHOP</a>
