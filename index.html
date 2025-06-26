@@ -7,12 +7,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0;
-            padding: 80px 40px 40px 40px; /* more space at the top for fixed header */
-            font-family: 'Cal Sans', sans-serif;
-            background-color: white;
-            color: black;
-            overflow-x: hidden;
+    margin: 0;
+    padding: 80px 40px 40px 40px; /* more space at the top for fixed header */
+    font-family: 'Cal Sans', sans-serif;
+    color: black; /* Text color */
+    overflow-x: hidden;
+
+    /* --- BACKGROUND IMAGE PROPERTIES --- */
+    background-image: url('images/home-background.jpg'); /* <--- IMPORTANT: Replace with your actual image path! */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-attachment: fixed; /* Keeps the background fixed when content scrolls */
+}
         }
 
         .revolve-wrapper {
