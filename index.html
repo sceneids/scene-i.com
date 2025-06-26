@@ -1,133 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Indistinct Scene</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
-  <style>
-    body {
-  margin: 0;
-  padding: 80px 40px 40px 40px; /* more space at the top for fixed header */
-  font-family: 'Cal Sans', sans-serif;
-  background-color: white;
-  color: black;
-}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indistinct Scene</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 80px 40px 40px 40px; /* more space at the top for fixed header */
+            font-family: 'Cal Sans', sans-serif;
+            background-color: white;
+            color: black;
+            overflow-x: hidden; /* Prevent horizontal scroll due to fixed elements */
+        }
 
-.revolve-wrapper {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  perspective: 800px;
-  z-index: 1000;
-}
+        .revolve-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            perspective: 800px;
+            z-index: 1000;
+        }
 
-@keyframes revolve {
-  0% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(360deg);
-  }
-}
+        @keyframes revolve {
+            0% {
+                transform: rotateY(0deg);
+            }
+            100% {
+                transform: rotateY(360deg);
+            }
+        }
 
-header {
-  font-size: 80px;
-  font-weight: bold;
-  color: red;
-  white-space: nowrap;
-  animation: revolve 8s linear infinite;
-  transform-style: preserve-3d;
-}
+        header {
+            font-size: 80px;
+            font-weight: bold;
+            color: red;
+            white-space: nowrap;
+            animation: revolve 8s linear infinite;
+            transform-style: preserve-3d;
+        }
 
-    nav {
-  font-size: 40px;
-  font-weight: bold;
-  position: fixed;
-  top: 40px;
-  left: 40px;
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+        nav {
+            font-size: 40px;
+            font-weight: bold;
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-    nav a {
-      display: block;
-      text-decoration: none;
-      color: black;
-      margin-bottom: 5px;
-    }
+        nav a {
+            display: block;
+            text-decoration: none;
+            color: black;
+            margin-bottom: 5px;
+            transition: color 0.3s ease; /* Smooth hover effect */
+        }
 
-    section {
-      display: none;
-    }
+        nav a:hover {
+            color: red; /* Highlight on hover */
+        }
 
-    section.active {
-      display: block;
-    }
+        section {
+            display: none; /* All sections hidden by default */
+            padding-top: 150px; /* Add space below fixed header */
+            min-height: calc(100vh - 80px - 40px); /* Ensure sections take up space */
+            box-sizing: border-box; /* Include padding in height calculation */
+        }
 
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 40px;
-    }
+        section.active {
+            display: block; /* Active section is shown */
+        }
 
-    .gallery-item {
-      text-align: left;
-    }
+        /* Gallery and other specific section styles would go here */
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center; /* Center gallery items */
+        }
 
-    .gallery-item img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
+        .gallery-item {
+            text-align: left;
+            flex: 1 1 calc(33% - 40px); /* Adjust for responsive 3-column layout */
+            max-width: calc(33% - 40px);
+            box-sizing: border-box;
+        }
 
-    .caption {
-      font-size: 14px;
-      margin-top: 5px;
-    }
-  </style> 
+        .gallery-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .caption {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .bottom-left {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 12px;
+            color: black; /* Changed to black for visibility against white background */
+            opacity: 0.7;
+            font-family: sans-serif;
+            z-index: 998; /* Ensure it's above other content but below header */
+        }
+
+        /* Basic responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                font-size: 50px; /* Smaller header on smaller screens */
+            }
+            nav {
+                font-size: 30px; /* Smaller nav on smaller screens */
+                top: 20px;
+                left: 20px;
+            }
+            body {
+                padding: 60px 20px 20px 20px;
+            }
+            .gallery-item {
+                flex: 1 1 calc(50% - 40px); /* 2 columns on tablets */
+                max-width: calc(50% - 40px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                font-size: 30px; /* Even smaller header on mobile */
+            }
+            nav {
+                font-size: 20px; /* Even smaller nav on mobile */
+            }
+            .gallery-item {
+                flex: 1 1 100%; /* Single column on mobile */
+                max-width: 100%;
+            }
+        }
+
+    </style>
 </head>
-<body> 
-  <div class="revolve-wrapper">
-    <header>INDISTINCT SCENE</header>
-  </div>
-  <nav>
-  <a href="#" onclick="showSection('home')">HOME</a>
-  <a href="mixes.html">MIXES</a>
-  <a href="gallery.html">GALLERY</a>
-</nav>
+<body>
+    <div class="revolve-wrapper">
+        <header>INDISTINCT SCENE</header>
+    </div>
 
- <section id="home" class="active">
-  <p></p>
-</section>
+    <nav>
+        <a href="#" onclick="showSection('home')">HOME</a>
+        <a href="#" onclick="showSection('mixes')">MIXES</a>
+        <a href="#" onclick="showSection('gallery')">GALLERY</a>
+        <a href="#" onclick="showSection('shop')">SHOP</a>
+    </nav>
 
-  <section id="shop">
-    <p>Items for sale will go here.</p>
-  </section>
+    <section id="home" class="active">
+        <h2>Welcome to Indistinct Scene</h2>
+        <p>This is the home section. You can put your main content, an introduction, or anything else you want visitors to see first here.</p>
+        <p>Feel free to add text, images, or other elements.</p>
+    </section>
 
-  <script>
-    function showSection(id) {
-      document.querySelectorAll("section").forEach((section) => {
-        section.classList.remove("active");
-      });
-      document.getElementById(id).classList.add("active");
-    }
-  </script>
+    <section id="mixes">
+        <h2>Mixes</h2>
+        <p>This section will feature your audio mixes. You could embed SoundCloud players, YouTube videos, or provide download links here.</p>
+        </section>
+
+    <section id="gallery">
+        <h2>Gallery</h2>
+        <p>Here you can showcase your visual work. Add images with captions.</p>
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="https://via.placeholder.com/400x300/CCCCCC/888888?text=Image+1" alt="Description of Image 1">
+                <div class="caption">A captivating scene.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://via.placeholder.com/400x300/AAAAAA/666666?text=Image+2" alt="Description of Image 2">
+                <div class="caption">Another view.</div>
+            </div>
+            <div class="gallery-item">
+                <img src="https://via.placeholder.com/400x300/BBBBBB/777777?text=Image+3" alt="Description of Image 3">
+                <div class="caption">Detail shot.</div>
+            </div>
+            </div>
+    </section>
+
+    <section id="shop">
+        <h2>Shop</h2>
+        <p>Items for sale will go here. You might integrate an e-commerce platform or list items manually.</p>
+    </section>
+
+    <div class="bottom-left">US</div>
+
+    <script>
+        function showSection(id) {
+            // Hide all sections
+            document.querySelectorAll("section").forEach((section) => {
+                section.classList.remove("active");
+            });
+
+            // Show the selected section
+            document.getElementById(id).classList.add("active");
+        }
+
+        // Initialize to show the home section on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            showSection('home');
+        });
+    </script>
 </body>
 </html>
-<body> <div class="bottom-left">US</div> </body>
-<head>
-  <style>.bottom-left {
-  position: fixed;
-  bottom: 10px;
-  left: 10px;
-  font-size: 12px;
-  color: white;
-  opacity: 0.7;
-  font-family: sans-serif;
-}</style>
-</head>
 
