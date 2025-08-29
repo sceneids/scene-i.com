@@ -14,12 +14,8 @@
     color: black; /* Text color */
     overflow-x: hidden;
 
-    /* --- BACKGROUND IMAGE PROPERTIES --- */
-    background-image: url('IMG_1864.jpeg'); /* <--- Using your desktop image */
-    background-size: cover; /* Ensures the image covers the entire background */
-    background-position: center center; /* Centers the image */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
-    background-attachment: fixed; /* Keeps the background fixed when content scrolls */
+    /* --- BACKGROUND PROPERTIES --- */
+    background-color: white; /* Clean white background */
 }
         
 
@@ -86,41 +82,7 @@
             display: block;
         }
 
-        .flag-row {
-            position: fixed;
-            bottom: 0px;
-            left: 0px;
-            right: 0px;
-            z-index: 997;
-            white-space: nowrap;
-            display: flex;
-            width: 100%;
-            overflow: hidden;
-        }
 
-        .flag-group {
-            display: flex;
-            flex-shrink: 0;
-            animation: marquee 40s linear infinite;
-            min-width: 100%;
-        }
-
-        .flag-group:nth-child(2) {
-            animation-delay: -20s; /* start halfway through for seamless loop */
-        }
-
-        @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-
-        .flag-image {
-            width: 200px;
-            height: 40px;
-            object-fit: cover;
-            display: block;
-            margin: 0;
-        }
 
         /* Basic responsive adjustments */
         @media (max-width: 768px) {
@@ -163,44 +125,7 @@
         <p></p>
     </section>
 
-    <div class="flag-row">
-        <div class="flag-group">
-            <img src="flagup.png" alt="American Flag" class="flag-image">
-            <img src="jp..webp" alt="Japanese Flag" class="flag-image">
-            <img src="hkg.png" alt="Hong Kong Flag" class="flag-image">
-            <img src="flag-france.webp" alt="French Flag" class="flag-image">
-            <img src="flagup.png" alt="American Flag" class="flag-image">
-            <img src="jp..webp" alt="Japanese Flag" class="flag-image">
-            <img src="hkg.png" alt="Hong Kong Flag" class="flag-image">
-            <img src="flag-france.webp" alt="French Flag" class="flag-image">
-            <img src="flagup.png" alt="American Flag" class="flag-image">
-            <img src="jp..webp" alt="Japanese Flag" class="flag-image">
-            <img src="hkg.png" alt="Hong Kong Flag" class="flag-image">
-            <img src="flag-france.webp" alt="French Flag" class="flag-image">
-            <img src="flagup.png" alt="American Flag" class="flag-image">
-            <img src="jp..webp" alt="Japanese Flag" class="flag-image">
-            <img src="hkg.png" alt="Hong Kong Flag" class="flag-image">
-            <img src="flag-france.webp" alt="French Flag" class="flag-image">
-        </div>
-        <div class="flag-group">
-            <img src="flagup.png" alt="American Flag" class="flag-image">
-            <img src="jp..webp" alt="Japanese Flag" class="flag-image">
-            <img src="hkg.png" alt="Hong Kong Flag" class="flag-image">
-            <img src="flag-france.webp" alt="French Flag" class="flag-image">
-            <img src="flagup.png" alt="American Flag" class="flag-image">
-            <img src="jp..webp" alt="Japanese Flag" class="flag-image">
-            <img src="hkg.png" alt="Hong Kong Flag" class="flag-image">
-            <img src="flag-france.webp" alt="French Flag" class="flag-image">
-            <img src="flagup.png" alt="American Flag" class="flag-image">
-            <img src="jp..webp" alt="Japanese Flag" class="flag-image">
-            <img src="hkg.png" alt="Hong Kong Flag" class="flag-image">
-            <img src="flag-france.webp" alt="French Flag" class="flag-image">
-            <img src="flagup.png" alt="American Flag" class="flag-image">
-            <img src="jp..webp" alt="Japanese Flag" class="flag-image">
-            <img src="hkg.png" alt="Hong Kong Flag" class="flag-image">
-            <img src="flag-france.webp" alt="French Flag" class="flag-image">
-        </div>
-    </div>
+
 
     <script>
         function showSection(id) {
