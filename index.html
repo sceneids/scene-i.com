@@ -48,15 +48,18 @@
         }
 
         nav {
-            font-size: 40px;
+            font-size: 24px;
             font-weight: bold;
+            font-family: 'Times New Roman', serif;
             position: fixed;
-            top: 40px;
-            left: 40px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 999;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
+            text-align: center;
         }
 
         nav a {
@@ -90,9 +93,10 @@
                 font-size: 50px;
             }
             nav {
-                font-size: 30px;
-                top: 20px;
-                left: 20px;
+                font-size: 20px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
             body {
                 padding: 60px 20px 20px 20px;
@@ -104,7 +108,10 @@
                 font-size: 30px;
             }
             nav {
-                font-size: 20px;
+                font-size: 18px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
         }
     </style>
@@ -116,7 +123,8 @@
 
     <nav>
         <a href="#" onclick="showSection('home')">HOME</a>
-        <a href="mixes.html">MIXES</a> <a href="gallery.html">GALLERY</a>
+        <a href="mixes.html">MIXES</a>
+        <a href="gallery.html">STORE</a>
     </nav>
 
     <section id="home" class="active">
