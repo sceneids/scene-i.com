@@ -101,15 +101,16 @@
         .flag-group {
             display: flex;
             flex-shrink: 0;
-            animation: marquee 30s linear infinite;
+            animation: marquee 20s linear infinite;
+            min-width: 100%;
         }
 
         .flag-group:nth-child(2) {
-            animation-delay: -15s; /* start halfway through for seamless loop */
+            animation-delay: -10s; /* start halfway through for seamless loop */
         }
 
         @keyframes marquee {
-            0% { transform: translateX(0); }
+            0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
         }
 
