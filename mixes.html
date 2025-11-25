@@ -5,24 +5,109 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mixes</title>
   <style>
-    body {
+    * {
       margin: 0;
-      padding: 80px;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background-color: white;
-      color: black;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .mixes {
-      font-size: 24px;
-      font-weight: bold;
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background-color: #000000;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mixes-container {
+      width: 100%;
+      max-width: 1200px;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 20px;
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 1;
+    }
+
+    .mix-box {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: normal;
+    }
+
+    .mix-box:hover {
+      background-color: #2a2a2a;
+      border-color: #555;
+      transform: scale(1.05);
+    }
+
+    /* Responsive: 2x2 grid on smaller screens */
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 15px;
+        max-width: 400px;
+      }
+
+      .mix-box {
+        font-size: 14px;
+      }
+    }
+
+    /* Responsive: 1x1 on very small screens */
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 10px;
+        max-width: 200px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="mixes">
-    This is your MIXES page.<br>
-    Add links to your DJ sets, SoundCloud embeds, or playlists here.
+  <div class="mixes-container">
+    <div class="grid">
+      <!-- Replace these href values with your actual links -->
+      <a href="#" class="mix-box" target="_blank">Mix 1</a>
+      <a href="#" class="mix-box" target="_blank">Mix 2</a>
+      <a href="#" class="mix-box" target="_blank">Mix 3</a>
+      <a href="#" class="mix-box" target="_blank">Mix 4</a>
+      <a href="#" class="mix-box" target="_blank">Mix 5</a>
+      <a href="#" class="mix-box" target="_blank">Mix 6</a>
+      <a href="#" class="mix-box" target="_blank">Mix 7</a>
+      <a href="#" class="mix-box" target="_blank">Mix 8</a>
+      <a href="#" class="mix-box" target="_blank">Mix 9</a>
+      <a href="#" class="mix-box" target="_blank">Mix 10</a>
+      <a href="#" class="mix-box" target="_blank">Mix 11</a>
+      <a href="#" class="mix-box" target="_blank">Mix 12</a>
+      <a href="#" class="mix-box" target="_blank">Mix 13</a>
+      <a href="#" class="mix-box" target="_blank">Mix 14</a>
+      <a href="#" class="mix-box" target="_blank">Mix 15</a>
+      <a href="#" class="mix-box" target="_blank">Mix 16</a>
+    </div>
   </div>
 </body>
 </html>
