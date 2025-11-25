@@ -75,8 +75,42 @@
       z-index: 1;
     }
 
+    .mix-cover {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .mix-cover.loaded {
+      opacity: 1;
+    }
+
     .mix-box:hover .mix-cover {
       opacity: 0.8;
+    }
+
+    .mix-box:hover .mix-cover.loaded {
+      opacity: 0.8;
+    }
+
+    .loading-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      z-index: 0;
+    }
+
+    @keyframes loading {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
     }
 
     .mix-box:hover {
@@ -110,10 +144,25 @@
     </div>
 
     <script>
-      // Function to fetch SoundCloud cover image
+      // Function to preload image
+      function preloadImage(src) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = src;
+        });
+      }
+
+      // Function to fetch SoundCloud cover image with optimized loading
       async function loadSoundCloudCover(boxElement) {
         const soundcloudUrl = boxElement.getAttribute('data-soundcloud-url');
         if (!soundcloudUrl) return;
+
+        // Add loading placeholder
+        const placeholder = document.createElement('div');
+        placeholder.className = 'loading-placeholder';
+        boxElement.appendChild(placeholder);
 
         try {
           // Use SoundCloud oEmbed API to get track info
@@ -123,37 +172,53 @@
           const data = await response.json();
           
           // Extract thumbnail URL from oEmbed response
-          // The thumbnail URL is usually a smaller version, but we can modify it to get larger version
           if (data.thumbnail_url) {
-            // Replace the size parameter to get larger image (t500x500 is a good size)
+            // Get larger image size (t500x500 or t300x300 for faster loading)
             let imageUrl = data.thumbnail_url.replace(/t\d+x\d+/, 't500x500');
             
-            // Create image element
-            const img = document.createElement('img');
-            img.src = imageUrl;
-            img.alt = data.title || 'Mix Cover';
-            img.className = 'mix-cover';
-            
-            // Hide the label and show the image
-            const label = boxElement.querySelector('.mix-label');
-            if (label) label.style.display = 'none';
-            
-            // Insert image
-            boxElement.insertBefore(img, boxElement.firstChild);
+            // Preload image before displaying
+            try {
+              await preloadImage(imageUrl);
+              
+              // Create image element
+              const img = document.createElement('img');
+              img.src = imageUrl;
+              img.alt = data.title || 'Mix Cover';
+              img.className = 'mix-cover';
+              
+              // Remove placeholder and label
+              placeholder.remove();
+              const label = boxElement.querySelector('.mix-label');
+              if (label) label.style.display = 'none';
+              
+              // Insert image and fade in
+              boxElement.insertBefore(img, boxElement.firstChild);
+              
+              // Trigger fade-in animation
+              requestAnimationFrame(() => {
+                img.classList.add('loaded');
+              });
+            } catch (imgError) {
+              console.error('Error preloading image:', imgError);
+              placeholder.remove();
+            }
+          } else {
+            placeholder.remove();
           }
         } catch (error) {
           console.error('Error loading SoundCloud cover:', error);
+          placeholder.remove();
           // If fetching fails, keep the text label visible
         }
       }
 
-      // Load cover for Mix 1 when page loads
-      document.addEventListener('DOMContentLoaded', () => {
-        const mix1Box = document.querySelector('.mix-box[data-soundcloud-url]');
-        if (mix1Box) {
-          loadSoundCloudCover(mix1Box);
-        }
-      });
+      // Start loading immediately when script runs (before DOMContentLoaded)
+      (function() {
+        const mixBoxes = document.querySelectorAll('.mix-box[data-soundcloud-url]');
+        mixBoxes.forEach(box => {
+          loadSoundCloudCover(box);
+        });
+      })();
     </script>
   </body>
 </html>
