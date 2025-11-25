@@ -138,7 +138,6 @@
   <div class="mixes-container">
     <div class="grid">
       <a href="https://soundcloud.com/indistinctscene0/saint-germane-w-hnko-30102025" class="mix-box" target="_blank" data-soundcloud-url="https://soundcloud.com/indistinctscene0/saint-germane-w-hnko-30102025">
-        <span class="mix-label">Mix 1</span>
       </a>
       </div>
     </div>
@@ -186,10 +185,8 @@
               img.alt = data.title || 'Mix Cover';
               img.className = 'mix-cover';
               
-              // Remove placeholder and label
+              // Remove placeholder
               placeholder.remove();
-              const label = boxElement.querySelector('.mix-label');
-              if (label) label.style.display = 'none';
               
               // Insert image and fade in
               boxElement.insertBefore(img, boxElement.firstChild);
