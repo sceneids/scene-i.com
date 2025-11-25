@@ -34,12 +34,11 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
       width: 100%;
-      max-width: 800px;
-      aspect-ratio: 1;
+      max-width: 1200px;
+      justify-items: center;
     }
 
     .mix-box {
@@ -54,6 +53,30 @@
       color: #ffffff;
       font-size: 16px;
       font-weight: normal;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 300px;
+      aspect-ratio: 1;
+    }
+
+    .mix-cover {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .mix-label {
+      position: relative;
+      z-index: 1;
+    }
+
+    .mix-box:hover .mix-cover {
+      opacity: 0.8;
     }
 
     .mix-box:hover {
@@ -62,26 +85,16 @@
       transform: scale(1.05);
     }
 
-    /* Responsive: 2x2 grid on smaller screens */
+    /* Responsive adjustments */
     @media (max-width: 768px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        gap: 15px;
-        max-width: 400px;
-      }
-
       .mix-box {
+        max-width: 250px;
         font-size: 14px;
       }
     }
 
-    /* Responsive: 1x1 on very small screens */
     @media (max-width: 480px) {
-      .grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, 1fr);
-        gap: 10px;
+      .mix-box {
         max-width: 200px;
       }
     }
@@ -90,24 +103,57 @@
 <body>
   <div class="mixes-container">
     <div class="grid">
-      <!-- Replace these href values with your actual links -->
-      <a href="#" class="mix-box" target="_blank">Mix 1</a>
-      <a href="#" class="mix-box" target="_blank">Mix 2</a>
-      <a href="#" class="mix-box" target="_blank">Mix 3</a>
-      <a href="#" class="mix-box" target="_blank">Mix 4</a>
-      <a href="#" class="mix-box" target="_blank">Mix 5</a>
-      <a href="#" class="mix-box" target="_blank">Mix 6</a>
-      <a href="#" class="mix-box" target="_blank">Mix 7</a>
-      <a href="#" class="mix-box" target="_blank">Mix 8</a>
-      <a href="#" class="mix-box" target="_blank">Mix 9</a>
-      <a href="#" class="mix-box" target="_blank">Mix 10</a>
-      <a href="#" class="mix-box" target="_blank">Mix 11</a>
-      <a href="#" class="mix-box" target="_blank">Mix 12</a>
-      <a href="#" class="mix-box" target="_blank">Mix 13</a>
-      <a href="#" class="mix-box" target="_blank">Mix 14</a>
-      <a href="#" class="mix-box" target="_blank">Mix 15</a>
-      <a href="#" class="mix-box" target="_blank">Mix 16</a>
+      <a href="https://soundcloud.com/indistinctscene0/saint-germane-w-hnko-30102025" class="mix-box" target="_blank" data-soundcloud-url="https://soundcloud.com/indistinctscene0/saint-germane-w-hnko-30102025">
+        <span class="mix-label">Mix 1</span>
+      </a>
+      </div>
     </div>
-  </div>
-</body>
+
+    <script>
+      // Function to fetch SoundCloud cover image
+      async function loadSoundCloudCover(boxElement) {
+        const soundcloudUrl = boxElement.getAttribute('data-soundcloud-url');
+        if (!soundcloudUrl) return;
+
+        try {
+          // Use SoundCloud oEmbed API to get track info
+          const oembedUrl = `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(soundcloudUrl)}`;
+          
+          const response = await fetch(oembedUrl);
+          const data = await response.json();
+          
+          // Extract thumbnail URL from oEmbed response
+          // The thumbnail URL is usually a smaller version, but we can modify it to get larger version
+          if (data.thumbnail_url) {
+            // Replace the size parameter to get larger image (t500x500 is a good size)
+            let imageUrl = data.thumbnail_url.replace(/t\d+x\d+/, 't500x500');
+            
+            // Create image element
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = data.title || 'Mix Cover';
+            img.className = 'mix-cover';
+            
+            // Hide the label and show the image
+            const label = boxElement.querySelector('.mix-label');
+            if (label) label.style.display = 'none';
+            
+            // Insert image
+            boxElement.insertBefore(img, boxElement.firstChild);
+          }
+        } catch (error) {
+          console.error('Error loading SoundCloud cover:', error);
+          // If fetching fails, keep the text label visible
+        }
+      }
+
+      // Load cover for Mix 1 when page loads
+      document.addEventListener('DOMContentLoaded', () => {
+        const mix1Box = document.querySelector('.mix-box[data-soundcloud-url]');
+        if (mix1Box) {
+          loadSoundCloudCover(mix1Box);
+        }
+      });
+    </script>
+  </body>
 </html>
