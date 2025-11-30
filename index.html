@@ -19,32 +19,17 @@
 }
         
 
-        .revolve-wrapper {
+        header {
+            font-size: 80px;
+            font-weight: normal;
+            color: red;
+            white-space: nowrap;
+            font-family: 'Apple Braille', 'Apple Braille Outline 6 Dot', 'Apple Braille Outline 8 Dot', monospace;
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            perspective: 800px;
             z-index: 1000;
-        }
-
-        @keyframes revolve {
-            0% {
-                transform: rotateY(0deg);
-            }
-            100% {
-                transform: rotateY(360deg);
-            }
-        }
-
-        header {
-            font-size: 80px;
-            font-weight: bold;
-            color: red;
-            white-space: nowrap;
-            animation: revolve 8s linear infinite;
-            transform-style: preserve-3d;
-            font-family: 'Noto Sans Symbols', monospace;
         }
 
         nav {
@@ -117,9 +102,7 @@
     </style>
 </head>
 <body>
-    <div class="revolve-wrapper">
-        <header>⠊⠙⠎</header>
-    </div>
+    <header>⠊⠙⠎</header>
 
     <nav>
         <a href="#" onclick="showSection('home')">home</a>
