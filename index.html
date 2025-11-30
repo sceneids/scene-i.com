@@ -15,9 +15,35 @@
     overflow-x: hidden;
 
     /* --- BACKGROUND PROPERTIES --- */
-    background-color: black; /* Clean white background */
+    background-color: #1a1a2e; /* Fallback color */
+    background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2073&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
 }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.3);
+        z-index: -1;
+    }
         
+
+        @keyframes revolve {
+            0% {
+                transform: translate(-50%, -50%) rotateY(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotateY(360deg);
+            }
+        }
 
         header {
             font-size: 80px;
@@ -28,8 +54,29 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
             z-index: 1000;
+            letter-spacing: 0;
+            word-spacing: 0;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-variant-ligatures: none;
+            text-rendering: geometricPrecision;
+            line-height: 1;
+            animation: revolve 8s linear infinite;
+            transform-style: preserve-3d;
+        }
+
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            /* Mac-specific fix to prevent double braille rendering */
+            header {
+                text-shadow: none;
+                -webkit-text-stroke: 0;
+                -webkit-font-feature-settings: normal;
+                font-feature-settings: normal;
+                font-kerning: none;
+            }
         }
 
         nav {
