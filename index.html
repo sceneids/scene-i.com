@@ -16,7 +16,25 @@
 
     /* --- BACKGROUND PROPERTIES --- */
     background-color: white; /* Plain white background */
+    position: relative;
 }
+
+        .wormhole-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        .wormhole-canvas {
+            width: 100%;
+            height: 100%;
+            filter: blur(2px);
+        }
         
 
         @keyframes revolve {
@@ -132,6 +150,9 @@
     </style>
 </head>
 <body>
+    <div class="wormhole-container">
+        <canvas class="wormhole-canvas" id="wormholeCanvas"></canvas>
+    </div>
     <header>⠊⠙⠎</header>
 
     <nav>
@@ -159,7 +180,94 @@
         // Initialize to show the home section on page load
         document.addEventListener("DOMContentLoaded", () => {
             showSection('home');
+            initWormhole();
         });
+
+        // 3D Wormhole Animation
+        function initWormhole() {
+            const canvas = document.getElementById('wormholeCanvas');
+            const ctx = canvas.getContext('2d');
+            let time = 0;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            function drawWormhole() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const maxRadius = Math.max(canvas.width, canvas.height) * 0.8;
+                
+                time += 0.01;
+
+                // Draw multiple rotating rings to create wormhole effect
+                for (let i = 0; i < 20; i++) {
+                    const progress = i / 20;
+                    const radius = progress * maxRadius * (0.3 + Math.sin(time + progress * 5) * 0.2);
+                    const angle = time * 2 + progress * 10;
+                    
+                    // Create distortion effect
+                    const distortion = Math.sin(time * 3 + progress * 8) * 0.15;
+                    
+                    ctx.save();
+                    ctx.translate(centerX, centerY);
+                    ctx.rotate(angle);
+                    
+                    // Create gradient for each ring
+                    const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
+                    const alpha = (1 - progress) * 0.4;
+                    const hue = (time * 50 + progress * 360) % 360;
+                    
+                    gradient.addColorStop(0, `hsla(${hue}, 70%, 60%, ${alpha * 0.3})`);
+                    gradient.addColorStop(0.5, `hsla(${hue + 60}, 60%, 50%, ${alpha * 0.2})`);
+                    gradient.addColorStop(1, `hsla(${hue + 120}, 50%, 40%, 0)`);
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    
+                    // Draw distorted ellipse
+                    const width = radius * (1 + distortion);
+                    const height = radius * (1 - distortion * 0.5);
+                    
+                    ctx.ellipse(0, 0, width, height, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Add spiral lines
+                    ctx.strokeStyle = `hsla(${hue}, 80%, 50%, ${alpha * 0.5})`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    for (let j = 0; j < 8; j++) {
+                        const a = (j / 8) * Math.PI * 2;
+                        const r1 = radius * 0.3;
+                        const r2 = radius * 0.9;
+                        ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1);
+                        ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2);
+                    }
+                    ctx.stroke();
+                    
+                    ctx.restore();
+                }
+                
+                // Draw center vortex
+                const centerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, maxRadius * 0.2);
+                centerGradient.addColorStop(0, `hsla(${(time * 100) % 360}, 100%, 50%, 0.1)`);
+                centerGradient.addColorStop(1, 'hsla(0, 0%, 0%, 0)');
+                ctx.fillStyle = centerGradient;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, maxRadius * 0.2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                requestAnimationFrame(drawWormhole);
+            }
+            
+            drawWormhole();
+        }
     </script>
 </body>
 </html>
