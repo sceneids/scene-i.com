@@ -11,29 +11,12 @@
     margin: 0;
     padding: 80px 40px 40px 40px; /* more space at the top for fixed header */
     font-family: 'Cal Sans', sans-serif;
-    color: white; /* Text color */
+    color: black; /* Text color */
     overflow-x: hidden;
 
     /* --- BACKGROUND PROPERTIES --- */
-    background-color: #1a1a2e; /* Fallback color */
-    background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2073&q=80');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    position: relative;
+    background-color: white; /* Plain white background */
 }
-
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.3);
-        z-index: -1;
-    }
         
 
         @keyframes revolve {
@@ -97,7 +80,7 @@
         nav a {
             display: block;
             text-decoration: none;
-            color: white;
+            color: #000000 !important;
             margin-bottom: 5px;
             transition: color 0.3s ease;
         }
