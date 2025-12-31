@@ -15,432 +15,218 @@
       margin: 0;
       padding: 0;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background-color: #000000;
-      color: #ffffff;
+      background-color: #ffffff;
+      color: #000000;
       min-height: 100vh;
-      display: flex;
-      overflow-x: hidden;
     }
 
     .gallery-container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .photo-item {
+      width: 100%;
+      margin-bottom: 60px;
       display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .photo-item img {
       width: 100%;
-      min-height: 100vh;
-    }
-
-    .left-side {
-      width: 33.33%;
-      padding: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-    }
-
-    .artwork-box {
-      width: 100%;
-      max-width: 400px;
-      aspect-ratio: 1;
-      background-color: #1a1a1a;
-      border: 1px solid #333;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      overflow: visible;
-      position: relative;
-    }
-
-    .artwork-box:hover {
-      transform: scale(1.02);
-      border-color: #555;
-    }
-
-    .artwork-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 100%;
+      height: auto;
       display: block;
+      border: 1px solid #000000;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
-    .price-tag {
-      position: absolute;
-      bottom: -20px;
-      left: 0;
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: 600;
-      z-index: 10;
-    }
-
-    .right-side {
-      width: 66.67%;
-      padding: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .content-placeholder {
-      color: #666;
-      font-size: 18px;
-      text-align: center;
-    }
-
-    /* Payment Modal */
-    .payment-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
+    .photo-description {
       width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-      overflow-y: auto;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .payment-modal.active {
-      display: flex;
-    }
-
-    .payment-content {
-      background-color: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 40px;
-      max-width: 600px;
-      width: 100%;
-      position: relative;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: none;
-      border: none;
-      color: #ffffff;
-      font-size: 30px;
-      cursor: pointer;
-      padding: 0;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color 0.3s ease;
-    }
-
-    .close-btn:hover {
-      color: #ff0000;
-    }
-
-    .product-image {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto 30px;
-      display: block;
-      border: 1px solid #333;
-    }
-
-    .product-title {
-      font-size: 28px;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    .product-price {
-      font-size: 24px;
-      color: #0085c3;
-      margin-bottom: 30px;
-      text-align: center;
-    }
-
-    .payment-section {
-      margin-top: 30px;
-    }
-
-    .payment-instructions {
-      background-color: #0a0a0a;
-      padding: 20px;
-      border-radius: 4px;
-      margin-bottom: 20px;
-      border: 1px solid #333;
-    }
-
-    .payment-instructions h3 {
-      margin-bottom: 15px;
-      font-size: 20px;
-    }
-
-    .xrp-address {
-      background-color: #000;
-      padding: 15px;
-      border-radius: 4px;
-      word-break: break-all;
-      font-family: monospace;
-      font-size: 14px;
-      margin-bottom: 15px;
-      border: 1px solid #333;
-      color: #0085c3;
-    }
-
-    .copy-btn {
-      background-color: #333;
-      color: #ffffff;
-      border: 1px solid #555;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 14px;
-      transition: background-color 0.3s ease;
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    .copy-btn:hover {
-      background-color: #444;
-    }
-
-    .copy-btn.copied {
-      background-color: #00ff00;
-      color: #000;
-    }
-
-    .qr-code {
-      width: 200px;
-      height: 200px;
-      margin: 20px auto;
-      background-color: #fff;
-      padding: 10px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .payment-status {
       margin-top: 20px;
-      padding: 15px;
-      border-radius: 4px;
-      text-align: center;
-      display: none;
-    }
-
-    .payment-status.checking {
-      display: block;
-      background-color: #1a3a1a;
-      border: 1px solid #00ff00;
-      color: #00ff00;
-    }
-
-    .payment-status.success {
-      display: block;
-      background-color: #1a3a1a;
-      border: 1px solid #00ff00;
-      color: #00ff00;
-    }
-
-    .payment-status.failed {
-      display: block;
-      background-color: #3a1a1a;
-      border: 1px solid #ff0000;
-      color: #ff0000;
+      padding: 15px 0;
+      color: #000000;
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 40px;
     }
 
     /* Responsive */
     @media (max-width: 768px) {
       .gallery-container {
-        flex-direction: column;
+        padding: 20px 15px;
       }
 
-      .left-side,
-      .right-side {
-        width: 100%;
+      .photo-item {
+        margin-bottom: 40px;
       }
 
-      .artwork-box {
-        max-width: 100%;
-      }
-
-      .payment-content {
-        padding: 20px;
+      .photo-description {
+        font-size: 14px;
+        margin-top: 15px;
       }
     }
   </style>
 </head>
 <body>
   <div class="gallery-container">
-    <div class="left-side">
-      <div class="artwork-box" onclick="openPaymentModal()">
-        <!-- Replace 'IMG_0985.jpeg' with your image filename -->
-        <img src="IMG_0985.jpeg" alt="Artwork" id="artwork-image">
-        <div class="price-tag">15 XRP</div>
-      </div>
+    <div class="photo-item">
+      <img src="Abuelas photos/000000010004.jpg" alt="Photo 1">
+      <div class="photo-description"></div>
     </div>
-    <div class="right-side">
-      <div class="content-placeholder">
-        Select an artwork to view and purchase
-      </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000010013.jpg" alt="Photo 2">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000010015.jpg" alt="Photo 3">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000010016.jpg" alt="Photo 4">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000030030.jpg" alt="Photo 5">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000060009.jpg" alt="Photo 6">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000060025.jpg" alt="Photo 7">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000060028.jpg" alt="Photo 8">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000060029.jpg" alt="Photo 9">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000060030.jpg" alt="Photo 10">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000060039.jpg" alt="Photo 11">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000070001.jpg" alt="Photo 12">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000070009.jpg" alt="Photo 13">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000070013.jpg" alt="Photo 14">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000080009.jpg" alt="Photo 15">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000080010.jpg" alt="Photo 16">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000080011.jpg" alt="Photo 17">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000080012.jpg" alt="Photo 18">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000080013.jpg" alt="Photo 19">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000080014.jpg" alt="Photo 20">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000080024.jpg" alt="Photo 21">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000080025.jpg" alt="Photo 22">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000080029.jpg" alt="Photo 23">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000090001.jpg" alt="Photo 24">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000090002.jpg" alt="Photo 25">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000090005.jpg" alt="Photo 26">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000090017.jpg" alt="Photo 27">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000090018.jpg" alt="Photo 28">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000090029.jpg" alt="Photo 29">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000090032.jpg" alt="Photo 30">
+      <div class="photo-description"></div>
+    </div>
+    
+    <div class="photo-item">
+      <img src="Abuelas photos/000000090034.jpg" alt="Photo 31">
+      <div class="photo-description"></div>
     </div>
   </div>
-
-  <!-- Payment Modal -->
-  <div class="payment-modal" id="paymentModal">
-    <div class="payment-content">
-      <button class="close-btn" onclick="closePaymentModal()">&times;</button>
-      
-      <img src="IMG_0985.jpeg" alt="Product" class="product-image" id="product-image">
-      <h2 class="product-title" id="product-title">Artwork Title</h2>
-      <div class="product-price" id="product-price">15 XRP</div>
-      
-      <div class="payment-section">
-        <div class="payment-instructions">
-          <h3>Payment Instructions</h3>
-          <p style="margin-bottom: 15px;">Send the exact amount to the XRP address below:</p>
-          
-          <div class="xrp-address" id="xrp-address">
-            rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-          </div>
-          
-          <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
-          
-          <div class="qr-code" id="qr-code">
-            <!-- QR code will be generated here -->
-            <canvas id="qr-canvas"></canvas>
-          </div>
-          
-          <p style="font-size: 14px; color: #888; margin-top: 15px;">
-            After payment is confirmed, you will receive a download link via email.
-          </p>
-        </div>
-        
-        <div class="payment-status" id="payment-status"></div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-  <script>
-    // Replace with your actual XRP address
-    const XRP_ADDRESS = 'rXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'; // Replace with your XRP address (starts with 'r')
-    const XRP_AMOUNT = '15'; // XRP amount
-    const PRODUCT_TITLE = 'Artwork Title'; // Change to your artwork title
-    const PRODUCT_IMAGE = 'IMG_0985.jpeg'; // Change to your image filename
-
-    function openPaymentModal() {
-      const modal = document.getElementById('paymentModal');
-      modal.classList.add('active');
-      
-      // Update product details
-      document.getElementById('product-title').textContent = PRODUCT_TITLE;
-      document.getElementById('product-image').src = PRODUCT_IMAGE;
-      document.getElementById('xrp-address').textContent = XRP_ADDRESS;
-      
-      // Generate QR code
-      generateQRCode();
-      
-      // Start checking payment status
-      startPaymentCheck();
-    }
-
-    function closePaymentModal() {
-      const modal = document.getElementById('paymentModal');
-      modal.classList.remove('active');
-      stopPaymentCheck();
-    }
-
-    function copyAddress() {
-      const address = document.getElementById('xrp-address').textContent;
-      navigator.clipboard.writeText(address).then(() => {
-        const btn = event.target;
-        btn.textContent = 'Copied!';
-        btn.classList.add('copied');
-        setTimeout(() => {
-          btn.textContent = 'Copy Address';
-          btn.classList.remove('copied');
-        }, 2000);
-      });
-    }
-
-    function generateQRCode() {
-      const canvas = document.getElementById('qr-canvas');
-      // XRP payment URI format: xrp:address?amount=15
-      const paymentUrl = `xrp:${XRP_ADDRESS}?amount=${XRP_AMOUNT}`;
-      
-      QRCode.toCanvas(canvas, paymentUrl, {
-        width: 200,
-        margin: 2,
-        color: {
-          dark: '#000000',
-          light: '#FFFFFF'
-        }
-      }, function (error) {
-        if (error) console.error(error);
-      });
-    }
-
-    let paymentCheckInterval;
-
-    function startPaymentCheck() {
-      const statusDiv = document.getElementById('payment-status');
-      statusDiv.className = 'payment-status checking';
-      statusDiv.textContent = 'Waiting for payment...';
-      
-      // Check payment status every 30 seconds
-      // NOTE: You'll need to integrate with an XRP payment API for actual status checking
-      // This is a placeholder - replace with your payment processor API
-      paymentCheckInterval = setInterval(() => {
-        checkPaymentStatus();
-      }, 30000);
-    }
-
-    function stopPaymentCheck() {
-      if (paymentCheckInterval) {
-        clearInterval(paymentCheckInterval);
-        paymentCheckInterval = null;
-      }
-      const statusDiv = document.getElementById('payment-status');
-      statusDiv.className = 'payment-status';
-    }
-
-    async function checkPaymentStatus() {
-      // PLACEHOLDER: Replace this with actual API call to your payment processor
-      // Examples: XRPayments, GateHub, or direct XRP Ledger API integration
-      
-      // Example integration with XRP Ledger API:
-      // You can check transactions using XRP Ledger APIs or services like:
-      // - XRPScan API: https://xrpscan.com/api
-      // - Ripple API: https://xrpl.org/docs.html
-      // const response = await fetch(`https://xrpscan.com/api/v1/account/${XRP_ADDRESS}/txs`);
-      // const data = await response.json();
-      // Check for payment confirmation in transaction history
-      
-      // For now, this is just a placeholder
-      // You'll need to:
-      // 1. Set up an XRP payment processor or use XRP Ledger API
-      // 2. Get API access
-      // 3. Create orders and track their status
-      // 4. Replace this function with actual API calls
-    }
-
-    function showPaymentSuccess() {
-      const statusDiv = document.getElementById('payment-status');
-      statusDiv.className = 'payment-status success';
-      statusDiv.textContent = 'Payment received! Check your email for download instructions.';
-      stopPaymentCheck();
-    }
-
-    // Close modal when clicking outside
-    document.getElementById('paymentModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closePaymentModal();
-      }
-    });
-
-    // Set initial artwork details
-    document.getElementById('artwork-image').src = PRODUCT_IMAGE;
-  </script>
 </body>
 </html>
