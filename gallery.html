@@ -18,6 +18,7 @@
       background-color: #ffffff;
       color: #000000;
       min-height: 100vh;
+      text-transform: uppercase;
     }
 
     .gallery-container {
@@ -42,6 +43,12 @@
       display: block;
       border: 1px solid #000000;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .photo-item img[src] {
+      opacity: 1;
     }
 
     .photo-description {
@@ -74,159 +81,189 @@
 <body>
   <div class="gallery-container">
     <div class="photo-item">
-      <img src="Abuelas photos/000000010004.jpg" alt="Photo 1">
+      <img data-src="Abuelas photos/000000010004.jpg" alt="Photo 1" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000010013.jpg" alt="Photo 2">
+      <img data-src="Abuelas photos/000000010013.jpg" alt="Photo 2" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000010015.jpg" alt="Photo 3">
+      <img data-src="Abuelas photos/000000010015.jpg" alt="Photo 3" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000010016.jpg" alt="Photo 4">
+      <img data-src="Abuelas photos/000000010016.jpg" alt="Photo 4" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000030030.jpg" alt="Photo 5">
+      <img data-src="Abuelas photos/000000030030.jpg" alt="Photo 5" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000060009.jpg" alt="Photo 6">
+      <img data-src="Abuelas photos/000000060009.jpg" alt="Photo 6" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000060025.jpg" alt="Photo 7">
+      <img data-src="Abuelas photos/000000060025.jpg" alt="Photo 7" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000060028.jpg" alt="Photo 8">
+      <img data-src="Abuelas photos/000000060028.jpg" alt="Photo 8" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000060029.jpg" alt="Photo 9">
+      <img data-src="Abuelas photos/000000060029.jpg" alt="Photo 9" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000060030.jpg" alt="Photo 10">
+      <img data-src="Abuelas photos/000000060030.jpg" alt="Photo 10" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000060039.jpg" alt="Photo 11">
+      <img data-src="Abuelas photos/000000060039.jpg" alt="Photo 11" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000070001.jpg" alt="Photo 12">
+      <img data-src="Abuelas photos/000000070001.jpg" alt="Photo 12" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000070009.jpg" alt="Photo 13">
+      <img data-src="Abuelas photos/000000070009.jpg" alt="Photo 13" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000070013.jpg" alt="Photo 14">
+      <img data-src="Abuelas photos/000000070013.jpg" alt="Photo 14" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000080009.jpg" alt="Photo 15">
+      <img data-src="Abuelas photos/000000080009.jpg" alt="Photo 15" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000080010.jpg" alt="Photo 16">
+      <img data-src="Abuelas photos/000000080010.jpg" alt="Photo 16" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000080011.jpg" alt="Photo 17">
+      <img data-src="Abuelas photos/000000080011.jpg" alt="Photo 17" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000080012.jpg" alt="Photo 18">
+      <img data-src="Abuelas photos/000000080012.jpg" alt="Photo 18" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000080013.jpg" alt="Photo 19">
+      <img data-src="Abuelas photos/000000080013.jpg" alt="Photo 19" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000080014.jpg" alt="Photo 20">
+      <img data-src="Abuelas photos/000000080014.jpg" alt="Photo 20" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000080024.jpg" alt="Photo 21">
+      <img data-src="Abuelas photos/000000080024.jpg" alt="Photo 21" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000080025.jpg" alt="Photo 22">
+      <img data-src="Abuelas photos/000000080025.jpg" alt="Photo 22" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000080029.jpg" alt="Photo 23">
+      <img data-src="Abuelas photos/000000080029.jpg" alt="Photo 23" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000090001.jpg" alt="Photo 24">
+      <img data-src="Abuelas photos/000000090001.jpg" alt="Photo 24" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000090002.jpg" alt="Photo 25">
+      <img data-src="Abuelas photos/000000090002.jpg" alt="Photo 25" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000090005.jpg" alt="Photo 26">
+      <img data-src="Abuelas photos/000000090005.jpg" alt="Photo 26" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000090017.jpg" alt="Photo 27">
+      <img data-src="Abuelas photos/000000090017.jpg" alt="Photo 27" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000090018.jpg" alt="Photo 28">
+      <img data-src="Abuelas photos/000000090018.jpg" alt="Photo 28" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000090029.jpg" alt="Photo 29">
+      <img data-src="Abuelas photos/000000090029.jpg" alt="Photo 29" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000090032.jpg" alt="Photo 30">
+      <img data-src="Abuelas photos/000000090032.jpg" alt="Photo 30" loading="lazy">
       <div class="photo-description"></div>
     </div>
     
     <div class="photo-item">
-      <img src="Abuelas photos/000000090034.jpg" alt="Photo 31">
+      <img data-src="Abuelas photos/000000090034.jpg" alt="Photo 31" loading="lazy">
       <div class="photo-description"></div>
     </div>
   </div>
+  <script src="router.js"></script>
+  <script data-init>
+    // Initialize lazy loading for first visible images
+    if ('IntersectionObserver' in window) {
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            if (img.dataset.src) {
+              img.src = img.dataset.src;
+              img.removeAttribute('data-src');
+            }
+            observer.unobserve(img);
+          }
+        });
+      }, { rootMargin: '50px' });
+      
+      document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+      });
+    } else {
+      // Fallback: load first 3 images immediately
+      document.querySelectorAll('img[data-src]').forEach((img, index) => {
+        if (index < 3) {
+          img.src = img.dataset.src;
+          img.removeAttribute('data-src');
+        }
+      });
+    }
+  </script>
 </body>
 </html>

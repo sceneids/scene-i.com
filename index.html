@@ -10,9 +10,10 @@
         body {
     margin: 0;
     padding: 80px 40px 40px 40px; /* more space at the top for fixed header */
-    font-family: 'Cal Sans', sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     color: black; /* Text color */
     overflow-x: hidden;
+    text-transform: uppercase;
 
     /* --- BACKGROUND PROPERTIES --- */
     background-color: white; /* Plain white background */
@@ -83,7 +84,7 @@
         nav {
             font-size: 24px;
             font-weight: normal;
-            font-family: 'Times New Roman', serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             position: fixed;
             top: 50%;
             left: 35%;
@@ -156,7 +157,7 @@
     <header>⠊⠙⠎</header>
 
     <nav>
-        <a href="#" onclick="showSection('home')">home</a>
+        <a href="index.html" onclick="if(typeof showSection === 'function') showSection('home'); return false;">home</a>
         <a href="mixes.html">mixes</a>
         <a href="gallery.html">gallery</a>
     </nav>
@@ -266,6 +267,13 @@
             }
             
             drawWormhole();
+        }
+    </script>
+    <script src="router.js"></script>
+    <script data-init>
+        // Reinitialize wormhole on navigation
+        if (typeof initWormhole === 'function') {
+            initWormhole();
         }
     </script>
 </body>

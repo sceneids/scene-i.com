@@ -21,6 +21,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      text-transform: uppercase;
     }
 
     .mixes-container {
@@ -214,6 +215,18 @@
         const mixBoxes = document.querySelectorAll('.mix-box[data-soundcloud-url]');
         mixBoxes.forEach(box => {
           loadSoundCloudCover(box);
+        });
+      })();
+    </script>
+    <script src="router.js"></script>
+    <script data-init>
+      // Reinitialize SoundCloud cover loading on navigation
+      (function() {
+        const mixBoxes = document.querySelectorAll('.mix-box[data-soundcloud-url]');
+        mixBoxes.forEach(box => {
+          if (!box.querySelector('.mix-cover')) {
+            loadSoundCloudCover(box);
+          }
         });
       })();
     </script>
