@@ -237,33 +237,48 @@
   </div>
   <script src="router.js"></script>
   <script data-init>
-    // Initialize lazy loading for first visible images
-    if ('IntersectionObserver' in window) {
-      const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target;
-            if (img.dataset.src) {
-              img.src = img.dataset.src;
-              img.removeAttribute('data-src');
-            }
-            observer.unobserve(img);
-          }
-        });
-      }, { rootMargin: '50px' });
-      
-      document.querySelectorAll('img[data-src]').forEach(img => {
-        imageObserver.observe(img);
-      });
-    } else {
-      // Fallback: load first 3 images immediately
-      document.querySelectorAll('img[data-src]').forEach((img, index) => {
-        if (index < 3) {
+    // Eager-load the first few images so they appear immediately,
+    // then lazy-load the rest as they scroll into view.
+    (function() {
+      const eagerCount = 3;
+      const lazyImages = Array.from(document.querySelectorAll('img[data-src]'));
+
+      // Load the first few images right away for faster initial display
+      lazyImages.forEach((img, index) => {
+        if (index < eagerCount && img.dataset.src) {
           img.src = img.dataset.src;
           img.removeAttribute('data-src');
         }
       });
-    }
+
+      // Lazy-load the remaining images
+      if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target;
+              if (img.dataset.src) {
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+              }
+              observer.unobserve(img);
+            }
+          });
+        }, { rootMargin: '150px' }); // Start loading a bit before images enter the viewport
+        
+        document.querySelectorAll('img[data-src]').forEach(img => {
+          imageObserver.observe(img);
+        });
+      } else {
+        // Fallback: load all remaining images immediately
+        document.querySelectorAll('img[data-src]').forEach((img) => {
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          }
+        });
+      }
+    })();
   </script>
 </body>
 </html>

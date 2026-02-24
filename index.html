@@ -178,10 +178,25 @@
             document.getElementById(id).classList.add("active");
         }
 
+        // Prefetch a few gallery images so they are cached before navigation
+        function prefetchGalleryImages() {
+            const galleryImages = [
+                "Abuelas photos/000000010004.jpg",
+                "Abuelas photos/000000010013.jpg",
+                "Abuelas photos/000000010015.jpg"
+            ];
+
+            galleryImages.forEach((src) => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+
         // Initialize to show the home section on page load
         document.addEventListener("DOMContentLoaded", () => {
             showSection('home');
             initWormhole();
+            prefetchGalleryImages();
         });
 
         // 3D Wormhole Animation
