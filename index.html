@@ -77,15 +77,19 @@
             transform: translate(-50%, -50%);
             z-index: 1001;
             display: flex;
-            gap: 40px;
+            flex-direction: column; /* stack language lines vertically */
+            align-items: center;
+            gap: 16px;
             font-size: 24px;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         .ids-lang {
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* text runs horizontally */
             align-items: center;
+            justify-content: center;
+            gap: 8px;
             line-height: 1.2;
         }
 
