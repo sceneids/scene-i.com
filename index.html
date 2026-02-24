@@ -66,8 +66,27 @@
             font-variant-ligatures: none;
             text-rendering: geometricPrecision;
             line-height: 1;
-            animation: revolve 8s linear infinite;
+            transform: translate(-50%, -50%);
             transform-style: preserve-3d;
+        }
+
+        .ids-langs {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+            display: flex;
+            gap: 40px;
+            font-size: 24px;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .ids-lang {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.2;
         }
 
         @media screen and (-webkit-min-device-pixel-ratio: 0) {
@@ -155,6 +174,27 @@
         <canvas class="wormhole-canvas" id="wormholeCanvas"></canvas>
     </div>
     <header>⠊⠙⠎</header>
+
+    <div class="ids-langs">
+        <div class="ids-lang ids-lang-zh">
+            <span>艾</span>
+            <span>迪</span>
+            <span>艾</span>
+            <span>斯</span>
+        </div>
+        <div class="ids-lang ids-lang-ru">
+            <span>И</span>
+            <span>Д</span>
+            <span>С</span>
+        </div>
+        <div class="ids-lang ids-lang-ko">
+            <span>아</span>
+            <span>이</span>
+            <span>디</span>
+            <span>에</span>
+            <span>스</span>
+        </div>
+    </div>
 
     <nav>
         <a href="index.html" onclick="if(typeof showSection === 'function') showSection('home'); return false;">home</a>
