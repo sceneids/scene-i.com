@@ -28,13 +28,14 @@
             height: 100%;
             z-index: 1;
             pointer-events: none;
-            opacity: 0.15;
+            opacity: 0.6;
         }
 
         .wormhole-canvas {
             width: 100%;
             height: 100%;
-            filter: blur(2px);
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
         
 
@@ -47,12 +48,20 @@
             }
         }
 
-        .ids-stack {
+        .hero-wrapper {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 1000;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 80px;
+        }
+
+        .ids-stack {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -60,7 +69,7 @@
             gap: 1.25em;
             font-size: 24px;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #000000;
+            color: #FFE600;
             margin: 0;
             padding: 0;
         }
@@ -77,11 +86,6 @@
             font-size: 24px;
             font-weight: normal;
             font-family: 'Times New Roman', Times, serif;
-            position: fixed;
-            top: 50%;
-            left: 35%;
-            transform: translate(-50%, -50%);
-            z-index: 999;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -118,12 +122,7 @@
         /* Basic responsive adjustments */
         @media (max-width: 768px) {
             .ids-stack { font-size: 20px; }
-            nav {
-                font-size: 20px;
-                top: 50%;
-                left: 35%;
-                transform: translate(-50%, -50%);
-            }
+            nav { font-size: 20px; }
             body {
                 padding: 60px 20px 20px 20px;
             }
@@ -131,12 +130,7 @@
 
         @media (max-width: 480px) {
             .ids-stack { font-size: 18px; }
-            nav {
-                font-size: 18px;
-                top: 50%;
-                left: 35%;
-                transform: translate(-50%, -50%);
-            }
+            nav { font-size: 18px; }
         }
     </style>
 </head>
@@ -144,18 +138,20 @@
     <div class="wormhole-container">
         <canvas class="wormhole-canvas" id="wormholeCanvas"></canvas>
     </div>
-    <div class="ids-stack">
-        <span class="ids-line ids-mandarin">艾 迪 斯</span>
-        <span class="ids-line ids-russian">И Д С</span>
-        <span class="ids-line ids-korean">아 이 디 에 스</span>
-        <span class="ids-line">⠊⠙⠎</span>
-    </div>
 
-    <nav>
-        <a href="index.html" onclick="if(typeof showSection === 'function') showSection('home'); return false;">home</a>
-        <a href="mixes.html">mixes</a>
-        <a href="gallery.html">gallery</a>
-    </nav>
+    <div class="hero-wrapper">
+        <nav>
+            <a href="index.html" onclick="if(typeof showSection === 'function') showSection('home'); return false;">home</a>
+            <a href="mixes.html">mixes</a>
+            <a href="gallery.html">gallery</a>
+        </nav>
+        <div class="ids-stack">
+            <span class="ids-line ids-mandarin">艾 迪 斯</span>
+            <span class="ids-line ids-russian">И Д С</span>
+            <span class="ids-line ids-korean">아 이 디 에 스</span>
+            <span class="ids-line">⠊⠙⠎</span>
+        </div>
+    </div>
 
     <section id="home" class="active">
         <h2></h2>
@@ -201,8 +197,9 @@
             let time = 0;
 
             function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
+                // Low internal resolution for pixelation effect
+                canvas.width = Math.floor(window.innerWidth / 6);
+                canvas.height = Math.floor(window.innerHeight / 6);
             }
 
             resizeCanvas();
@@ -234,9 +231,9 @@
                     const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
                     const alpha = (1 - progress) * 0.4;
                     
-                    gradient.addColorStop(0, `rgba(0, 0, 0, ${alpha * 0.3})`);
-                    gradient.addColorStop(0.5, `rgba(0, 0, 0, ${alpha * 0.2})`);
-                    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                    gradient.addColorStop(0, `rgba(180, 0, 255, ${alpha * 0.3})`);
+                    gradient.addColorStop(0.5, `rgba(180, 0, 255, ${alpha * 0.2})`);
+                    gradient.addColorStop(1, 'rgba(180, 0, 255, 0)');
                     
                     ctx.fillStyle = gradient;
                     ctx.beginPath();
@@ -249,7 +246,7 @@
                     ctx.fill();
                     
                     // Add spiral lines
-                    ctx.strokeStyle = `rgba(0, 0, 0, ${alpha * 0.5})`;
+                    ctx.strokeStyle = `rgba(180, 0, 255, ${alpha * 0.5})`;
                     ctx.lineWidth = 2;
                     ctx.beginPath();
                     for (let j = 0; j < 8; j++) {
@@ -266,8 +263,8 @@
                 
                 // Draw center vortex
                 const centerGradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, maxRadius * 0.2);
-                centerGradient.addColorStop(0, 'rgba(0, 0, 0, 0.1)');
-                centerGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                centerGradient.addColorStop(0, 'rgba(180, 0, 255, 0.2)');
+                centerGradient.addColorStop(1, 'rgba(180, 0, 255, 0)');
                 ctx.fillStyle = centerGradient;
                 ctx.beginPath();
                 ctx.arc(centerX, centerY, maxRadius * 0.2, 0, Math.PI * 2);

@@ -21,6 +21,19 @@
       text-transform: uppercase;
     }
 
+    .back-home {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-size: 24px;
+      color: #000000;
+      text-decoration: none;
+      z-index: 1000;
+    }
+
     .gallery-container {
       width: 100%;
       max-width: 900px;
@@ -83,6 +96,7 @@
   </style>
 </head>
 <body>
+  <a href="index.html" class="back-home">i</a>
   <div class="gallery-container">
     <div class="photo-item">
       <img data-src="Abuelas photos/000000010004.jpg" alt="Photo 1" loading="lazy">
