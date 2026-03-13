@@ -71,23 +71,7 @@
             white-space: nowrap;
         }
 
-        .ids-line.ids-braille {
-            font-family: 'Apple Braille', 'Apple Braille Outline 6 Dot', 'Apple Braille Outline 8 Dot', monospace;
-            font-size: 2em;
-            letter-spacing: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        @media screen and (-webkit-min-device-pixel-ratio: 0) {
-            .ids-line.ids-braille {
-                text-shadow: none;
-                -webkit-text-stroke: 0;
-                -webkit-font-feature-settings: normal;
-                font-feature-settings: normal;
-                font-kerning: none;
-            }
-        }
+        
 
         nav {
             font-size: 24px;
@@ -134,7 +118,6 @@
         /* Basic responsive adjustments */
         @media (max-width: 768px) {
             .ids-stack { font-size: 20px; }
-            .ids-line.ids-braille { font-size: 1.6em; }
             nav {
                 font-size: 20px;
                 top: 50%;
@@ -148,7 +131,6 @@
 
         @media (max-width: 480px) {
             .ids-stack { font-size: 18px; }
-            .ids-line.ids-braille { font-size: 1.4em; }
             nav {
                 font-size: 18px;
                 top: 50%;
@@ -166,7 +148,7 @@
         <span class="ids-line ids-mandarin">艾 迪 斯</span>
         <span class="ids-line ids-russian">И Д С</span>
         <span class="ids-line ids-korean">아 이 디 에 스</span>
-        <span class="ids-line ids-braille">⠊⠙⠎</span>
+        <span class="ids-line">⠊⠙⠎</span>
     </div>
 
     <nav>
