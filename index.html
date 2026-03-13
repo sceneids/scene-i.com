@@ -47,55 +47,40 @@
             }
         }
 
-        header {
-            font-size: 80px;
-            font-weight: normal;
-            color: red;
-            white-space: nowrap;
-            font-family: 'Apple Braille', 'Apple Braille Outline 6 Dot', 'Apple Braille Outline 8 Dot', monospace;
+        .ids-stack {
             position: fixed;
             top: 50%;
             left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 1000;
-            letter-spacing: 0;
-            word-spacing: 0;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            font-variant-ligatures: none;
-            text-rendering: geometricPrecision;
-            line-height: 1;
-            transform: translate(-50%, -50%);
-            transform-style: preserve-3d;
-        }
-
-        .ids-langs {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1001;
             display: flex;
-            flex-direction: column; /* stack language lines vertically */
-            align-items: center;
-            gap: 16px;
-            font-size: 24px;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        }
-
-        .ids-lang {
-            display: flex;
-            flex-direction: row; /* text runs horizontally */
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 1.25em;
+            font-size: 24px;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ids-line {
+            display: block;
             line-height: 1.2;
+            white-space: nowrap;
+        }
+
+        .ids-line.ids-braille {
+            font-family: 'Apple Braille', 'Apple Braille Outline 6 Dot', 'Apple Braille Outline 8 Dot', monospace;
+            font-size: 2em;
+            letter-spacing: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         @media screen and (-webkit-min-device-pixel-ratio: 0) {
-            /* Mac-specific fix to prevent double braille rendering */
-            header {
+            .ids-line.ids-braille {
                 text-shadow: none;
                 -webkit-text-stroke: 0;
                 -webkit-font-feature-settings: normal;
@@ -107,7 +92,7 @@
         nav {
             font-size: 24px;
             font-weight: normal;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             position: fixed;
             top: 50%;
             left: 35%;
@@ -117,6 +102,7 @@
             flex-direction: column;
             gap: 15px;
             text-align: center;
+            text-transform: none;
         }
 
         nav a {
@@ -125,6 +111,7 @@
             color: #000000 !important;
             margin-bottom: 5px;
             transition: color 0.3s ease;
+            text-transform: lowercase;
         }
 
         nav a:hover {
@@ -146,9 +133,8 @@
 
         /* Basic responsive adjustments */
         @media (max-width: 768px) {
-            header {
-                font-size: 50px;
-            }
+            .ids-stack { font-size: 20px; }
+            .ids-line.ids-braille { font-size: 1.6em; }
             nav {
                 font-size: 20px;
                 top: 50%;
@@ -161,9 +147,8 @@
         }
 
         @media (max-width: 480px) {
-            header {
-                font-size: 30px;
-            }
+            .ids-stack { font-size: 18px; }
+            .ids-line.ids-braille { font-size: 1.4em; }
             nav {
                 font-size: 18px;
                 top: 50%;
@@ -177,27 +162,11 @@
     <div class="wormhole-container">
         <canvas class="wormhole-canvas" id="wormholeCanvas"></canvas>
     </div>
-    <header>⠊⠙⠎</header>
-
-    <div class="ids-langs">
-        <div class="ids-lang ids-lang-zh">
-            <span>艾</span>
-            <span>迪</span>
-            <span>艾</span>
-            <span>斯</span>
-        </div>
-        <div class="ids-lang ids-lang-ru">
-            <span>И</span>
-            <span>Д</span>
-            <span>С</span>
-        </div>
-        <div class="ids-lang ids-lang-ko">
-            <span>아</span>
-            <span>이</span>
-            <span>디</span>
-            <span>에</span>
-            <span>스</span>
-        </div>
+    <div class="ids-stack">
+        <span class="ids-line ids-mandarin">艾 迪 斯</span>
+        <span class="ids-line ids-russian">И Д С</span>
+        <span class="ids-line ids-korean">아 이 디 에 스</span>
+        <span class="ids-line ids-braille">⠊⠙⠎</span>
     </div>
 
     <nav>
