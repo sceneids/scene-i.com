@@ -23,7 +23,7 @@
 
     .back-home {
       position: fixed;
-      top: 10px;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
       font-family: 'Times New Roman', Times, serif;
@@ -31,272 +31,211 @@
       font-size: 24px;
       color: #000000;
       text-decoration: none;
-      z-index: 1000;
+      z-index: 9999;
     }
 
     .gallery-container {
       width: 100%;
       max-width: 900px;
-      margin: 0 auto;
+      margin: 60px auto 0 auto;
       padding: 40px 20px;
     }
 
     .photo-item {
       width: 100%;
+      max-width: 700px;
+      margin: 0 auto 60px auto;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 40px 0;
+      align-items: flex-start;
     }
 
     .photo-item img {
-      width: auto;
+      width: 100%;
       height: auto;
-      max-width: 100%;
-      max-height: 80vh;
       display: block;
-      border: 1px solid #000000;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      object-fit: contain;
-    }
-    
-    .photo-item img[src] {
+      border: none;
+      box-shadow: none;
       opacity: 1;
     }
 
     .photo-description {
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 12px;
+      color: #333333;
+      margin-top: 6px;
+      padding: 0;
+      line-height: 1.4;
+      text-transform: none;
       width: 100%;
-      margin-top: 20px;
-      padding: 15px 0;
-      color: #000000;
-      font-size: 16px;
-      line-height: 1.6;
-      min-height: 40px;
+      min-height: 18px;
+      outline: none;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .gallery-container {
-        padding: 20px 15px;
-      }
-
-      .photo-item {
-        padding: 20px 0;
-      }
-
-      .photo-description {
-        font-size: 14px;
-        margin-top: 15px;
-      }
+    .photo-description[contenteditable=\"true\"]:empty::before {
+      content: \"location / date / names\";
+      color: #999999;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <a href="index.html" class="back-home">i</a>
+  <a href="index.html" class="back-home" onclick="window.location.href='index.html'; return false;">i</a>
   <div class="gallery-container">
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000010004.jpg" alt="Photo 1" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000010004.jpg" alt="Photo 1">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000010013.jpg" alt="Photo 2" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000010013.jpg" alt="Photo 2">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000010015.jpg" alt="Photo 3" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000010015.jpg" alt="Photo 3">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000010016.jpg" alt="Photo 4" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000010016.jpg" alt="Photo 4">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000030030.jpg" alt="Photo 5" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000030030.jpg" alt="Photo 5">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000060009.jpg" alt="Photo 6" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000060009.jpg" alt="Photo 6">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000060025.jpg" alt="Photo 7" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000060025.jpg" alt="Photo 7">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000060028.jpg" alt="Photo 8" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000060028.jpg" alt="Photo 8">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000060029.jpg" alt="Photo 9" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000060029.jpg" alt="Photo 9">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000060030.jpg" alt="Photo 10" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000060030.jpg" alt="Photo 10">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000060039.jpg" alt="Photo 11" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000060039.jpg" alt="Photo 11">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000070001.jpg" alt="Photo 12" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000070001.jpg" alt="Photo 12">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000070009.jpg" alt="Photo 13" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000070009.jpg" alt="Photo 13">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000070013.jpg" alt="Photo 14" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000070013.jpg" alt="Photo 14">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000080009.jpg" alt="Photo 15" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000080009.jpg" alt="Photo 15">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000080010.jpg" alt="Photo 16" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000080010.jpg" alt="Photo 16">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000080011.jpg" alt="Photo 17" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000080011.jpg" alt="Photo 17">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000080012.jpg" alt="Photo 18" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000080012.jpg" alt="Photo 18">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000080013.jpg" alt="Photo 19" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000080013.jpg" alt="Photo 19">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000080014.jpg" alt="Photo 20" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000080014.jpg" alt="Photo 20">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000080024.jpg" alt="Photo 21" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000080024.jpg" alt="Photo 21">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000080025.jpg" alt="Photo 22" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000080025.jpg" alt="Photo 22">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000080029.jpg" alt="Photo 23" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000080029.jpg" alt="Photo 23">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000090001.jpg" alt="Photo 24" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000090001.jpg" alt="Photo 24">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000090002.jpg" alt="Photo 25" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000090002.jpg" alt="Photo 25">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000090005.jpg" alt="Photo 26" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000090005.jpg" alt="Photo 26">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000090017.jpg" alt="Photo 27" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000090017.jpg" alt="Photo 27">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000090018.jpg" alt="Photo 28" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000090018.jpg" alt="Photo 28">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000090029.jpg" alt="Photo 29" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000090029.jpg" alt="Photo 29">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000090032.jpg" alt="Photo 30" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000090032.jpg" alt="Photo 30">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
     
     <div class="photo-item">
-      <img data-src="Abuelas photos/000000090034.jpg" alt="Photo 31" loading="lazy">
-      <div class="photo-description"></div>
+      <img src="Abuelas photos/000000090034.jpg" alt="Photo 31">
+      <div class="photo-description" contenteditable="true"></div>
     </div>
   </div>
-  <script src="router.js"></script>
-  <script data-init>
-    // Eager-load the first few images so they appear immediately,
-    // then lazy-load the rest as they scroll into view.
-    (function() {
-      const eagerCount = 3;
-      const lazyImages = Array.from(document.querySelectorAll('img[data-src]'));
-
-      // Load the first few images right away for faster initial display
-      lazyImages.forEach((img, index) => {
-        if (index < eagerCount && img.dataset.src) {
-          img.src = img.dataset.src;
-          img.removeAttribute('data-src');
-        }
-      });
-
-      // Lazy-load the remaining images
-      if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const img = entry.target;
-              if (img.dataset.src) {
-                img.src = img.dataset.src;
-                img.removeAttribute('data-src');
-              }
-              observer.unobserve(img);
-            }
-          });
-        }, { rootMargin: '150px' }); // Start loading a bit before images enter the viewport
-        
-        document.querySelectorAll('img[data-src]').forEach(img => {
-          imageObserver.observe(img);
-        });
-      } else {
-        // Fallback: load all remaining images immediately
-        document.querySelectorAll('img[data-src]').forEach((img) => {
-          if (img.dataset.src) {
-            img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-          }
-        });
-      }
-    })();
-  </script>
 </body>
 </html>

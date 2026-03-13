@@ -56,6 +56,11 @@
   
   // Navigate to page
   async function navigate(url, pushState = true) {
+    // Force full navigation for gallery to avoid SPA body replacement issues
+    if (url && url.indexOf('gallery.html') !== -1) {
+      window.location.href = url;
+      return;
+    }
     if (!isInternal(url)) {
       window.location.href = url;
       return;
@@ -156,6 +161,11 @@
       
       const href = link.getAttribute('href');
       if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('mailto:') || href.startsWith('tel:')) {
+        return;
+      }
+
+      // Allow links with data-no-router or back-home class to bypass SPA routing
+      if (link.classList.contains('back-home') || link.dataset.noRouter === 'true') {
         return;
       }
       
