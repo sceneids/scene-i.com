@@ -90,39 +90,39 @@
         
 
         nav {
-            font-size: 24px;
-            font-weight: 700;
-            font-family: 'Space Grotesk', sans-serif;
             display: flex;
-            flex-direction: row;
-            gap: 15px;
-            text-align: center;
+            flex-direction: column;
+            gap: 40px;
+            text-align: left;
             text-transform: uppercase;
             z-index: 999;
             padding: 40px;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: flex-start;
+            align-items: flex-start;
             flex: 1;
             min-height: 100%;
             box-sizing: border-box;
-            flex-wrap: wrap;
-            align-content: center;
         }
 
         nav a {
             display: block;
             text-decoration: none;
             color: #000000 !important;
-            margin-bottom: 5px;
-            transition: color 0.3s ease;
+            font-family: 'Arial Narrow', 'Helvetica Condensed', Impact, sans-serif;
+            font-weight: 900;
+            font-stretch: condensed;
+            letter-spacing: -0.02em;
+            font-size: clamp(32px, 5vw, 64px);
+            transform: scaleX(1.6);
+            transform-origin: left center;
+            transition: color 0.2s ease, transform 0.2s ease;
             text-transform: uppercase;
-            flex: 1;
-            padding: 20px 10px;
-            min-width: 100px;
+            white-space: nowrap;
         }
 
         nav a:hover {
             color: red;
+            transform: scaleX(1);
         }
 
         section {
