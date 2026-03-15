@@ -6,11 +6,12 @@
     <title>Indistinct Scene</title>
     <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
     margin: 0;
-    padding: 80px 40px 40px 40px; /* more space at the top for fixed header */
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    padding: 0;
+    font-family: 'Space Grotesk', sans-serif;
     color: black; /* Text color */
     overflow-x: hidden;
     text-transform: uppercase;
@@ -50,28 +51,34 @@
 
         .hero-wrapper {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 1000;
             display: flex;
             flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            gap: 80px;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 0;
+            padding: 0;
         }
 
         .ids-stack {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             gap: 1.25em;
             font-size: 24px;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            color: #FFE600;
+            font-family: 'Space Grotesk', sans-serif;
+            color: #f0f0f0;
             margin: 0;
-            padding: 0;
+            padding: 40px;
+            flex: 1;
+            min-height: 100%;
+            box-sizing: border-box;
+            text-transform: uppercase;
         }
 
         .ids-line {
@@ -84,14 +91,20 @@
 
         nav {
             font-size: 24px;
-            font-weight: normal;
-            font-family: 'Times New Roman', Times, serif;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
             display: flex;
             flex-direction: column;
             gap: 15px;
             text-align: center;
-            text-transform: none;
+            text-transform: uppercase;
             z-index: 999;
+            padding: 40px;
+            justify-content: space-between;
+            align-items: center;
+            flex: 1;
+            min-height: 100%;
+            box-sizing: border-box;
         }
 
         nav a {
@@ -100,7 +113,7 @@
             color: #000000 !important;
             margin-bottom: 5px;
             transition: color 0.3s ease;
-            text-transform: lowercase;
+            text-transform: uppercase;
         }
 
         nav a:hover {
@@ -124,8 +137,13 @@
         @media (max-width: 768px) {
             .ids-stack { font-size: 20px; }
             nav { font-size: 20px; }
-            body {
-                padding: 60px 20px 20px 20px;
+            .hero-wrapper {
+                flex-direction: column;
+            }
+            nav, .ids-stack {
+                flex: 0;
+                min-height: auto;
+                padding: 30px 20px;
             }
         }
 
