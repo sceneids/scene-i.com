@@ -191,123 +191,108 @@
             prefetchGalleryImages();
         });
 
-        // Dot-matrix wormhole animation
+        // Moving water display with tiny dots
         function initWormhole() {
             const canvas = document.getElementById('wormholeCanvas');
             const ctx = canvas.getContext('2d');
             let time = 0;
+            
+            // Initialize particles for water effect
+            const particles = [];
+            const particleCount = 2000;
+            
+            function initParticles() {
+                particles.length = 0;
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        life: Math.random(),
+                        baseLife: Math.random() * 0.5 + 0.5
+                    });
+                }
+            }
 
             function resizeCanvas() {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
+                initParticles();
             }
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
 
-            function drawWormhole() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            function drawWaterDisplay() {
+                // Very light fade to create motion trails
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                time += 0.016; // ~60fps
 
                 const cx = canvas.width / 2;
                 const cy = canvas.height / 2;
-                const R = Math.min(canvas.width, canvas.height) * 0.42;
-                // Super slow motion for the dot movement
-                time += 0.0005;
 
-                const DOT_COUNT = 18000;
+                // Update and draw particles
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
 
-                for (let i = 0; i < DOT_COUNT; i++) {
-                    const t = i / DOT_COUNT;
+                    // Fluid wave influence
+                    const waveX = Math.sin(time * 0.3 + p.y * 0.005) * 0.08;
+                    const waveY = Math.cos(time * 0.25 + p.x * 0.004) * 0.08;
 
-                    // Spherical shell distribution
-                    const theta = Math.acos(2 * Math.random() - 1);
-                    const phi = Math.random() * Math.PI * 2;
-
-                    const sinT = Math.sin(theta);
-                    const cosT = Math.cos(theta);
-                    const sinP = Math.sin(phi + time * 0.3);
-                    const cosP = Math.cos(phi + time * 0.3);
-
-                    // 3D sphere point
-                    let x3 = sinT * cosP;
-                    let y3 = sinT * sinP;
-                    let z3 = cosT;
-
-                    // Wormhole throat pinch — pull points near poles inward
-                    const throatStrength = Math.exp(-Math.abs(z3) * 3.5) * 0.75;
-                    const r2d = Math.sqrt(x3 * x3 + y3 * y3) + 0.001;
-                    x3 -= (x3 / r2d) * throatStrength * 0.5;
-                    y3 -= (y3 / r2d) * throatStrength * 0.5;
-
-                    // Wormhole tunnel rings — ellipses narrowing toward center
-                    const ringY = z3 * 0.55; // vertical position of the ring
-                    const ringScale = 0.18 + Math.abs(z3) * 0.35; // smaller near center
-                    const ringAngle = phi + time * (z3 > 0 ? 0.5 : -0.5);
-                    const useRing = Math.random() < 0.22; // 22% of dots form the rings
+                    // Gentle pull toward center
+                    const dx = cx - p.x;
+                    const dy = cy - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const maxDist = Math.min(canvas.width, canvas.height) * 0.6;
                     
-                    let px, py;
-                    if (useRing && z3 > 0.1) {
-                        // Draw the funnel/throat rings visible at top
-                        px = cx + Math.cos(ringAngle) * ringScale * R * 0.8;
-                        py = cy - R * 0.35 + ringY * R * 1.2;
-                    } else {
-                        // Project sphere to 2D
-                        const perspective = 1.8 / (1.8 - y3 * 0.4);
-                        px = cx + x3 * R * perspective;
-                        py = cy + z3 * R * perspective * 0.92;
+                    if (dist > maxDist) {
+                        p.vx += (dx / dist) * 0.002;
+                        p.vy += (dy / dist) * 0.002;
                     }
 
-                    // Brightness — bright at center star, darker at edges
-                    const distFromCenter = Math.sqrt((px - cx) ** 2 + (py - cy) ** 2);
-                    const normalizedDist = distFromCenter / R;
-                    
-                    let brightness;
-                    if (normalizedDist < 0.04) {
-                        // Bright star burst at center
-                        brightness = 1.0;
-                    } else if (normalizedDist < 0.12) {
-                        brightness = 0.85 - normalizedDist * 2;
-                    } else {
-                        brightness = Math.max(0.05, 0.55 - normalizedDist * 0.5 + Math.random() * 0.08);
-                    }
+                    // Apply wave forces
+                    p.vx += waveX * 0.01;
+                    p.vy += waveY * 0.01;
 
-                    // Add film grain / noise texture
-                    brightness *= (0.75 + Math.random() * 0.25);
+                    // Damping
+                    p.vx *= 0.99;
+                    p.vy *= 0.99;
 
-                    // Clip to sphere boundary with soft edge fade
-                    if (normalizedDist > 1.02) continue;
-                    if (normalizedDist > 0.88) {
-                        brightness *= (1.02 - normalizedDist) / 0.14;
-                    }
+                    // Update position
+                    p.x += p.vx;
+                    p.y += p.vy;
 
+                    // Wrap around edges smoothly
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    // Calculate distance from center for brightness
+                    const dx2 = cx - p.x;
+                    const dy2 = cy - p.y;
+                    const distFromCenter = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+                    const normalizedDist = distFromCenter / maxDist;
+
+                    // Brightness varies with distance and time
+                    let brightness = Math.max(0.1, 0.8 - normalizedDist * 0.5);
+                    brightness += Math.sin(time * 0.5 + i) * 0.15; // Subtle pulse
+                    brightness = Math.max(0.05, brightness);
+
+                    // Draw tiny dot
                     const gray = Math.floor(brightness * 255);
-                    const dotSize = normalizedDist < 0.06 ? 2.5 : 1.2;
-
-                    ctx.fillStyle = `rgb(${gray},${gray},${gray})`;
+                    ctx.fillStyle = `rgba(${gray}, ${gray}, ${gray}, 0.9)`;
                     ctx.beginPath();
-                    ctx.arc(px, py, dotSize, 0, Math.PI * 2);
+                    ctx.arc(p.x, p.y, 0.5, 0, Math.PI * 2);
                     ctx.fill();
                 }
 
-                // Star burst rays at center
-                const rayCount = 12;
-                for (let r = 0; r < rayCount; r++) {
-                    const angle = (r / rayCount) * Math.PI * 2 + time * 0.2;
-                    const len = R * (0.18 + Math.random() * 0.07);
-                    const gradient = ctx.createLinearGradient(cx, cy, cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
-                    gradient.addColorStop(0, 'rgba(255,255,255,0.55)');
-                    gradient.addColorStop(1, 'rgba(255,255,255,0)');
-                    ctx.strokeStyle = gradient;
-                    ctx.lineWidth = 0.8;
-                    ctx.beginPath();
-                    ctx.moveTo(cx, cy);
-                    ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
-                    ctx.stroke();
-                }
-
-                requestAnimationFrame(drawWormhole);
+                requestAnimationFrame(drawWaterDisplay);
             }
 
-            drawWormhole();
+            drawWaterDisplay();
         }
     </script>
     <script src="router.js"></script>
