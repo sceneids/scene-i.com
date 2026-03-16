@@ -56,29 +56,24 @@
             width: 100%;
             height: 100%;
             z-index: 1000;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            padding: 0;
+            pointer-events: none;
         }
 
         .ids-stack {
+            position: fixed;
+            right: 40px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1.25em;
+            align-items: flex-end;
+            gap: 18px;
             font-size: 24px;
             font-family: 'Space Grotesk', sans-serif;
-            color: #f0f0f0;
-            margin: 0;
-            padding: 40px;
-            flex: 1;
-            min-height: 100%;
-            box-sizing: border-box;
+            color: #cccccc;
             text-transform: uppercase;
+            z-index: 1001;
+            pointer-events: auto;
         }
 
         .ids-line {
@@ -90,19 +85,20 @@
         
 
         nav {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             flex-direction: column;
             gap: 40px;
-            text-align: center;
+            text-align: left;
             text-transform: uppercase;
-            z-index: 999;
-            padding: 40px;
+            z-index: 1001;
+            padding: 0;
             justify-content: center;
-            align-items: center;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            align-items: flex-start;
+            pointer-events: auto;
         }
 
         nav a {
@@ -165,6 +161,12 @@
             <a href="mixes.html">mixes</a>
             <a href="gallery.html">gallery</a>
         </nav>
+        <div class="ids-stack">
+            <span class="ids-line ids-mandarin">艾 迪 斯</span>
+            <span class="ids-line ids-russian">И Д С</span>
+            <span class="ids-line ids-korean">아 이 디 에 스</span>
+            <span class="ids-line">⠊⠙⠎</span>
+        </div>
     </div>
 
     <section id="home" class="active">
