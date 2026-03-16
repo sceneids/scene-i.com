@@ -5,226 +5,168 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mixes</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background-color: #ffffff;
-      color: #000000;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-transform: uppercase;
-    }
+body {
+    background-color: #000;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    overflow: hidden;
+}
 
-    .mixes-container {
-      width: 100%;
-      padding: 0;
-      margin: 0;
-      display: block;
-    }
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 100vw;
+    height: 100vh;
+    gap: 2px;
+    background-color: #111;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      grid-template-rows: repeat(12, 1fr);
-      width: 100vw;
-      height: 100vh;
-      gap: 0;
-    }
+.mix-box {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #1a1a1a;
+}
 
-    .mix-box {
-      background-color: #e0e0e0;
-      border: 1px solid #cccccc;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-decoration: none;
-      color: #000000;
-      font-size: 10px;
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      height: 100%;
-      aspect-ratio: unset;
-    }
+.mix-box img.mix-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
 
-    .mix-cover {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+.mix-box:hover img.mix-cover {
+    opacity: 1;
+}
 
-    .mix-label {
-      position: relative;
-      z-index: 1;
-    }
+.mix-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 12px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-    .mix-cover {
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
+.play-btn {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    background: transparent;
+    transition: background 0.2s;
+}
 
-    .mix-cover.loaded {
-      opacity: 1;
-    }
+.play-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
 
-    .mix-box:hover .mix-cover {
-      opacity: 0.8;
-    }
+.play-btn svg {
+    width: 10px;
+    height: 10px;
+    fill: #fff;
+    margin-left: 2px;
+}
 
-    .mix-box:hover .mix-cover.loaded {
-      opacity: 0.8;
-    }
+.mix-title {
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+}
 
-    .loading-placeholder {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
-      background-size: 200% 100%;
-      animation: loading 1.5s infinite;
-      z-index: 0;
-    }
+.sc-player {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+}
 
-    @keyframes loading {
-      0% {
-        background-position: 200% 0;
-      }
-      100% {
-        background-position: -200% 0;
-      }
-    }
+.sc-player.active {
+    display: block;
+}
 
-    .mix-box:hover {
-      background-color: #2a2a2a;
-      border-color: #555;
-      transform: scale(1.05);
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .mix-box {
-        max-width: 250px;
-        font-size: 14px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .mix-box {
-        max-width: 200px;
-      }
-    }
+.sc-player iframe {
+    width: 100%;
+    height: 80px;
+    border: none;
+}
   </style>
 </head>
 <body>
-  <div class="mixes-container">
-    <div class="grid">
-      <a href="https://soundcloud.com/indistinctscene0/saint-germane-w-hnko-30102025" class="mix-box" target="_blank" data-soundcloud-url="https://soundcloud.com/indistinctscene0/saint-germane-w-hnko-30102025">
-      </a>
-      </div>
-  </div>
+<div class="grid" id="mixGrid"></div>
 
-    <script>
-      // Function to preload image
-      function preloadImage(src) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => resolve(img);
-          img.onerror = reject;
-          img.src = src;
-        });
-      }
+<div class="sc-player" id="scPlayer">
+    <iframe id="scIframe" allow="autoplay"></iframe>
+</div>
 
-      // Function to fetch SoundCloud cover image with optimized loading
-      async function loadSoundCloudCover(boxElement) {
-        const soundcloudUrl = boxElement.getAttribute('data-soundcloud-url');
-        if (!soundcloudUrl) return;
+<script>
+const mixes = [
+    {
+        url: "https://soundcloud.com/indistinctscene0/saint-germane-w-hnko-30102025",
+        title: "Saint Germane w/ HNKO"
+    }
+    // Add more mixes here as objects with url and title
+];
 
-        // Add loading placeholder
-        const placeholder = document.createElement('div');
-        placeholder.className = 'loading-placeholder';
-        boxElement.appendChild(placeholder);
+const grid = document.getElementById('mixGrid');
+const scPlayer = document.getElementById('scPlayer');
+const scIframe = document.getElementById('scIframe');
 
-        try {
-          // Use SoundCloud oEmbed API to get track info
-          const oembedUrl = `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(soundcloudUrl)}`;
-          
-          const response = await fetch(oembedUrl);
-          const data = await response.json();
-          
-          // Extract thumbnail URL from oEmbed response
-          if (data.thumbnail_url) {
-            // Get larger image size (t500x500 or t300x300 for faster loading)
-            let imageUrl = data.thumbnail_url.replace(/t\d+x\d+/, 't500x500');
-            
-            // Preload image before displaying
-            try {
-              await preloadImage(imageUrl);
-              
-              // Create image element
-              const img = document.createElement('img');
-              img.src = imageUrl;
-              img.alt = data.title || 'Mix Cover';
-              img.className = 'mix-cover';
-              
-              // Remove placeholder
-              placeholder.remove();
-              
-              // Insert image and fade in
-              boxElement.insertBefore(img, boxElement.firstChild);
-              
-              // Trigger fade-in animation
-              requestAnimationFrame(() => {
-                img.classList.add('loaded');
-              });
-            } catch (imgError) {
-              console.error('Error preloading image:', imgError);
-              placeholder.remove();
+// Fill all 12 slots
+for (let i = 0; i < 12; i++) {
+    const mix = mixes[i % mixes.length];
+    const box = document.createElement('div');
+    box.className = 'mix-box';
+
+    box.innerHTML = `
+        <img class="mix-cover" src="" alt="${mix.title}" />
+        <div class="mix-overlay">
+            <div class="play-btn" data-url="${mix.url}">
+                <svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>
+            </div>
+            <span class="mix-title">${mix.title}</span>
+        </div>
+    `;
+
+    // Load cover from SoundCloud oEmbed
+    const img = box.querySelector('img');
+    fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(mix.url)}`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.thumbnail_url) {
+                img.src = data.thumbnail_url.replace(/t\d+x\d+/, 't500x500');
             }
-          } else {
-            placeholder.remove();
-          }
-        } catch (error) {
-          console.error('Error loading SoundCloud cover:', error);
-          placeholder.remove();
-          // If fetching fails, keep the text label visible
-        }
-      }
+        })
+        .catch(() => {});
 
-      // Start loading immediately when script runs (before DOMContentLoaded)
-      (function() {
-        const mixBoxes = document.querySelectorAll('.mix-box[data-soundcloud-url]');
-        mixBoxes.forEach(box => {
-          loadSoundCloudCover(box);
-        });
-      })();
-    </script>
-    <script src="router.js"></script>
-    <script data-init>
-      // Reinitialize SoundCloud cover loading on navigation
-      (function() {
-        const mixBoxes = document.querySelectorAll('.mix-box[data-soundcloud-url]');
-        mixBoxes.forEach(box => {
-          if (!box.querySelector('.mix-cover')) {
-            loadSoundCloudCover(box);
-          }
-        });
-      })();
-    </script>
+    // Play on click
+    box.querySelector('.play-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const trackUrl = e.currentTarget.dataset.url;
+        scIframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(trackUrl)}&auto_play=true&color=%23000000&hide_related=true&show_comments=false&show_user=false&show_reposts=false`;
+        scPlayer.classList.add('active');
+    });
+
+    grid.appendChild(box);
+}
+</script>
+<script src="router.js"></script>
 </body>
 </html>
