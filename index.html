@@ -61,12 +61,12 @@
 
         .ids-stack {
             position: fixed;
-            right: 40px;
+            left: 50%;
             top: 50%;
-            transform: translateY(-50%);
+            transform: translate(4vw, -50%);
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: flex-start;
             gap: 18px;
             font-size: 24px;
             font-family: 'Space Grotesk', sans-serif;
@@ -86,12 +86,12 @@
 
         nav {
             position: fixed;
-            left: 40px;
+            left: 50%;
             top: 50%;
-            transform: translateY(-50%);
+            transform: translate(-20vw, -50%);
             display: flex;
             flex-direction: column;
-            gap: 40px;
+            gap: 18px;
             text-align: left;
             text-transform: uppercase;
             z-index: 1001;
@@ -107,7 +107,7 @@
             color: #000000;
             font-family: 'Times New Roman', Times, serif;
             font-weight: normal;
-            font-size: clamp(32px, 5vw, 64px);
+            font-size: 24px;
             transition: color 0.2s ease;
             text-transform: uppercase;
             white-space: nowrap;
@@ -206,108 +206,102 @@
             prefetchGalleryImages();
         });
 
-        // Moving water display with tiny dots
+        // Strange attractor visualization (Sprott system)
         function initWormhole() {
             const canvas = document.getElementById('wormholeCanvas');
             const ctx = canvas.getContext('2d');
-            let time = 0;
-            
-            // Initialize particles for water effect
-            const particles = [];
-            const particleCount = 2000;
-            
-            function initParticles() {
-                particles.length = 0;
-                for (let i = 0; i < particleCount; i++) {
-                    particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: (Math.random() - 0.5) * 0.5,
-                        life: Math.random(),
-                        baseLife: Math.random() * 0.5 + 0.5
-                    });
-                }
-            }
 
             function resizeCanvas() {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
-                initParticles();
             }
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
 
-            function drawWaterDisplay() {
-                // Very light fade to create motion trails
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Multiple attractor streams
+            const streams = [];
+            const numStreams = 6;
 
-                time += 0.016; // ~60fps
-
-                const cx = canvas.width / 2;
-                const cy = canvas.height / 2;
-
-                // Update and draw particles
-                for (let i = 0; i < particles.length; i++) {
-                    const p = particles[i];
-
-                    // Fluid wave influence
-                    const waveX = Math.sin(time * 0.3 + p.y * 0.005) * 0.08;
-                    const waveY = Math.cos(time * 0.25 + p.x * 0.004) * 0.08;
-
-                    // Gentle pull toward center
-                    const dx = cx - p.x;
-                    const dy = cy - p.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    const maxDist = Math.min(canvas.width, canvas.height) * 0.6;
-                    
-                    if (dist > maxDist) {
-                        p.vx += (dx / dist) * 0.002;
-                        p.vy += (dy / dist) * 0.002;
-                    }
-
-                    // Apply wave forces
-                    p.vx += waveX * 0.01;
-                    p.vy += waveY * 0.01;
-
-                    // Damping
-                    p.vx *= 0.99;
-                    p.vy *= 0.99;
-
-                    // Update position
-                    p.x += p.vx;
-                    p.y += p.vy;
-
-                    // Wrap around edges smoothly
-                    if (p.x < 0) p.x = canvas.width;
-                    if (p.x > canvas.width) p.x = 0;
-                    if (p.y < 0) p.y = canvas.height;
-                    if (p.y > canvas.height) p.y = 0;
-
-                    // Calculate distance from center for brightness
-                    const dx2 = cx - p.x;
-                    const dy2 = cy - p.y;
-                    const distFromCenter = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-                    const normalizedDist = distFromCenter / maxDist;
-
-                    // Brightness varies with distance and time
-                    let brightness = Math.max(0.1, 0.8 - normalizedDist * 0.5);
-                    brightness += Math.sin(time * 0.5 + i) * 0.15; // Subtle pulse
-                    brightness = Math.max(0.05, brightness);
-
-                    // Draw tiny dot
-                    const gray = Math.floor(brightness * 255);
-                    ctx.fillStyle = `rgba(${gray}, ${gray}, ${gray}, 0.9)`;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, 0.5, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-
-                requestAnimationFrame(drawWaterDisplay);
+            function resetStream(stream) {
+                stream.x = Math.random() * 0.4 - 0.8;
+                stream.y = Math.random() * 0.4 - 0.8;
+                stream.age = 0;
+                stream.maxAge = 8000 + Math.random() * 4000;
+                stream.opacity = 0.12 + Math.random() * 0.15;
             }
 
-            drawWaterDisplay();
+            for (let i = 0; i < numStreams; i++) {
+                const stream = { x: 0, y: 0, age: 0, maxAge: 0, opacity: 0 };
+                resetStream(stream);
+                stream.age = Math.floor(Math.random() * 4000); // stagger starts
+                streams.push(stream);
+            }
+
+            // Sprott attractor coefficients (type C)
+            function sprott(x, y) {
+                const dt = 0.0012;
+                const dx = y;
+                const dy = -x + y * (0.9 - x * x * 1.2) - x * 0.4;
+                return {
+                    nx: x + dx * dt * 8,
+                    ny: y + dy * dt * 8
+                };
+            }
+
+            // Map attractor coords to canvas
+            function toCanvas(x, y) {
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const scale = Math.min(canvas.width, canvas.height) * 0.28;
+                return {
+                    px: cx + x * scale,
+                    py: cy + y * scale
+                };
+            }
+
+            // Fade canvas slowly
+            function draw() {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.018)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                for (let s = 0; s < streams.length; s++) {
+                    const stream = streams[s];
+
+                    // Step attractor multiple times per frame for speed
+                    for (let step = 0; step < 12; step++) {
+                        const { nx, ny } = sprott(stream.x, stream.y);
+                        stream.x = nx;
+                        stream.y = ny;
+                        stream.age++;
+
+                        const { px, py } = toCanvas(stream.x, stream.y);
+
+                        // Fade in and out over lifetime
+                        const lifeFraction = stream.age / stream.maxAge;
+                        let alpha = stream.opacity;
+                        if (lifeFraction < 0.05) alpha *= lifeFraction / 0.05;
+                        if (lifeFraction > 0.85) alpha *= (1 - lifeFraction) / 0.15;
+
+                        // Distance from center affects brightness
+                        const dist = Math.sqrt(stream.x * stream.x + stream.y * stream.y);
+                        const brightness = Math.max(30, Math.min(180, 80 + dist * 120));
+                        const b = Math.floor(brightness);
+
+                        ctx.fillStyle = `rgba(${b},${b},${b},${alpha})`;
+                        ctx.beginPath();
+                        ctx.arc(px, py, 0.6, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+
+                    if (stream.age >= stream.maxAge) {
+                        resetStream(stream);
+                    }
+                }
+
+                requestAnimationFrame(draw);
+            }
+
+            draw();
         }
     </script>
     <script src="router.js"></script>
