@@ -58,8 +58,8 @@
             z-index: 1000;
             display: flex;
             flex-direction: row;
-            align-items: stretch;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: center;
             gap: 0;
             padding: 0;
         }
@@ -93,29 +93,26 @@
             display: flex;
             flex-direction: column;
             gap: 40px;
-            text-align: left;
+            text-align: center;
             text-transform: uppercase;
             z-index: 999;
             padding: 40px;
-            justify-content: flex-start;
-            align-items: flex-start;
-            flex: 1;
-            min-height: 100%;
-            box-sizing: border-box;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         nav a {
             display: block;
             text-decoration: none;
-            color: #000000 !important;
-            font-family: 'Arial Narrow', 'Helvetica Condensed', Impact, sans-serif;
-            font-weight: 900;
-            font-stretch: condensed;
-            letter-spacing: -0.02em;
+            color: #000000;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: normal;
             font-size: clamp(32px, 5vw, 64px);
-            transform: scaleX(2.0);
-            transform-origin: left center;
-            transition: color 0.2s ease, transform 0.2s ease;
+            transition: color 0.2s ease;
             text-transform: uppercase;
             white-space: nowrap;
         }
@@ -168,12 +165,6 @@
             <a href="mixes.html">mixes</a>
             <a href="gallery.html">gallery</a>
         </nav>
-        <div class="ids-stack">
-            <span class="ids-line ids-mandarin">艾 迪 斯</span>
-            <span class="ids-line ids-russian">И Д С</span>
-            <span class="ids-line ids-korean">아 이 디 에 스</span>
-            <span class="ids-line">⠊⠙⠎</span>
-        </div>
     </div>
 
     <section id="home" class="active">
