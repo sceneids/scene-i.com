@@ -15,8 +15,8 @@ body {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
     width: 100vw;
     height: 100vh;
     gap: 2px;
@@ -129,8 +129,8 @@ const grid = document.getElementById('mixGrid');
 const scPlayer = document.getElementById('scPlayer');
 const scIframe = document.getElementById('scIframe');
 
-// Fill all 12 slots
-for (let i = 0; i < 12; i++) {
+// Fill all 4 slots
+for (let i = 0; i < 4; i++) {
     const mix = mixes[i];
     const box = document.createElement('div');
     box.className = 'mix-box';
