@@ -131,38 +131,40 @@ const scIframe = document.getElementById('scIframe');
 
 // Fill all 12 slots
 for (let i = 0; i < 12; i++) {
-    const mix = mixes[i % mixes.length];
+    const mix = mixes[i];
     const box = document.createElement('div');
     box.className = 'mix-box';
 
-    box.innerHTML = `
-        <img class="mix-cover" src="" alt="${mix.title}" />
-        <div class="mix-overlay">
-            <div class="play-btn" data-url="${mix.url}">
-                <svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>
+    if (mix) {
+        box.innerHTML = `
+            <img class="mix-cover" src="" alt="${mix.title}" />
+            <div class="mix-overlay">
+                <div class="play-btn" data-url="${mix.url}">
+                    <svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>
+                </div>
+                <span class="mix-title">${mix.title}</span>
             </div>
-            <span class="mix-title">${mix.title}</span>
-        </div>
-    `;
+        `;
 
-    // Load cover from SoundCloud oEmbed
-    const img = box.querySelector('img');
-    fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(mix.url)}`)
-        .then(r => r.json())
-        .then(data => {
-            if (data.thumbnail_url) {
-                img.src = data.thumbnail_url.replace(/t\d+x\d+/, 't500x500');
-            }
-        })
-        .catch(() => {});
+        // Load cover from SoundCloud oEmbed
+        const img = box.querySelector('img');
+        fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(mix.url)}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.thumbnail_url) {
+                    img.src = data.thumbnail_url.replace(/t\d+x\d+/, 't500x500');
+                }
+            })
+            .catch(() => {});
 
-    // Play on click
-    box.querySelector('.play-btn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        const trackUrl = e.currentTarget.dataset.url;
-        scIframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(trackUrl)}&auto_play=true&color=%23000000&hide_related=true&show_comments=false&show_user=false&show_reposts=false`;
-        scPlayer.classList.add('active');
-    });
+        // Play on click
+        box.querySelector('.play-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const trackUrl = e.currentTarget.dataset.url;
+            scIframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(trackUrl)}&auto_play=true&color=%23000000&hide_related=true&show_comments=false&show_user=false&show_reposts=false`;
+            scPlayer.classList.add('active');
+        });
+    }
 
     grid.appendChild(box);
 }
