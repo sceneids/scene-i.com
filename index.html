@@ -29,7 +29,7 @@
             z-index: 1;
             pointer-events: none;
             opacity: 0.82;
-            background: white;
+            background: transparent;
         }
 
         .wormhole-canvas {
@@ -102,17 +102,16 @@
         nav a {
             display: block;
             text-decoration: none;
-            color: #000000;
             font-family: 'Times New Roman', Times, serif;
             font-weight: normal;
             font-size: 24px;
-            transition: color 0.2s ease;
             text-transform: none;
             white-space: nowrap;
+            animation: flashText 0.6s steps(1) infinite;
         }
 
         nav a:hover {
-            color: silver;
+            opacity: 0.6;
         }
 
         section {
@@ -288,9 +287,12 @@
                 };
             }
 
-            // Fade canvas slowly
+            // Fade canvas slowly — match the black/white flash cycle
             function draw() {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.018)';
+                const isBlack = document.body.style.backgroundColor === 'black' ||
+                    (Date.now() % 600 < 300);
+                const fade = isBlack ? 'rgba(0,0,0,0.018)' : 'rgba(255,255,255,0.018)';
+                ctx.fillStyle = fade;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 for (let s = 0; s < streams.length; s++) {
@@ -316,7 +318,8 @@
                         const brightness = Math.max(30, Math.min(180, 80 + dist * 120));
                         const b = Math.floor(brightness);
 
-                        ctx.fillStyle = `rgba(${b},${b},${b},${alpha})`;
+                        const dotB = isBlack ? 255 - b : b;
+                        ctx.fillStyle = `rgba(${dotB},${dotB},${dotB},${alpha})`;
                         ctx.beginPath();
                         ctx.arc(px, py, 0.6, 0, Math.PI * 2);
                         ctx.fill();
