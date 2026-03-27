@@ -157,7 +157,17 @@
         }
 
         body {
-            animation: flashBg 0.6s steps(1) infinite;
+            background: black;
+        }
+
+        #flag-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
         }
 
         .scene-title {
@@ -179,6 +189,7 @@
 </head>
 <body>
     <div class="scene-title">SCENE</div>
+    <div id="flag-bg"></div>
     <div class="wormhole-container">
         <canvas class="wormhole-canvas" id="wormholeCanvas"></canvas>
     </div>
@@ -335,6 +346,40 @@
 
             draw();
         }
+
+        // Flag background cycling
+        (function initFlags() {
+            const flags = [
+                // France — vertical blue, white, red
+                'linear-gradient(to right, #002395 33.33%, #FFFFFF 33.33% 66.66%, #ED2939 66.66%)',
+                // England — white with red St George's Cross
+                'linear-gradient(#C8102E, #C8102E) center / 20% 100% no-repeat, linear-gradient(#C8102E, #C8102E) center / 100% 20% no-repeat, #FFFFFF',
+                // USA — red and white stripes
+                'repeating-linear-gradient(to bottom, #B22234 0 7.7%, #FFFFFF 7.7% 15.4%)',
+                // China — red
+                '#DE2910',
+                // Japan — white with red circle
+                'radial-gradient(circle at 50% 50%, #BC002D 28%, #FFFFFF 28%)',
+                // Russia — horizontal white, blue, red
+                'linear-gradient(to bottom, #FFFFFF 33.33%, #0039A6 33.33% 66.66%, #D52B1E 66.66%)',
+                // Iraq — horizontal red, white, black
+                'linear-gradient(to bottom, #CE1126 33.33%, #FFFFFF 33.33% 66.66%, #000000 66.66%)',
+                // Lebanon — horizontal red, white, red
+                'linear-gradient(to bottom, #FF0000 25%, #FFFFFF 25% 75%, #FF0000 75%)',
+                // Canada — vertical red, white, red
+                'linear-gradient(to right, #FF0000 25%, #FFFFFF 25% 75%, #FF0000 75%)',
+                // Texas — vertical blue, white, red
+                'linear-gradient(to right, #002868 35%, #FFFFFF 35% 67.5%, #BF0A30 67.5%)',
+            ];
+            let idx = 0;
+            const el = document.getElementById('flag-bg');
+            function nextFlag() {
+                el.style.background = flags[idx % flags.length];
+                idx++;
+            }
+            nextFlag();
+            setInterval(nextFlag, 600);
+        })();
     </script>
     <script src="router.js"></script>
     <script data-init>
