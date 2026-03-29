@@ -3,393 +3,275 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Indistinct Scene</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <title>INDISTINCT SCENE</title>
     <style>
-        body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Space Grotesk', sans-serif;
-    color: black; /* Text color */
-    overflow-x: hidden;
-    text-transform: uppercase;
-
-    /* --- BACKGROUND PROPERTIES --- */
-    position: relative;
-}
-        
-        .wormhole-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.82;
-            background: transparent;
-        }
-
-        .wormhole-canvas {
-            width: 100%;
-            height: 100%;
-            image-rendering: auto;
-        }
-        
-
-        @keyframes revolve {
-            0% {
-                transform: translate(-50%, -50%) rotateY(0deg);
-            }
-            100% {
-                transform: translate(-50%, -50%) rotateY(360deg);
-            }
-        }
-
-        .hero-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .ids-stack {
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(4vw, -50%);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 18px;
-            font-size: 24px;
-            font-family: 'Space Grotesk', sans-serif;
-            color: #cccccc;
-            text-transform: uppercase;
-            z-index: 1001;
-            pointer-events: auto;
-        }
-
-        .ids-line {
-            display: block;
-            line-height: 1.2;
-            white-space: nowrap;
-        }
-
-        
-
-        nav {
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-20vw, -50%);
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            text-align: left;
-            z-index: 1001;
+        * {
+            margin: 0;
             padding: 0;
-            justify-content: center;
-            align-items: flex-start;
-            pointer-events: auto;
-        }
-
-        nav a {
-            display: block;
-            text-decoration: none;
-            font-family: 'Times New Roman', Times, serif;
-            font-weight: normal;
-            font-size: 24px;
-            text-transform: none;
-            white-space: nowrap;
-            animation: flashText 0.6s steps(1) infinite;
-        }
-
-        nav a:hover {
-            opacity: 0.6;
-        }
-
-        section {
-            display: none;
-            padding-top: 150px;
-            min-height: calc(100vh - 80px - 40px);
             box-sizing: border-box;
         }
 
-        section.active {
-            display: block;
-        }
-
-
-
-        /* Basic responsive adjustments */
-        @media (max-width: 768px) {
-            .ids-stack { font-size: 20px; }
-            nav { font-size: 20px; }
-            .hero-wrapper {
-                flex-direction: column;
-            }
-            nav, .ids-stack {
-                flex: 0;
-                min-height: auto;
-                padding: 30px 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .ids-stack { font-size: 18px; }
-            nav { font-size: 18px; }
-        }
-
-        @keyframes flashBg {
-            0%, 49% { background-color: white; }
-            50%, 100% { background-color: black; }
-        }
-
-        @keyframes flashText {
-            0%, 49% { color: black; opacity: 1; }
-            50%, 100% { color: white; opacity: 1; }
-        }
-
         body {
-            background: black;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #000000;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
         }
 
-        #flag-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* ── LEFT: full-height photo ── */
+        .photo-pane {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-pane img {
             width: 100%;
             height: 100%;
-            z-index: 2;
-            pointer-events: none;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            filter: grayscale(100%);
         }
 
-        .scene-title {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 20vw;
-            font-weight: 700;
+        /* ── RIGHT: sidebar ── */
+        .sidebar {
+            width: 220px;
+            min-width: 220px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 28px 20px 20px 20px;
+            border-left: none;
+            background: #ffffff;
+            position: relative;
+        }
+
+        /* Site title */
+        .site-title {
+            font-size: 10px;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            letter-spacing: -0.02em;
-            z-index: 2000;
-            pointer-events: none;
-            white-space: nowrap;
-            animation: flashText 0.6s steps(1) infinite;
+            font-weight: normal;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        /* Nav links */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            margin-bottom: 28px;
+        }
+
+        .sidebar-nav a {
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #000;
+            line-height: 1.9;
+            font-weight: normal;
+        }
+
+        .sidebar-nav a:hover {
+            opacity: 0.5;
+        }
+
+        /* Calendar */
+        .calendar {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .cal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 10px;
+            letter-spacing: 0.06em;
+            margin-bottom: 10px;
+            user-select: none;
+        }
+
+        .cal-header button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            color: #000;
+            padding: 0 2px;
+            line-height: 1;
+        }
+
+        .cal-header button:hover {
+            opacity: 0.5;
+        }
+
+        .cal-header .cal-label {
+            font-size: 10px;
+            letter-spacing: 0.06em;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0;
+        }
+
+        .cal-cell {
+            font-size: 10px;
+            text-align: center;
+            padding: 3px 0;
+            cursor: default;
+            color: #000;
+            letter-spacing: 0em;
+            line-height: 1.6;
+        }
+
+        .cal-cell.today {
+            font-weight: bold;
+        }
+
+        .cal-cell.has-entry {
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .cal-cell.has-entry:hover {
+            opacity: 0.5;
+        }
+
+        .cal-cell.empty {
+            color: transparent;
+        }
+
+        /* Bottom date label */
+        .date-label {
+            margin-top: auto;
+            font-size: 10px;
+            letter-spacing: 0.04em;
+            color: #000;
+            padding-top: 20px;
         }
     </style>
 </head>
 <body>
-    <div class="scene-title">SCENE</div>
-    <div id="flag-bg"></div>
-    <div class="wormhole-container">
-        <canvas class="wormhole-canvas" id="wormholeCanvas"></canvas>
+
+    <!-- Left: photo -->
+    <div class="photo-pane">
+        <img id="main-photo" src="Abuelas photos/000000010004.jpg" alt="" />
     </div>
 
-    <div class="hero-wrapper">
-        <nav>
-            <a href="index.html" onclick="if(typeof showSection === 'function') showSection('home'); return false;">home</a>
-            <a href="mixes.html">mixes</a>
-            <a href="gallery.html">gallery</a>
-        </nav>
-        <div class="ids-stack">
-            <span class="ids-line ids-mandarin">艾 迪 斯</span>
-            <span class="ids-line ids-russian">И Д С</span>
-            <span class="ids-line ids-arabic">ي د س</span>
-            <span class="ids-line">⠊⠙⠎</span>
+    <!-- Right: sidebar -->
+    <div class="sidebar">
+
+        <div class="site-title">
+            INDISTINCT SCENE
         </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html">DIARY</a>
+            <a href="mixes.html">MIXES</a>
+            <a href="gallery.html">GALLERY</a>
+        </nav>
+
+        <div class="calendar">
+            <div class="cal-header">
+                <button id="cal-prev">&lt;</button>
+                <span class="cal-label" id="cal-label"></span>
+                <button id="cal-next">&gt;</button>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+        </div>
+
+        <div class="date-label" id="date-label"></div>
+
     </div>
-
-    <section id="home" class="active">
-        <h2></h2>
-        <p></p>
-        <p></p>
-    </section>
-
-
 
     <script>
-        function showSection(id) {
-            document.querySelectorAll("section").forEach((section) => {
-                section.classList.remove("active");
-            });
-            document.getElementById(id).classList.add("active");
-        }
+        // Gallery images keyed by date (YYYY-MM-DD)
+        const entries = {
+            "2026-03-26": "Abuelas photos/000000010004.jpg",
+            "2026-03-20": "Abuelas photos/000000010013.jpg",
+            "2026-03-15": "Abuelas photos/000000010015.jpg",
+            "2026-03-10": "Abuelas photos/000000010016.jpg",
+            "2026-03-05": "Abuelas photos/000000030030.jpg",
+            "2026-02-28": "Abuelas photos/000000060009.jpg",
+            "2026-02-20": "Abuelas photos/000000060025.jpg",
+        };
 
-        // Prefetch a few gallery images so they are cached before navigation
-        function prefetchGalleryImages() {
-            const galleryImages = [
-                "Abuelas photos/000000010004.jpg",
-                "Abuelas photos/000000010013.jpg",
-                "Abuelas photos/000000010015.jpg"
-            ];
+        // Show the latest entry on load
+        const latestKey = Object.keys(entries).sort().reverse()[0];
+        document.getElementById('main-photo').src = entries[latestKey] || "Abuelas photos/000000010004.jpg";
+        document.getElementById('date-label').textContent = latestKey;
 
-            galleryImages.forEach((src) => {
-                const img = new Image();
-                img.src = src;
-            });
-        }
+        // Calendar state
+        const today = new Date();
+        let calYear = today.getFullYear();
+        let calMonth = today.getMonth(); // 0-indexed
 
-        // Initialize to show the home section on page load
-        document.addEventListener("DOMContentLoaded", () => {
-            showSection('home');
-            initWormhole();
-            prefetchGalleryImages();
-        });
+        function renderCal(year, month) {
+            const label = document.getElementById('cal-label');
+            const grid = document.getElementById('cal-grid');
 
-        // Strange attractor visualization (Sprott system)
-        function initWormhole() {
-            const canvas = document.getElementById('wormholeCanvas');
-            const ctx = canvas.getContext('2d');
+            label.textContent = (month + 1) + ' / ' + year;
+            grid.innerHTML = '';
 
-            function resizeCanvas() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
+            const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-            // Multiple attractor streams
-            const streams = [];
-            const numStreams = 6;
-
-            function resetStream(stream) {
-                stream.x = Math.random() * 0.4 - 0.8;
-                stream.y = Math.random() * 0.4 - 0.8;
-                stream.age = 0;
-                stream.maxAge = 8000 + Math.random() * 4000;
-                stream.opacity = 0.12 + Math.random() * 0.15;
+            // Blank cells before the 1st
+            // Start week on Monday (shift Sunday to end)
+            const startOffset = (firstDay + 6) % 7;
+            for (let i = 0; i < startOffset; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cal-cell empty';
+                cell.textContent = '';
+                grid.appendChild(cell);
             }
 
-            for (let i = 0; i < numStreams; i++) {
-                const stream = { x: 0, y: 0, age: 0, maxAge: 0, opacity: 0 };
-                resetStream(stream);
-                stream.age = Math.floor(Math.random() * 4000); // stagger starts
-                streams.push(stream);
-            }
+            for (let d = 1; d <= daysInMonth; d++) {
+                const cell = document.createElement('div');
+                cell.className = 'cal-cell';
+                cell.textContent = d;
 
-            // Sprott attractor coefficients (type C)
-            function sprott(x, y) {
-                const dt = 0.0012;
-                const dx = y;
-                const dy = -x + y * (0.9 - x * x * 1.2) - x * 0.4;
-                return {
-                    nx: x + dx * dt * 8,
-                    ny: y + dy * dt * 8
-                };
-            }
+                const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
 
-            // Map attractor coords to canvas
-            function toCanvas(x, y) {
-                const cx = canvas.width / 2;
-                const cy = canvas.height / 2;
-                const scale = Math.min(canvas.width, canvas.height) * 0.28;
-                return {
-                    px: cx + x * scale,
-                    py: cy + y * scale
-                };
-            }
-
-            // Fade canvas slowly — match the black/white flash cycle
-            function draw() {
-                const isBlack = document.body.style.backgroundColor === 'black' ||
-                    (Date.now() % 600 < 300);
-                const fade = isBlack ? 'rgba(0,0,0,0.018)' : 'rgba(255,255,255,0.018)';
-                ctx.fillStyle = fade;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                for (let s = 0; s < streams.length; s++) {
-                    const stream = streams[s];
-
-                    // Step attractor multiple times per frame for speed
-                    for (let step = 0; step < 12; step++) {
-                        const { nx, ny } = sprott(stream.x, stream.y);
-                        stream.x = nx;
-                        stream.y = ny;
-                        stream.age++;
-
-                        const { px, py } = toCanvas(stream.x, stream.y);
-
-                        // Fade in and out over lifetime
-                        const lifeFraction = stream.age / stream.maxAge;
-                        let alpha = stream.opacity;
-                        if (lifeFraction < 0.05) alpha *= lifeFraction / 0.05;
-                        if (lifeFraction > 0.85) alpha *= (1 - lifeFraction) / 0.15;
-
-                        // Distance from center affects brightness
-                        const dist = Math.sqrt(stream.x * stream.x + stream.y * stream.y);
-                        const brightness = Math.max(30, Math.min(180, 80 + dist * 120));
-                        const b = Math.floor(brightness);
-
-                        const dotB = isBlack ? 255 - b : b;
-                        ctx.fillStyle = `rgba(${dotB},${dotB},${dotB},${alpha})`;
-                        ctx.beginPath();
-                        ctx.arc(px, py, 0.6, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-
-                    if (stream.age >= stream.maxAge) {
-                        resetStream(stream);
-                    }
+                if (year === today.getFullYear() && month === today.getMonth() && d === today.getDate()) {
+                    cell.classList.add('today');
                 }
 
-                requestAnimationFrame(draw);
-            }
+                if (entries[dateStr]) {
+                    cell.classList.add('has-entry');
+                    cell.addEventListener('click', () => {
+                        document.getElementById('main-photo').src = entries[dateStr];
+                        document.getElementById('date-label').textContent = dateStr;
+                    });
+                }
 
-            draw();
+                grid.appendChild(cell);
+            }
         }
 
-        // Flag background cycling
-        (function initFlags() {
-            const flags = [
-                // France — vertical blue, white, red
-                'linear-gradient(to right, #002395 33.33%, #FFFFFF 33.33% 66.66%, #ED2939 66.66%)',
-                // England — white with red St George's Cross
-                'linear-gradient(#C8102E, #C8102E) center / 20% 100% no-repeat, linear-gradient(#C8102E, #C8102E) center / 100% 20% no-repeat, #FFFFFF',
-                // USA — red and white stripes
-                'repeating-linear-gradient(to bottom, #B22234 0 7.7%, #FFFFFF 7.7% 15.4%)',
-                // China — red
-                '#DE2910',
-                // Japan — white with red circle
-                'radial-gradient(circle at 50% 50%, #BC002D 28%, #FFFFFF 28%)',
-                // Russia — horizontal white, blue, red
-                'linear-gradient(to bottom, #FFFFFF 33.33%, #0039A6 33.33% 66.66%, #D52B1E 66.66%)',
-                // Iraq — horizontal red, white, black
-                'linear-gradient(to bottom, #CE1126 33.33%, #FFFFFF 33.33% 66.66%, #000000 66.66%)',
-                // Lebanon — horizontal red, white, red
-                'linear-gradient(to bottom, #FF0000 25%, #FFFFFF 25% 75%, #FF0000 75%)',
-                // Canada — vertical red, white, red
-                'linear-gradient(to right, #FF0000 25%, #FFFFFF 25% 75%, #FF0000 75%)',
-                // Texas — vertical blue, white, red
-                'linear-gradient(to right, #002868 35%, #FFFFFF 35% 67.5%, #BF0A30 67.5%)',
-            ];
-            let idx = 0;
-            const el = document.getElementById('flag-bg');
-            function nextFlag() {
-                el.style.background = flags[idx % flags.length];
-                idx++;
-            }
-            nextFlag();
-            setInterval(nextFlag, 600);
-        })();
+        renderCal(calYear, calMonth);
+
+        document.getElementById('cal-prev').addEventListener('click', () => {
+            calMonth--;
+            if (calMonth < 0) { calMonth = 11; calYear--; }
+            renderCal(calYear, calMonth);
+        });
+
+        document.getElementById('cal-next').addEventListener('click', () => {
+            calMonth++;
+            if (calMonth > 11) { calMonth = 0; calYear++; }
+            renderCal(calYear, calMonth);
+        });
     </script>
-    <script src="router.js"></script>
-    <script data-init>
-        // Reinitialize wormhole on navigation
-        if (typeof initWormhole === 'function') {
-            initWormhole();
-        }
-    </script>
+
 </body>
 </html>
-
-
-
