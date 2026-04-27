@@ -28,6 +28,36 @@
             text-align: center;
             letter-spacing: 0.02em;
         }
+
+        #location-container {
+            position: fixed;
+            bottom: 20px;
+            left: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        #datetime {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            color: #000;
+            letter-spacing: 0.02em;
+        }
+
+        #flag-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            color: #000;
+        }
+
+        #flag {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -38,6 +68,14 @@
     </nav>
 
     <p>A project exploring visual documentation and archival practice.</p>
+
+    <div id="location-container">
+        <div id="datetime"></div>
+        <div id="flag-location">
+            <span id="flag">🌍</span>
+            <span id="location-text">loading...</span>
+        </div>
+    </div>
 
     <div id="globe-container">
         <canvas id="globe" width="60" height="60"></canvas>
@@ -138,6 +176,50 @@
         }
 
         animate();
+
+        // Get user location from IP and update time/flag
+        function countryCodeToFlag(countryCode) {
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
+
+        function updateDateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            
+            document.getElementById('datetime').textContent = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // Fetch geolocation from IP
+        fetch('https://ipapi.co/json/')
+            .then(response => response.json())
+            .then(data => {
+                const countryCode = data.country_code;
+                const countryName = data.country_name;
+                const city = data.city;
+                
+                const flag = countryCodeToFlag(countryCode);
+                document.getElementById('flag').textContent = flag;
+                
+                const locationText = city ? `${city}, ${countryName}` : countryName;
+                document.getElementById('location-text').textContent = locationText;
+            })
+            .catch(error => {
+                console.log('Location fetch error:', error);
+                document.getElementById('location-text').textContent = 'location unavailable';
+            });
+
+        // Update time every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
     </script>
 </body>
 </html>
