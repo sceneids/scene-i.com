@@ -58,6 +58,26 @@
         #flag {
             font-size: 16px;
         }
+
+        #barcode-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #barcode {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 24px;
+            letter-spacing: 2px;
+            color: #000;
+            font-weight: bold;
+            writing-mode: horizontal-tb;
+            line-height: 1.2;
+        }
     </style>
 </head>
 <body>
@@ -67,7 +87,7 @@
         <a href="mixes.html">mixes</a>
     </nav>
 
-    <p>A project exploring visual documentation and archival practice.</p>
+    <p>a project exploring visual documentation and archival practice.</p>
 
     <div id="location-container">
         <div id="datetime"></div>
@@ -75,6 +95,10 @@
             <span id="flag">🌍</span>
             <span id="location-text">loading...</span>
         </div>
+    </div>
+
+    <div id="barcode-container">
+        <div id="barcode">||||||||| |||| |||| ||||</div>
     </div>
 
     <div id="globe-container">
