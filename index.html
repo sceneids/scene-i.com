@@ -4,103 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>INDISTINCT SCENE</title>
-    <style>
-                * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <h1>INDISTINCT SCENE</h1>
+    
+    <nav>
+        <a href="index.html">home</a>
+        <a href="gallery.html">gallery</a>
+        <a href="mixes.html">mixes</a>
+    </nav>
 
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            background: #ffffff;
-            color: #000000;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-        }
-
-        /* ── LEFT: scrollable photo column ── */
-        .photo-pane {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            scrollbar-width: none;
-        }
-
-        .photo-pane::-webkit-scrollbar {
-            display: none;
-        }
-
-        .photo-item {
-            width: 100%;
-            max-width: 850px;
-            margin-left: 40px;
-            flex-shrink: 0;
-        }
-
-        .photo-item img {
-            width: 100%;
-            display: block;
-        }
-
-        /* ── RIGHT: sidebar ── */
-        .sidebar {
-            width: 220px;
-            min-width: 220px;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 28px 20px 20px 20px;
-            background: #ffffff;
-            position: relative;
-        }
-
-        /* Site title */
-        .site-title {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 10px;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            font-weight: normal;
-            line-height: 1.6;
-            margin-bottom: 18px;
-        }
-
-        /* Nav links */
-        .sidebar-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            margin-bottom: 28px;
-        }
-
-        .sidebar-nav a {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 10px;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: #000;
-            line-height: 1.9;
-            font-weight: normal;
-        }
-
-        .sidebar-nav a:hover {
-            opacity: 0.5;
-        }
-
-        /* ── Liquid Glass Calendar ── */
-        .calendar {
-            margin-top: auto;
-            margin-bottom: auto;
-        }
-
-        .cal-widget {
-            background: rgba(255, 255, 255, 0.55);
-            backdrop-filter: blur(24px) saturate(180%);
+    <p>A project exploring visual documentation and archival practice.</p>
+</body>
+</html>
             -webkit-backdrop-filter: blur(24px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.75);
             border-radius: 18px;
