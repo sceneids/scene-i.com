@@ -3,12 +3,34 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>INDISTINCT SCENE</title>
+    <title></title>
     <link rel="stylesheet" href="styles.css" />
+    <style>
+        #globe-container {
+            position: fixed;
+            bottom: 20px;
+            right: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        canvas#globe {
+            display: block;
+            border: 1px solid #000;
+        }
+
+        #globe-label {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            color: #000;
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
+    </style>
 </head>
 <body>
-    <h1>INDISTINCT SCENE</h1>
-    
     <nav>
         <a href="index.html">home</a>
         <a href="gallery.html">gallery</a>
@@ -16,5 +38,71 @@
     </nav>
 
     <p>A project exploring visual documentation and archival practice.</p>
+
+    <div id="globe-container">
+        <canvas id="globe" width="60" height="60"></canvas>
+        <div id="globe-label">Free Thinking Federation &copy;</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('globe');
+        const ctx = canvas.getContext('2d');
+        let rotation = 0;
+
+        function drawGlobe() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Save context state
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            
+            // Rotate globe
+            ctx.rotate(rotation);
+            
+            // Draw sphere (outer circle)
+            ctx.strokeStyle = '#000';
+            ctx.fillStyle = '#fff';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(0, 0, 28, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw equator
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(-28, 0);
+            ctx.lineTo(28, 0);
+            ctx.stroke();
+            
+            // Draw meridians (vertical lines)
+            for (let i = -2; i <= 2; i++) {
+                const x = (i * 28) / 2.5;
+                ctx.beginPath();
+                ctx.moveTo(x, -28);
+                ctx.lineTo(x, 28);
+                ctx.stroke();
+            }
+            
+            // Draw parallels (horizontal lines)
+            for (let i = -2; i <= 2; i++) {
+                const y = (i * 28) / 2.5;
+                ctx.beginPath();
+                ctx.ellipse(0, y, 28, 8, 0, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            ctx.restore();
+        }
+
+        function animate() {
+            rotation += 0.02;
+            drawGlobe();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
 </body>
 </html>
