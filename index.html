@@ -64,19 +64,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            opacity: 0.3;
+            opacity: 0.4;
             z-index: 1;
             pointer-events: none;
         }
 
-        #barcode {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 24px;
-            letter-spacing: 2px;
-            color: #000;
-            font-weight: bold;
-            writing-mode: horizontal-tb;
-            line-height: 1.2;
+        canvas#barcode {
+            display: block;
         }
     </style>
 </head>
@@ -98,7 +92,7 @@
     </div>
 
     <div id="barcode-container">
-        <div id="barcode">||||||||| |||| |||| ||||</div>
+        <canvas id="barcode" width="200" height="80"></canvas>
     </div>
 
     <div id="globe-container">
@@ -107,6 +101,34 @@
     </div>
 
     <script>
+        // Draw barcode
+        const barcodeCanvas = document.getElementById('barcode');
+        const barcodeCtx = barcodeCanvas.getContext('2d');
+        
+        function drawBarcode() {
+            barcodeCtx.fillStyle = '#fff';
+            barcodeCtx.fillRect(0, 0, barcodeCanvas.width, barcodeCanvas.height);
+            
+            barcodeCtx.fillStyle = '#000';
+            
+            // Generate random barcode pattern with varying widths
+            let x = 10;
+            const barData = [2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2];
+            
+            for (let i = 0; i < barData.length; i++) {
+                const barWidth = barData[i] * 2;
+                const barHeight = 60;
+                barcodeCtx.fillRect(x, 10, barWidth, barHeight);
+                x += barWidth + 1;
+            }
+            
+            // Add numbers below barcode
+            barcodeCtx.font = '10px Courier New';
+            barcodeCtx.fillText('5901234123457', 35, 75);
+        }
+        
+        drawBarcode();
+
         const canvas = document.getElementById('globe');
         const ctx = canvas.getContext('2d');
         let rotation = 0;
