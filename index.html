@@ -52,14 +52,11 @@
         function drawGlobe() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Save context state
             ctx.save();
             ctx.translate(canvas.width / 2, canvas.height / 2);
-            
-            // Rotate globe
             ctx.rotate(rotation);
             
-            // Draw sphere (outer circle)
+            // Draw outer sphere
             ctx.strokeStyle = '#000';
             ctx.fillStyle = '#fff';
             ctx.lineWidth = 1;
@@ -68,36 +65,74 @@
             ctx.fill();
             ctx.stroke();
             
-            // Draw equator
+            // Draw organic brain-like neural network pattern
             ctx.strokeStyle = '#000';
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 0.8;
+            
+            // Central vertical network
             ctx.beginPath();
-            ctx.moveTo(-28, 0);
-            ctx.lineTo(28, 0);
+            ctx.moveTo(0, -28);
+            ctx.quadraticCurveTo(-8, -15, -6, 0);
+            ctx.quadraticCurveTo(-8, 15, 0, 28);
             ctx.stroke();
             
-            // Draw meridians (vertical lines)
-            for (let i = -2; i <= 2; i++) {
-                const x = (i * 28) / 2.5;
+            ctx.beginPath();
+            ctx.moveTo(0, -28);
+            ctx.quadraticCurveTo(8, -15, 6, 0);
+            ctx.quadraticCurveTo(8, 15, 0, 28);
+            ctx.stroke();
+            
+            // Hemispheric divisions
+            ctx.beginPath();
+            ctx.arc(0, 0, 28, 0, Math.PI);
+            ctx.stroke();
+            
+            // Left hemisphere details
+            for (let i = 1; i < 5; i++) {
+                const y = -20 + (i * 8);
+                const xOffset = 4 + (i * 3);
+                
                 ctx.beginPath();
-                ctx.moveTo(x, -28);
-                ctx.lineTo(x, 28);
+                ctx.arc(-10, y, xOffset * 0.6, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.arc(-14, y - 2, xOffset * 0.5, 0, Math.PI * 2);
                 ctx.stroke();
             }
             
-            // Draw parallels (horizontal lines)
-            for (let i = -2; i <= 2; i++) {
-                const y = (i * 28) / 2.5;
+            // Right hemisphere details
+            for (let i = 1; i < 5; i++) {
+                const y = -20 + (i * 8);
+                const xOffset = 4 + (i * 3);
+                
                 ctx.beginPath();
-                ctx.ellipse(0, y, 28, 8, 0, 0, Math.PI * 2);
+                ctx.arc(10, y, xOffset * 0.6, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.arc(14, y - 2, xOffset * 0.5, 0, Math.PI * 2);
                 ctx.stroke();
             }
+            
+            // Central ridge/fold details
+            ctx.beginPath();
+            ctx.moveTo(-2, -22);
+            ctx.quadraticCurveTo(-1, -10, -3, 0);
+            ctx.quadraticCurveTo(-1, 10, -2, 22);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(2, -22);
+            ctx.quadraticCurveTo(1, -10, 3, 0);
+            ctx.quadraticCurveTo(1, 10, 2, 22);
+            ctx.stroke();
             
             ctx.restore();
         }
 
         function animate() {
-            rotation += 0.02;
+            rotation += 0.015;
             drawGlobe();
             requestAnimationFrame(animate);
         }
