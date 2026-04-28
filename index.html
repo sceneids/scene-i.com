@@ -229,88 +229,90 @@
 
         function drawGlobe() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Calculate orbital position (circle around canvas center)
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const orbitRadius = 15;
+            const globeX = centerX + Math.cos(rotation) * orbitRadius;
+            const globeY = centerY + Math.sin(rotation) * orbitRadius;
             
             ctx.save();
-            ctx.translate(canvas.width / 2, canvas.height / 2);
-            ctx.rotate(rotation);
+            ctx.translate(globeX, globeY);
             
-            // Draw outer sphere
+            // Draw magnetic field lines (flowing around the globe)
             ctx.strokeStyle = '#000';
-            ctx.fillStyle = '#fff';
+            ctx.lineWidth = 0.5;
+            ctx.globalAlpha = 0.4;
+            
+            // Horizontal field lines
+            for (let i = -2; i <= 2; i++) {
+                ctx.beginPath();
+                ctx.ellipse(0, i * 6, 25 + Math.sin(rotation + i) * 3, 4, 0, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
+            // Vertical field lines
+            for (let i = -3; i <= 3; i++) {
+                ctx.beginPath();
+                ctx.moveTo(i * 4, -28);
+                for (let y = -28; y <= 28; y += 2) {
+                    const wobble = Math.sin(rotation + y * 0.1) * 2;
+                    ctx.lineTo(i * 4 + wobble, y);
+                }
+                ctx.stroke();
+            }
+            
+            ctx.globalAlpha = 1;
+            ctx.strokeStyle = '#000';
             ctx.lineWidth = 1;
+            
+            // Draw 3D wireframe Earth outline
+            // Main outline
             ctx.beginPath();
             ctx.arc(0, 0, 28, 0, Math.PI * 2);
-            ctx.fill();
             ctx.stroke();
             
-            // Draw organic brain-like neural network pattern
-            ctx.strokeStyle = '#000';
+            // Equator
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 28, 8, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Tropic lines
+            ctx.beginPath();
+            ctx.ellipse(0, -10, 26, 6, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.ellipse(0, 10, 26, 6, 0, 0, Math.PI * 2);
+            ctx.stroke();
+            
+            // Prime meridian and key longitude lines
             ctx.lineWidth = 0.8;
-            
-            // Central vertical network
-            ctx.beginPath();
-            ctx.moveTo(0, -28);
-            ctx.quadraticCurveTo(-8, -15, -6, 0);
-            ctx.quadraticCurveTo(-8, 15, 0, 28);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.moveTo(0, -28);
-            ctx.quadraticCurveTo(8, -15, 6, 0);
-            ctx.quadraticCurveTo(8, 15, 0, 28);
-            ctx.stroke();
-            
-            // Hemispheric divisions
-            ctx.beginPath();
-            ctx.arc(0, 0, 28, 0, Math.PI);
-            ctx.stroke();
-            
-            // Left hemisphere details
-            for (let i = 1; i < 5; i++) {
-                const y = -20 + (i * 8);
-                const xOffset = 4 + (i * 3);
-                
+            for (let i = 0; i < 4; i++) {
+                const angle = (i * Math.PI / 2);
+                const xPos = Math.cos(angle) * 28;
                 ctx.beginPath();
-                ctx.arc(-10, y, xOffset * 0.6, 0, Math.PI * 2);
-                ctx.stroke();
-                
-                ctx.beginPath();
-                ctx.arc(-14, y - 2, xOffset * 0.5, 0, Math.PI * 2);
+                ctx.ellipse(xPos * 0.7, 0, 8, 28, angle, 0, Math.PI * 2);
                 ctx.stroke();
             }
             
-            // Right hemisphere details
-            for (let i = 1; i < 5; i++) {
-                const y = -20 + (i * 8);
-                const xOffset = 4 + (i * 3);
-                
-                ctx.beginPath();
-                ctx.arc(10, y, xOffset * 0.6, 0, Math.PI * 2);
-                ctx.stroke();
-                
-                ctx.beginPath();
-                ctx.arc(14, y - 2, xOffset * 0.5, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-            
-            // Central ridge/fold details
+            // Polar circles
             ctx.beginPath();
-            ctx.moveTo(-2, -22);
-            ctx.quadraticCurveTo(-1, -10, -3, 0);
-            ctx.quadraticCurveTo(-1, 10, -2, 22);
+            ctx.ellipse(0, -20, 12, 4, 0, 0, Math.PI * 2);
             ctx.stroke();
             
             ctx.beginPath();
-            ctx.moveTo(2, -22);
-            ctx.quadraticCurveTo(1, -10, 3, 0);
-            ctx.quadraticCurveTo(1, 10, 2, 22);
+            ctx.ellipse(0, 20, 12, 4, 0, 0, Math.PI * 2);
             ctx.stroke();
             
             ctx.restore();
         }
 
         function animate() {
-            rotation += 0.015;
+            rotation += 0.01;
             flagTime += 1;
             drawGlobe();
             
