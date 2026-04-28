@@ -232,7 +232,7 @@
             ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Calculate orbital position (circle around canvas center)
+            // Calculate orbital position
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
             const orbitRadius = 15;
@@ -242,77 +242,65 @@
             ctx.save();
             ctx.translate(globeX, globeY);
             
-            // Draw magnetic field lines (flowing around the globe)
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 0.5;
-            ctx.globalAlpha = 0.4;
+            // Create 3D pixelated Earth with rotation
+            const pixelSize = 2;
+            const radius = 14;
             
-            // Horizontal field lines
-            for (let i = -2; i <= 2; i++) {
-                ctx.beginPath();
-                ctx.ellipse(0, i * 6, 25 + Math.sin(rotation + i) * 3, 4, 0, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-            
-            // Vertical field lines
-            for (let i = -3; i <= 3; i++) {
-                ctx.beginPath();
-                ctx.moveTo(i * 4, -28);
-                for (let y = -28; y <= 28; y += 2) {
-                    const wobble = Math.sin(rotation + y * 0.1) * 2;
-                    ctx.lineTo(i * 4 + wobble, y);
+            // Draw pixelated Earth with 3D depth
+            for (let x = -radius; x <= radius; x += pixelSize) {
+                for (let y = -radius; y <= radius; y += pixelSize) {
+                    const distFromCenter = Math.sqrt(x * x + y * y);
+                    
+                    if (distFromCenter <= radius) {
+                        // Calculate 3D depth based on position
+                        const angle = Math.atan2(y, x) + rotation;
+                        const depthFactor = Math.cos(angle);
+                        
+                        // Only draw front-facing pixels
+                        if (depthFactor > 0) {
+                            // Vary opacity based on depth for 3D effect
+                            ctx.globalAlpha = 0.5 + depthFactor * 0.5;
+                            
+                            // Create land/water pattern
+                            const noise = Math.sin(x * 0.3 + rotation) * Math.cos(y * 0.3 + rotation * 1.2);
+                            
+                            if (noise > 0.1) {
+                                // Land (darker)
+                                ctx.fillStyle = '#333';
+                            } else if (noise > -0.2) {
+                                // Transition
+                                ctx.fillStyle = '#666';
+                            } else {
+                                // Water (lighter)
+                                ctx.fillStyle = '#999';
+                            }
+                            
+                            ctx.fillRect(x, y, pixelSize, pixelSize);
+                            
+                            // Add black outline for pixel definition
+                            ctx.globalAlpha = 0.3;
+                            ctx.strokeStyle = '#000';
+                            ctx.lineWidth = 0.5;
+                            ctx.strokeRect(x, y, pixelSize, pixelSize);
+                        }
+                    }
                 }
-                ctx.stroke();
             }
             
             ctx.globalAlpha = 1;
+            
+            // Draw outer sphere outline
             ctx.strokeStyle = '#000';
             ctx.lineWidth = 1;
-            
-            // Draw 3D wireframe Earth outline
-            // Main outline
             ctx.beginPath();
-            ctx.arc(0, 0, 28, 0, Math.PI * 2);
-            ctx.stroke();
-            
-            // Equator
-            ctx.beginPath();
-            ctx.ellipse(0, 0, 28, 8, 0, 0, Math.PI * 2);
-            ctx.stroke();
-            
-            // Tropic lines
-            ctx.beginPath();
-            ctx.ellipse(0, -10, 26, 6, 0, 0, Math.PI * 2);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.ellipse(0, 10, 26, 6, 0, 0, Math.PI * 2);
-            ctx.stroke();
-            
-            // Prime meridian and key longitude lines
-            ctx.lineWidth = 0.8;
-            for (let i = 0; i < 4; i++) {
-                const angle = (i * Math.PI / 2);
-                const xPos = Math.cos(angle) * 28;
-                ctx.beginPath();
-                ctx.ellipse(xPos * 0.7, 0, 8, 28, angle, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-            
-            // Polar circles
-            ctx.beginPath();
-            ctx.ellipse(0, -20, 12, 4, 0, 0, Math.PI * 2);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.ellipse(0, 20, 12, 4, 0, 0, Math.PI * 2);
+            ctx.arc(0, 0, radius, 0, Math.PI * 2);
             ctx.stroke();
             
             ctx.restore();
         }
 
         function animate() {
-            rotation += 0.01;
+            rotation += 0.02;
             flagTime += 1;
             drawGlobe();
             
