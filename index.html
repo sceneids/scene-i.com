@@ -18,7 +18,6 @@
 
         canvas#globe {
             display: block;
-            border: 1px solid #000;
         }
 
         #globe-label {
@@ -90,7 +89,6 @@
         #flag-canvas {
             width: 20px;
             height: 14px;
-            border: 1px solid #000;
             flex-shrink: 0;
         }
     </style>
@@ -184,10 +182,6 @@
                 flagCtx.fillStyle = colors[4];
                 flagCtx.fillRect(13 + wave, 0, 7, 14);
             }
-            
-            flagCtx.strokeStyle = '#000';
-            flagCtx.lineWidth = 1;
-            flagCtx.strokeRect(0, 0, 20, 14);
         }
 
         // Draw improved barcode with better black/white contrast
