@@ -86,6 +86,13 @@
             text-decoration: none;
             cursor: default;
         }
+
+        #flag-canvas {
+            width: 20px;
+            height: 14px;
+            border: 1px solid #000;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -100,7 +107,7 @@
     <div id="location-container">
         <div id="datetime"></div>
         <div id="flag-location">
-            <span id="flag">🌍</span>
+            <canvas id="flag-canvas" width="20" height="14"></canvas>
             <span id="location-text">loading...</span>
         </div>
     </div>
@@ -115,7 +122,75 @@
     </div>
 
     <script>
-        // Draw barcode
+        // List of countries and color schemes for flags
+        const countries = [
+            { name: 'Japan', code: 'JP', colors: ['#bc002d', '#fff'] },
+            { name: 'Brazil', code: 'BR', colors: ['#009c3b', '#ffcc00'] },
+            { name: 'Mexico', code: 'MX', colors: ['#ce1126', '#fff'] },
+            { name: 'France', code: 'FR', colors: ['#002395', '#fff', '#ED2939'] },
+            { name: 'Germany', code: 'DE', colors: ['#000', '#D00', '#FFCE00'] },
+            { name: 'Italy', code: 'IT', colors: ['#009246', '#fff', '#CE2B37'] },
+            { name: 'Spain', code: 'ES', colors: ['#c60b1e', '#ffc400'] },
+            { name: 'Greece', code: 'GR', colors: ['#0066cc', '#fff'] },
+            { name: 'Turkey', code: 'TR', colors: ['#e30613', '#fff'] },
+            { name: 'Egypt', code: 'EG', colors: ['#ce1126', '#fff', '#007a5e'] },
+            { name: 'Nigeria', code: 'NG', colors: ['#008753', '#fff'] },
+            { name: 'Kenya', code: 'KE', colors: ['#000', '#fff', '#ce1126'] },
+            { name: 'South Africa', code: 'ZA', colors: ['#000', '#fff', '#007a5e', '#ffb81c', '#ff0000'] },
+            { name: 'India', code: 'IN', colors: ['#ff9933', '#fff', '#138808'] },
+            { name: 'China', code: 'CN', colors: ['#de2910', '#ffde00'] },
+            { name: 'Thailand', code: 'TH', colors: ['#a51e3d', '#fff', '#000'] },
+            { name: 'Vietnam', code: 'VN', colors: ['#ce1126', '#ffde00'] },
+            { name: 'Australia', code: 'AU', colors: ['#00008b', '#fff', '#ff0000'] },
+            { name: 'New Zealand', code: 'NZ', colors: ['#00008b', '#fff', '#c8102e'] },
+            { name: 'Canada', code: 'CA', colors: ['#ff0000', '#fff'] },
+        ];
+
+        // Draw animated flag
+        function drawAnimatedFlag(countryIndex, time) {
+            const flagCanvas = document.getElementById('flag-canvas');
+            const flagCtx = flagCanvas.getContext('2d');
+            const country = countries[countryIndex];
+            const colors = country.colors;
+
+            flagCtx.clearRect(0, 0, flagCanvas.width, flagCanvas.height);
+            
+            // Add wave animation
+            const wave = Math.sin(time * 0.005) * 2;
+            
+            if (colors.length === 2) {
+                // Two color flag (vertical stripes)
+                flagCtx.fillStyle = colors[0];
+                flagCtx.fillRect(0, 0, 10 + wave, 14);
+                flagCtx.fillStyle = colors[1];
+                flagCtx.fillRect(10 + wave, 0, 10, 14);
+            } else if (colors.length === 3) {
+                // Three color flag (horizontal or vertical stripes)
+                const stripe = 14 / 3;
+                for (let i = 0; i < 3; i++) {
+                    flagCtx.fillStyle = colors[i];
+                    flagCtx.fillRect(0, i * stripe, 20 + wave, stripe);
+                }
+            } else if (colors.length === 5) {
+                // Complex flag (South Africa)
+                flagCtx.fillStyle = colors[0];
+                flagCtx.fillRect(0, 0, 20, 7 + wave);
+                flagCtx.fillStyle = colors[1];
+                flagCtx.fillRect(0, 7 + wave, 20, 7);
+                flagCtx.fillStyle = colors[2];
+                flagCtx.fillRect(0 + wave, 0, 5, 14);
+                flagCtx.fillStyle = colors[3];
+                flagCtx.fillRect(8 + wave, 4, 4, 6);
+                flagCtx.fillStyle = colors[4];
+                flagCtx.fillRect(13 + wave, 0, 7, 14);
+            }
+            
+            flagCtx.strokeStyle = '#000';
+            flagCtx.lineWidth = 1;
+            flagCtx.strokeRect(0, 0, 20, 14);
+        }
+
+        // Draw improved barcode with better black/white contrast
         const barcodeCanvas = document.getElementById('barcode');
         const barcodeCtx = barcodeCanvas.getContext('2d');
         
@@ -125,20 +200,30 @@
             
             barcodeCtx.fillStyle = '#000';
             
-            // Generate random barcode pattern with varying widths
-            let x = 10;
-            const barData = [2, 1, 1, 2, 1, 2, 2, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2];
+            // More realistic barcode pattern
+            let x = 15;
+            const barData = [1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 1, 2, 1, 2, 2, 1, 2, 1, 1, 2, 2, 1];
             
+            // Start guard
+            barcodeCtx.fillRect(x, 8, 2, 56);
+            x += 4;
+            barcodeCtx.fillRect(x, 8, 1, 56);
+            x += 3;
+            
+            // Bars
             for (let i = 0; i < barData.length; i++) {
-                const barWidth = barData[i] * 2;
-                const barHeight = 60;
-                barcodeCtx.fillRect(x, 10, barWidth, barHeight);
+                const barWidth = barData[i];
+                barcodeCtx.fillRect(x, 8, barWidth, 56);
                 x += barWidth + 1;
             }
             
-            // Add numbers below barcode
-            barcodeCtx.font = '10px Courier New';
-            barcodeCtx.fillText('5901234123457', 35, 75);
+            // End guard
+            barcodeCtx.fillRect(x, 8, 2, 56);
+            x += 4;
+            
+            // Numbers below barcode
+            barcodeCtx.font = 'bold 11px Courier New';
+            barcodeCtx.fillText('5 901234 123457', 20, 72);
         }
         
         drawBarcode();
@@ -146,6 +231,7 @@
         const canvas = document.getElementById('globe');
         const ctx = canvas.getContext('2d');
         let rotation = 0;
+        let flagTime = 0;
 
         function drawGlobe() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -231,20 +317,17 @@
 
         function animate() {
             rotation += 0.015;
+            flagTime += 1;
             drawGlobe();
+            
+            // Get current/stored country index
+            const countryIndex = parseInt(localStorage.getItem('selectedCountryIndex') || '0');
+            drawAnimatedFlag(countryIndex, flagTime);
+            
             requestAnimationFrame(animate);
         }
 
         animate();
-
-        // Get user location from IP and update time/flag
-        function countryCodeToFlag(countryCode) {
-            const codePoints = countryCode
-                .toUpperCase()
-                .split('')
-                .map(char => 127397 + char.charCodeAt());
-            return String.fromCodePoint(...codePoints);
-        }
 
         function updateDateTime() {
             const now = new Date();
@@ -258,24 +341,20 @@
             document.getElementById('datetime').textContent = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
 
-        // Fetch geolocation from IP
-        fetch('https://ipapi.co/json/')
-            .then(response => response.json())
-            .then(data => {
-                const countryCode = data.country_code;
-                const countryName = data.country_name;
-                const city = data.city;
-                
-                const flag = countryCodeToFlag(countryCode);
-                document.getElementById('flag').textContent = flag;
-                
-                const locationText = city ? `${city}, ${countryName}` : countryName;
-                document.getElementById('location-text').textContent = locationText;
-            })
-            .catch(error => {
-                console.log('Location fetch error:', error);
-                document.getElementById('location-text').textContent = 'location unavailable';
-            });
+        // Generate random location on page load
+        function generateRandomLocation() {
+            const countryIndex = Math.floor(Math.random() * countries.length);
+            const country = countries[countryIndex];
+            
+            // Store for persistent flag animation
+            localStorage.setItem('selectedCountryIndex', countryIndex);
+            
+            document.getElementById('location-text').textContent = country.name;
+            drawAnimatedFlag(countryIndex, 0);
+        }
+
+        // Generate random location on page load
+        generateRandomLocation();
 
         // Update time every second
         updateDateTime();
