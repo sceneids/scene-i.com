@@ -18,6 +18,7 @@
 
         canvas#globe {
             display: block;
+            background: transparent;
         }
 
         #globe-label {
@@ -585,85 +586,111 @@
         drawBarcode();
         window.addEventListener('resize', drawBarcode);
 
-        const canvas = document.getElementById('globe');
-        const ctx = canvas.getContext('2d');
-        let rotation = 0;
+        const globeCanvas = document.getElementById('globe');
+        const globeCtx = globeCanvas.getContext('2d');
+        const GLOBE_CSS = 60;
+        let globeRotation = 0;
         let flagTime = 0;
 
-        function drawGlobe() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Calculate orbital position
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const orbitRadius = 15;
-            const globeX = centerX + Math.cos(rotation) * orbitRadius;
-            const globeY = centerY + Math.sin(rotation) * orbitRadius;
-            
-            ctx.save();
-            ctx.translate(globeX, globeY);
-            
-            // Create 3D pixelated Earth with rotation
-            const pixelSize = 2;
-            const radius = 14;
-            
-            // Draw pixelated Earth with 3D depth
-            for (let x = -radius; x <= radius; x += pixelSize) {
-                for (let y = -radius; y <= radius; y += pixelSize) {
-                    const distFromCenter = Math.sqrt(x * x + y * y);
-                    
-                    if (distFromCenter <= radius) {
-                        // Calculate 3D depth based on position
-                        const angle = Math.atan2(y, x) + rotation;
-                        const depthFactor = Math.cos(angle);
-                        
-                        // Only draw front-facing pixels
-                        if (depthFactor > 0) {
-                            // Vary opacity based on depth for 3D effect
-                            ctx.globalAlpha = 0.5 + depthFactor * 0.5;
-                            
-                            // Create land/water pattern
-                            const noise = Math.sin(x * 0.3 + rotation) * Math.cos(y * 0.3 + rotation * 1.2);
-                            
-                            if (noise > 0.1) {
-                                // Land (darker)
-                                ctx.fillStyle = '#333';
-                            } else if (noise > -0.2) {
-                                // Transition
-                                ctx.fillStyle = '#666';
-                            } else {
-                                // Water (lighter)
-                                ctx.fillStyle = '#999';
-                            }
-                            
-                            ctx.fillRect(x, y, pixelSize, pixelSize);
-                            
-                            // Add black outline for pixel definition
-                            ctx.globalAlpha = 0.3;
-                            ctx.strokeStyle = '#000';
-                            ctx.lineWidth = 0.5;
-                            ctx.strokeRect(x, y, pixelSize, pixelSize);
-                        }
-                    }
-                }
-            }
-            
-            ctx.globalAlpha = 1;
-            
-            // Draw outer sphere outline
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.arc(0, 0, radius, 0, Math.PI * 2);
-            ctx.stroke();
-            
-            ctx.restore();
+        function resizeGlobeCanvas() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            globeCanvas.style.width = GLOBE_CSS + 'px';
+            globeCanvas.style.height = GLOBE_CSS + 'px';
+            globeCanvas.width = Math.round(GLOBE_CSS * dpr);
+            globeCanvas.height = Math.round(GLOBE_CSS * dpr);
+            globeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
+        function spherePoint(phi, lam) {
+            const cp = Math.cos(phi);
+            return [cp * Math.cos(lam), Math.sin(phi), cp * Math.sin(lam)];
+        }
+
+        function rotateY(x, y, z, ang) {
+            const c = Math.cos(ang);
+            const s = Math.sin(ang);
+            return [x * c + z * s, y, -x * s + z * c];
+        }
+
+        function drawGlobe() {
+            const w = GLOBE_CSS;
+            const h = GLOBE_CSS;
+            globeCtx.clearRect(0, 0, w, h);
+
+            const cx = w / 2;
+            const cy = h / 2;
+            const scale = (Math.min(w, h) / 2) * 0.9;
+            const rot = globeRotation;
+
+            function proj(X, Y) {
+                return [cx + X * scale, cy - Y * scale];
+            }
+
+            const meridians = 12;
+            const merSteps = 56;
+
+            for (let m = 0; m < meridians; m++) {
+                const lam = (m / meridians) * Math.PI * 2;
+                for (let s = 0; s < merSteps; s++) {
+                    const phi0 = -Math.PI / 2 + (Math.PI * s) / merSteps;
+                    const phi1 = -Math.PI / 2 + (Math.PI * (s + 1)) / merSteps;
+                    let p0 = spherePoint(phi0, lam);
+                    let p1 = spherePoint(phi1, lam);
+                    p0 = rotateY(p0[0], p0[1], p0[2], rot);
+                    p1 = rotateY(p1[0], p1[1], p1[2], rot);
+                    const avgz = (p0[2] + p1[2]) / 2;
+                    globeCtx.globalAlpha = avgz >= 0 ? 1 : 0.22;
+                    globeCtx.strokeStyle = '#000';
+                    globeCtx.lineWidth = avgz >= 0 ? 0.7 : 0.45;
+                    globeCtx.beginPath();
+                    globeCtx.moveTo(...proj(p0[0], p0[1]));
+                    globeCtx.lineTo(...proj(p1[0], p1[1]));
+                    globeCtx.stroke();
+                }
+            }
+
+            const latDegs = [-60, -30, 0, 30, 60];
+            const parSteps = 72;
+            for (const deg of latDegs) {
+                const phi = (deg * Math.PI) / 180;
+                const equator = Math.abs(phi) < 0.001;
+                for (let s = 0; s < parSteps; s++) {
+                    const lam0 = (2 * Math.PI * s) / parSteps;
+                    const lam1 = (2 * Math.PI * (s + 1)) / parSteps;
+                    let p0 = spherePoint(phi, lam0);
+                    let p1 = spherePoint(phi, lam1);
+                    p0 = rotateY(p0[0], p0[1], p0[2], rot);
+                    p1 = rotateY(p1[0], p1[1], p1[2], rot);
+                    const avgz = (p0[2] + p1[2]) / 2;
+                    globeCtx.globalAlpha = avgz >= 0 ? 1 : 0.22;
+                    globeCtx.strokeStyle = '#000';
+                    globeCtx.lineWidth = equator
+                        ? avgz >= 0
+                            ? 1.05
+                            : 0.5
+                        : avgz >= 0
+                          ? 0.6
+                          : 0.4;
+                    globeCtx.beginPath();
+                    globeCtx.moveTo(...proj(p0[0], p0[1]));
+                    globeCtx.lineTo(...proj(p1[0], p1[1]));
+                    globeCtx.stroke();
+                }
+            }
+
+            globeCtx.globalAlpha = 1;
+            globeCtx.strokeStyle = '#000';
+            globeCtx.lineWidth = 1;
+            globeCtx.beginPath();
+            globeCtx.arc(cx, cy, scale, 0, Math.PI * 2);
+            globeCtx.stroke();
+        }
+
+        resizeGlobeCanvas();
+        window.addEventListener('resize', resizeGlobeCanvas);
+
         function animate() {
-            rotation += 0.02;
+            globeRotation += 0.018;
             flagTime += 1;
             drawGlobe();
             
