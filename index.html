@@ -121,68 +121,384 @@
     </div>
 
     <script>
-        // List of countries and color schemes for flags
         const countries = [
-            { name: 'Japan', code: 'JP', colors: ['#bc002d', '#fff'] },
-            { name: 'Brazil', code: 'BR', colors: ['#009c3b', '#ffcc00'] },
-            { name: 'Mexico', code: 'MX', colors: ['#ce1126', '#fff'] },
-            { name: 'France', code: 'FR', colors: ['#002395', '#fff', '#ED2939'] },
-            { name: 'Germany', code: 'DE', colors: ['#000', '#D00', '#FFCE00'] },
-            { name: 'Italy', code: 'IT', colors: ['#009246', '#fff', '#CE2B37'] },
-            { name: 'Spain', code: 'ES', colors: ['#c60b1e', '#ffc400'] },
-            { name: 'Greece', code: 'GR', colors: ['#0066cc', '#fff'] },
-            { name: 'Turkey', code: 'TR', colors: ['#e30613', '#fff'] },
-            { name: 'Egypt', code: 'EG', colors: ['#ce1126', '#fff', '#007a5e'] },
-            { name: 'Nigeria', code: 'NG', colors: ['#008753', '#fff'] },
-            { name: 'Kenya', code: 'KE', colors: ['#000', '#fff', '#ce1126'] },
-            { name: 'South Africa', code: 'ZA', colors: ['#000', '#fff', '#007a5e', '#ffb81c', '#ff0000'] },
-            { name: 'India', code: 'IN', colors: ['#ff9933', '#fff', '#138808'] },
-            { name: 'China', code: 'CN', colors: ['#de2910', '#ffde00'] },
-            { name: 'Thailand', code: 'TH', colors: ['#a51e3d', '#fff', '#000'] },
-            { name: 'Vietnam', code: 'VN', colors: ['#ce1126', '#ffde00'] },
-            { name: 'Australia', code: 'AU', colors: ['#00008b', '#fff', '#ff0000'] },
-            { name: 'New Zealand', code: 'NZ', colors: ['#00008b', '#fff', '#c8102e'] },
-            { name: 'Canada', code: 'CA', colors: ['#ff0000', '#fff'] },
+            { name: 'Japan', code: 'JP' },
+            { name: 'Brazil', code: 'BR' },
+            { name: 'Mexico', code: 'MX' },
+            { name: 'France', code: 'FR' },
+            { name: 'Germany', code: 'DE' },
+            { name: 'Italy', code: 'IT' },
+            { name: 'Spain', code: 'ES' },
+            { name: 'Greece', code: 'GR' },
+            { name: 'Turkey', code: 'TR' },
+            { name: 'Egypt', code: 'EG' },
+            { name: 'Nigeria', code: 'NG' },
+            { name: 'Kenya', code: 'KE' },
+            { name: 'South Africa', code: 'ZA' },
+            { name: 'India', code: 'IN' },
+            { name: 'China', code: 'CN' },
+            { name: 'Thailand', code: 'TH' },
+            { name: 'Vietnam', code: 'VN' },
+            { name: 'Australia', code: 'AU' },
+            { name: 'New Zealand', code: 'NZ' },
+            { name: 'Canada', code: 'CA' },
         ];
 
-        // Draw animated flag
+        function drawStar(ctx, cx, cy, outerR, innerR, points, rotation) {
+            ctx.beginPath();
+            for (let i = 0; i < points * 2; i++) {
+                const r = i % 2 === 0 ? outerR : innerR;
+                const a = rotation + (i * Math.PI) / points;
+                const x = cx + Math.cos(a - Math.PI / 2) * r;
+                const y = cy + Math.sin(a - Math.PI / 2) * r;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawUnionJackMini(ctx, x, y, sw, sh) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.fillStyle = '#012169';
+            ctx.fillRect(0, 0, sw, sh);
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, Math.floor(sh / 3), sw, Math.ceil(sh / 3));
+            ctx.fillRect(Math.floor(sw / 3), 0, Math.ceil(sw / 3), sh);
+            ctx.fillStyle = '#c8102e';
+            ctx.fillRect(0, Math.floor(sh / 2) - 0.5, sw, 2);
+            ctx.fillRect(Math.floor(sw / 2) - 0.5, 0, 2, sh);
+            ctx.restore();
+        }
+
+        const FLAG_DRAWERS = {
+            JP(ctx, w, h) {
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#bc002d';
+                ctx.beginPath();
+                ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.38, 0, Math.PI * 2);
+                ctx.fill();
+            },
+            BR(ctx, w, h) {
+                ctx.fillStyle = '#009c3b';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#ffdf00';
+                ctx.beginPath();
+                ctx.moveTo(w / 2, 0.5);
+                ctx.lineTo(w - 0.5, h / 2);
+                ctx.lineTo(w / 2, h - 0.5);
+                ctx.lineTo(0.5, h / 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = '#002776';
+                ctx.beginPath();
+                ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.26, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 0.9;
+                ctx.beginPath();
+                ctx.arc(w / 2, h * 0.52, Math.min(w, h) * 0.22, 1.05 * Math.PI, 1.95 * Math.PI);
+                ctx.stroke();
+            },
+            MX(ctx, w, h) {
+                const a = Math.round(w / 3);
+                ctx.fillStyle = '#006847';
+                ctx.fillRect(0, 0, a, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(a, 0, a, h);
+                ctx.fillStyle = '#ce1126';
+                ctx.fillRect(a * 2, 0, w - a * 2, h);
+            },
+            FR(ctx, w, h) {
+                const a = Math.round(w / 3);
+                ctx.fillStyle = '#002395';
+                ctx.fillRect(0, 0, a, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(a, 0, a, h);
+                ctx.fillStyle = '#ed2939';
+                ctx.fillRect(a * 2, 0, w - a * 2, h);
+            },
+            DE(ctx, w, h) {
+                const s = h / 3;
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, w, s);
+                ctx.fillStyle = '#dd0000';
+                ctx.fillRect(0, s, w, s);
+                ctx.fillStyle = '#ffce00';
+                ctx.fillRect(0, 2 * s, w, h - 2 * s);
+            },
+            IT(ctx, w, h) {
+                const a = Math.round(w / 3);
+                ctx.fillStyle = '#009246';
+                ctx.fillRect(0, 0, a, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(a, 0, a, h);
+                ctx.fillStyle = '#ce2b37';
+                ctx.fillRect(a * 2, 0, w - a * 2, h);
+            },
+            ES(ctx, w, h) {
+                const t = Math.round(h * 0.25);
+                const b = h - 2 * t;
+                ctx.fillStyle = '#aa151b';
+                ctx.fillRect(0, 0, w, t);
+                ctx.fillStyle = '#f1bf00';
+                ctx.fillRect(0, t, w, b);
+                ctx.fillStyle = '#aa151b';
+                ctx.fillRect(0, t + b, w, t);
+            },
+            GR(ctx, w, h) {
+                const sh = h / 9;
+                for (let i = 0; i < 9; i++) {
+                    ctx.fillStyle = i % 2 === 0 ? '#0d5eaf' : '#fff';
+                    ctx.fillRect(0, i * sh, w, sh + 0.5);
+                }
+                const cw = Math.round(w * 0.42);
+                const ch = (5 * h) / 9;
+                ctx.fillStyle = '#0d5eaf';
+                ctx.fillRect(0, 0, cw, ch);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(cw * 0.32, 0, cw * 0.22, ch);
+                ctx.fillRect(0, ch * 0.4, cw, ch * 0.2);
+            },
+            TR(ctx, w, h) {
+                ctx.fillStyle = '#e30a17';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(w * 0.42, h * 0.5, h * 0.38, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#e30a17';
+                ctx.beginPath();
+                ctx.arc(w * 0.52, h * 0.5, h * 0.31, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                drawStar(ctx, w * 0.71, h * 0.5, h * 0.11, h * 0.042, 5, 0);
+            },
+            EG(ctx, w, h) {
+                const s = h / 3;
+                ctx.fillStyle = '#ce1126';
+                ctx.fillRect(0, 0, w, s);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, s, w, s);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 2 * s, w, h - 2 * s);
+            },
+            NG(ctx, w, h) {
+                const a = Math.round(w / 3);
+                ctx.fillStyle = '#008751';
+                ctx.fillRect(0, 0, a, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(a, 0, a, h);
+                ctx.fillStyle = '#008751';
+                ctx.fillRect(a * 2, 0, w - a * 2, h);
+            },
+            KE(ctx, w, h) {
+                const sh = [4, 1, 4, 1, 4];
+                let y = 0;
+                const colors = ['#000', '#fff', '#bb0000', '#fff', '#006600'];
+                for (let i = 0; i < 5; i++) {
+                    ctx.fillStyle = colors[i];
+                    ctx.fillRect(0, y, w, sh[i]);
+                    y += sh[i];
+                }
+                ctx.fillStyle = '#000';
+                ctx.fillRect(w / 2 - 2, 5, 4, 4);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(w / 2 - 1, 6, 2, 2);
+            },
+            ZA(ctx, w, h) {
+                const sx = (n) => (n * w) / 20;
+                const sy = (n) => (n * h) / 14;
+                ctx.fillStyle = '#001489';
+                ctx.beginPath();
+                ctx.moveTo(sx(7), sy(14));
+                ctx.lineTo(sx(20), sy(14));
+                ctx.lineTo(sx(20), sy(7.5));
+                ctx.lineTo(sx(7), sy(7));
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = '#e03c31';
+                ctx.beginPath();
+                ctx.moveTo(sx(7), sy(0));
+                ctx.lineTo(sx(20), sy(0));
+                ctx.lineTo(sx(20), sy(6.5));
+                ctx.lineTo(sx(7), sy(7));
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = '#007749';
+                ctx.beginPath();
+                ctx.moveTo(sx(0), sy(14));
+                ctx.lineTo(sx(7), sy(7));
+                ctx.lineTo(sx(0), sy(0));
+                ctx.lineTo(sx(5.5), sy(0));
+                ctx.lineTo(sx(11), sy(7));
+                ctx.lineTo(sx(5.5), sy(14));
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, h);
+                ctx.lineTo(sx(6.5), sy(7));
+                ctx.closePath();
+                ctx.fillStyle = '#000';
+                ctx.fill();
+                ctx.strokeStyle = '#ffb915';
+                ctx.lineWidth = 0.85;
+                ctx.stroke();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 0.55;
+                ctx.beginPath();
+                ctx.moveTo(sx(6.5), sy(7));
+                ctx.lineTo(sx(11), sy(7));
+                ctx.stroke();
+            },
+            IN(ctx, w, h) {
+                const s = h / 3;
+                ctx.fillStyle = '#ff9933';
+                ctx.fillRect(0, 0, w, s);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, s, w, s);
+                ctx.fillStyle = '#138808';
+                ctx.fillRect(0, 2 * s, w, h - 2 * s);
+                ctx.strokeStyle = '#000080';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.16, 0, Math.PI * 2);
+                ctx.stroke();
+                for (let i = 0; i < 24; i++) {
+                    const a = (i * Math.PI * 2) / 24;
+                    ctx.beginPath();
+                    ctx.moveTo(w / 2 + Math.cos(a) * 1.2, h / 2 + Math.sin(a) * 1.2);
+                    ctx.lineTo(w / 2 + Math.cos(a) * (Math.min(w, h) * 0.14), h / 2 + Math.sin(a) * (Math.min(w, h) * 0.14));
+                    ctx.stroke();
+                }
+            },
+            CN(ctx, w, h) {
+                ctx.fillStyle = '#de2910';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#ffde00';
+                drawStar(ctx, w * 0.18, h * 0.28, h * 0.14, h * 0.055, 5, 0);
+                const rs = h * 0.055;
+                const pts = [
+                    [w * 0.34, h * 0.14],
+                    [w * 0.4, h * 0.22],
+                    [w * 0.38, h * 0.34],
+                    [w * 0.32, h * 0.4],
+                ];
+                pts.forEach(([px, py]) => drawStar(ctx, px, py, rs, rs * 0.4, 5, -0.35));
+            },
+            TH(ctx, w, h) {
+                const b = [2, 2, 6, 2, 2];
+                const cols = ['#ed1c24', '#fff', '#241d4f', '#fff', '#ed1c24'];
+                let y = 0;
+                for (let i = 0; i < 5; i++) {
+                    ctx.fillStyle = cols[i];
+                    ctx.fillRect(0, y, w, b[i]);
+                    y += b[i];
+                }
+            },
+            VN(ctx, w, h) {
+                ctx.fillStyle = '#da251d';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#ffff00';
+                drawStar(ctx, w / 2, h / 2, h * 0.42, h * 0.18, 5, 0);
+            },
+            AU(ctx, w, h) {
+                ctx.fillStyle = '#012169';
+                ctx.fillRect(0, 0, w, h);
+                const uw = Math.round(w * 0.45);
+                const uh = Math.round(h * 0.52);
+                drawUnionJackMini(ctx, 0, 0, uw, uh);
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(uw - 1, h - 2.5, 1.8, 0, Math.PI * 2);
+                ctx.fill();
+                const sx = [
+                    [14, 3],
+                    [17, 6],
+                    [15.5, 9],
+                    [12.5, 11],
+                ];
+                sx.forEach(([px, py]) => {
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(px, py, 1.2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#e4002b';
+                    ctx.beginPath();
+                    ctx.arc(px, py, 0.65, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            },
+            NZ(ctx, w, h) {
+                ctx.fillStyle = '#00247d';
+                ctx.fillRect(0, 0, w, h);
+                const uw = Math.round(w * 0.45);
+                const uh = Math.round(h * 0.52);
+                drawUnionJackMini(ctx, 0, 0, uw, uh);
+                const stars = [
+                    [14.5, 3],
+                    [17, 6],
+                    [15, 9],
+                    [12.5, 11.5],
+                ];
+                stars.forEach(([px, py]) => {
+                    ctx.fillStyle = '#fff';
+                    drawStar(ctx, px, py, 2.2, 0.85, 5, Math.PI / 4);
+                    ctx.fillStyle = '#cc142b';
+                    drawStar(ctx, px, py, 1.45, 0.52, 5, Math.PI / 4);
+                });
+            },
+            CA(ctx, w, h) {
+                const rw = Math.round(w * 0.28);
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(0, 0, rw, h);
+                ctx.fillRect(w - rw, 0, rw, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(rw, 0, w - 2 * rw, h);
+                ctx.fillStyle = '#ff0000';
+                ctx.beginPath();
+                ctx.moveTo(w / 2, h * 0.15);
+                ctx.lineTo(w / 2 + w * 0.16, h * 0.38);
+                ctx.lineTo(w / 2 + w * 0.1, h * 0.38);
+                ctx.lineTo(w / 2 + w * 0.14, h * 0.62);
+                ctx.lineTo(w / 2, h * 0.48);
+                ctx.lineTo(w / 2 - w * 0.14, h * 0.62);
+                ctx.lineTo(w / 2 - w * 0.1, h * 0.38);
+                ctx.lineTo(w / 2 - w * 0.16, h * 0.38);
+                ctx.closePath();
+                ctx.fill();
+            },
+        };
+
         function drawAnimatedFlag(countryIndex, time) {
             const flagCanvas = document.getElementById('flag-canvas');
             const flagCtx = flagCanvas.getContext('2d');
             const country = countries[countryIndex];
-            const colors = country.colors;
+            if (!country) return;
 
-            flagCtx.clearRect(0, 0, flagCanvas.width, flagCanvas.height);
-            
-            // Add wave animation
-            const wave = Math.sin(time * 0.005) * 2;
-            
-            if (colors.length === 2) {
-                // Two color flag (vertical stripes)
-                flagCtx.fillStyle = colors[0];
-                flagCtx.fillRect(0, 0, 10 + wave, 14);
-                flagCtx.fillStyle = colors[1];
-                flagCtx.fillRect(10 + wave, 0, 10, 14);
-            } else if (colors.length === 3) {
-                // Three color flag (horizontal or vertical stripes)
-                const stripe = 14 / 3;
-                for (let i = 0; i < 3; i++) {
-                    flagCtx.fillStyle = colors[i];
-                    flagCtx.fillRect(0, i * stripe, 20 + wave, stripe);
-                }
-            } else if (colors.length === 5) {
-                // Complex flag (South Africa)
-                flagCtx.fillStyle = colors[0];
-                flagCtx.fillRect(0, 0, 20, 7 + wave);
-                flagCtx.fillStyle = colors[1];
-                flagCtx.fillRect(0, 7 + wave, 20, 7);
-                flagCtx.fillStyle = colors[2];
-                flagCtx.fillRect(0 + wave, 0, 5, 14);
-                flagCtx.fillStyle = colors[3];
-                flagCtx.fillRect(8 + wave, 4, 4, 6);
-                flagCtx.fillStyle = colors[4];
-                flagCtx.fillRect(13 + wave, 0, 7, 14);
+            const w = flagCanvas.width;
+            const h = flagCanvas.height;
+            flagCtx.setTransform(1, 0, 0, 1, 0, 0);
+            flagCtx.clearRect(0, 0, w, h);
+
+            const drift = Math.sin(time * 0.004) * 0.4;
+            flagCtx.save();
+            flagCtx.beginPath();
+            flagCtx.rect(0, 0, w, h);
+            flagCtx.clip();
+            flagCtx.translate(drift, 0);
+
+            const draw = FLAG_DRAWERS[country.code];
+            if (draw) {
+                draw(flagCtx, w, h);
+            } else {
+                flagCtx.fillStyle = '#ccc';
+                flagCtx.fillRect(0, 0, w, h);
             }
+            flagCtx.restore();
         }
 
         // EAN-13 barcode (valid checksum), centered white rectangle with quiet zones
