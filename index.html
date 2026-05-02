@@ -71,7 +71,6 @@
         canvas#barcode {
             display: block;
             background: #fff;
-            box-shadow: 0 0 0 1px #000;
         }
 
         nav {
@@ -238,25 +237,28 @@
             const quietModules = 9;
             const dataModules = bits.length;
             const totalModules = quietModules * 2 + dataModules;
-            const moduleW = cssW / totalModules;
-            const padTop = 12;
-            const barHeight = 62;
-            const textY = padTop + barHeight + 18;
+            const symbolScale = 0.58;
+            const symbolWidth = cssW * symbolScale;
+            const moduleW = symbolWidth / totalModules;
+            const offsetX = (cssW - symbolWidth) / 2;
+            const padTop = 14;
+            const barHeight = 54;
+            const textY = padTop + barHeight + 16;
 
             barcodeCtx.fillStyle = '#fff';
             barcodeCtx.fillRect(0, 0, cssW, cssH);
 
-            let x = quietModules * moduleW;
+            let x = offsetX + quietModules * moduleW;
             barcodeCtx.fillStyle = '#000';
             for (let i = 0; i < bits.length; i++) {
                 if (bits[i] === '1') {
-                    barcodeCtx.fillRect(x, padTop, moduleW + 0.5, barHeight);
+                    barcodeCtx.fillRect(x, padTop, moduleW, barHeight);
                 }
                 x += moduleW;
             }
 
             barcodeCtx.fillStyle = '#000';
-            barcodeCtx.font = '600 12px "Courier New", Courier, monospace';
+            barcodeCtx.font = '400 11px "Courier New", Courier, monospace';
             barcodeCtx.textAlign = 'center';
             barcodeCtx.textBaseline = 'alphabetic';
             const leftGroup = code.slice(1, 7);
