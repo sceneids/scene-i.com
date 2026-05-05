@@ -1,174 +1,695 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mixes</title>
-  <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        #globe-container {
+            position: fixed;
+            bottom: 20px;
+            right: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
 
-body {
-    background-color: #000;
-    font-family: 'Courier New', Courier, monospace;
-    overflow: hidden;
-}
+        canvas#globe {
+            display: block;
+            background: transparent;
+        }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    width: 100vw;
-    height: 100vh;
-    gap: 2px;
-    background-color: #111;
-}
+        #globe-label {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            color: #000;
+            text-align: center;
+            letter-spacing: 0.02em;
+        }
 
-.mix-box {
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    background-color: #1a1a1a;
-}
+        #location-container {
+            position: fixed;
+            bottom: 20px;
+            left: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+        }
 
-.mix-box img.mix-cover {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    opacity: 0.85;
-    transition: opacity 0.3s ease;
-}
+        #datetime {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            color: #000;
+            letter-spacing: 0.02em;
+        }
 
-.mix-box:hover img.mix-cover {
-    opacity: 1;
-}
+        #flag-location {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            color: #000;
+        }
 
-.mix-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 10px 12px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.75));
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        #flag {
+            font-size: 16px;
+        }
 
-.play-btn {
-    width: 28px;
-    height: 28px;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    cursor: pointer;
-    background: transparent;
-    transition: background 0.2s;
-}
+        #mix-dropdowns {
+            position: fixed;
+            left: 40px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            max-width: min(440px, calc(100vw - 80px));
+        }
 
-.play-btn:hover {
-    background: rgba(255,255,255,0.2);
-}
+        #mix-dropdowns details {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            color: #000;
+        }
 
-.play-btn svg {
-    width: 10px;
-    height: 10px;
-    fill: #fff;
-    margin-left: 2px;
-}
+        #mix-dropdowns summary {
+            cursor: pointer;
+            list-style: none;
+        }
 
-.mix-title {
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    line-height: 1.2;
-}
+        #mix-dropdowns summary::-webkit-details-marker {
+            display: none;
+        }
 
-.sc-player {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 9999;
-}
+        #mix-dropdowns .sc-wrap {
+            margin-top: 10px;
+            width: 100%;
+        }
 
-.sc-player.active {
-    display: block;
-}
+        #mix-dropdowns iframe {
+            width: 100%;
+            height: 166px;
+            border: none;
+            display: block;
+        }
 
-.sc-player iframe {
-    width: 100%;
-    height: 80px;
-    border: none;
-}
-  </style>
+        nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        nav a {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            color: #000;
+            text-decoration: none;
+            cursor: default;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        nav a:hover {
+            opacity: 0.4;
+        }
+
+        #flag-canvas {
+            width: 20px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+    </style>
 </head>
 <body>
-<div class="grid" id="mixGrid"></div>
+    <nav>
+        <a href="gallery.html">gallery</a>
+        <a href="mixes.html">mixes</a>
+    </nav>
 
-<div class="sc-player" id="scPlayer">
-    <iframe id="scIframe" allow="autoplay"></iframe>
-</div>
-
-<script>
-const mixes = [
-    {
-        url: "https://soundcloud.com/indistinctscene0/saint-germane-w-hnko-30102025",
-        title: "Saint Germane w/ HNKO"
-    }
-    // Add more mixes here as objects with url and title
-];
-
-const grid = document.getElementById('mixGrid');
-const scPlayer = document.getElementById('scPlayer');
-const scIframe = document.getElementById('scIframe');
-
-// Fill all 4 slots
-for (let i = 0; i < 4; i++) {
-    const mix = mixes[i];
-    const box = document.createElement('div');
-    box.className = 'mix-box';
-
-    if (mix) {
-        box.innerHTML = `
-            <img class="mix-cover" src="" alt="${mix.title}" />
-            <div class="mix-overlay">
-                <div class="play-btn" data-url="${mix.url}">
-                    <svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>
-                </div>
-                <span class="mix-title">${mix.title}</span>
+    <div id="mix-dropdowns">
+        <details>
+            <summary>03-06-2026</summary>
+            <div class="sc-wrap">
+                <iframe title="SoundCloud 03-06-2026" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Findistinctscene300%2Fids-radio-w-saintgermane&amp;color=%23000000&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=false&amp;show_reposts=false"></iframe>
             </div>
-        `;
+        </details>
+        <details>
+            <summary>10-03-2025</summary>
+            <div class="sc-wrap">
+                <iframe title="SoundCloud 10-03-2025" allow="autoplay"
+                    src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Findistinctscene0%2Fsaint-germane-w-hnko-30102025&amp;color=%23000000&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=false&amp;show_reposts=false"></iframe>
+            </div>
+        </details>
+    </div>
 
-        // Load cover from SoundCloud oEmbed
-        const img = box.querySelector('img');
-        fetch(`https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(mix.url)}`)
-            .then(r => r.json())
-            .then(data => {
-                if (data.thumbnail_url) {
-                    img.src = data.thumbnail_url.replace(/t\d+x\d+/, 't500x500');
+    <div id="location-container">
+        <div id="datetime"></div>
+        <div id="flag-location">
+            <canvas id="flag-canvas" width="20" height="14"></canvas>
+            <span id="location-text">loading...</span>
+        </div>
+    </div>
+
+    <div id="globe-container">
+        <canvas id="globe" width="60" height="60"></canvas>
+        <div id="globe-label">Free Thinking Federation &copy;</div>
+    </div>
+
+    <script>
+        const countries = [
+            { name: 'Japan', code: 'JP' },
+            { name: 'Brazil', code: 'BR' },
+            { name: 'Mexico', code: 'MX' },
+            { name: 'France', code: 'FR' },
+            { name: 'Germany', code: 'DE' },
+            { name: 'Italy', code: 'IT' },
+            { name: 'Spain', code: 'ES' },
+            { name: 'Greece', code: 'GR' },
+            { name: 'Turkey', code: 'TR' },
+            { name: 'Egypt', code: 'EG' },
+            { name: 'Nigeria', code: 'NG' },
+            { name: 'Kenya', code: 'KE' },
+            { name: 'South Africa', code: 'ZA' },
+            { name: 'India', code: 'IN' },
+            { name: 'China', code: 'CN' },
+            { name: 'Thailand', code: 'TH' },
+            { name: 'Vietnam', code: 'VN' },
+            { name: 'Australia', code: 'AU' },
+            { name: 'New Zealand', code: 'NZ' },
+            { name: 'Canada', code: 'CA' },
+        ];
+
+        function drawStar(ctx, cx, cy, outerR, innerR, points, rotation) {
+            ctx.beginPath();
+            for (let i = 0; i < points * 2; i++) {
+                const r = i % 2 === 0 ? outerR : innerR;
+                const a = rotation + (i * Math.PI) / points;
+                const x = cx + Math.cos(a - Math.PI / 2) * r;
+                const y = cy + Math.sin(a - Math.PI / 2) * r;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawUnionJackMini(ctx, x, y, sw, sh) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.fillStyle = '#012169';
+            ctx.fillRect(0, 0, sw, sh);
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, Math.floor(sh / 3), sw, Math.ceil(sh / 3));
+            ctx.fillRect(Math.floor(sw / 3), 0, Math.ceil(sw / 3), sh);
+            ctx.fillStyle = '#c8102e';
+            ctx.fillRect(0, Math.floor(sh / 2) - 0.5, sw, 2);
+            ctx.fillRect(Math.floor(sw / 2) - 0.5, 0, 2, sh);
+            ctx.restore();
+        }
+
+        const FLAG_DRAWERS = {
+            JP(ctx, w, h) {
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#bc002d';
+                ctx.beginPath();
+                ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.38, 0, Math.PI * 2);
+                ctx.fill();
+            },
+            BR(ctx, w, h) {
+                ctx.fillStyle = '#009c3b';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#ffdf00';
+                ctx.beginPath();
+                ctx.moveTo(w / 2, 0.5);
+                ctx.lineTo(w - 0.5, h / 2);
+                ctx.lineTo(w / 2, h - 0.5);
+                ctx.lineTo(0.5, h / 2);
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = '#002776';
+                ctx.beginPath();
+                ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.26, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 0.9;
+                ctx.beginPath();
+                ctx.arc(w / 2, h * 0.52, Math.min(w, h) * 0.22, 1.05 * Math.PI, 1.95 * Math.PI);
+                ctx.stroke();
+            },
+            MX(ctx, w, h) {
+                const a = Math.round(w / 3);
+                ctx.fillStyle = '#006847';
+                ctx.fillRect(0, 0, a, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(a, 0, a, h);
+                ctx.fillStyle = '#ce1126';
+                ctx.fillRect(a * 2, 0, w - a * 2, h);
+            },
+            FR(ctx, w, h) {
+                const a = Math.round(w / 3);
+                ctx.fillStyle = '#002395';
+                ctx.fillRect(0, 0, a, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(a, 0, a, h);
+                ctx.fillStyle = '#ed2939';
+                ctx.fillRect(a * 2, 0, w - a * 2, h);
+            },
+            DE(ctx, w, h) {
+                const s = h / 3;
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, w, s);
+                ctx.fillStyle = '#dd0000';
+                ctx.fillRect(0, s, w, s);
+                ctx.fillStyle = '#ffce00';
+                ctx.fillRect(0, 2 * s, w, h - 2 * s);
+            },
+            IT(ctx, w, h) {
+                const a = Math.round(w / 3);
+                ctx.fillStyle = '#009246';
+                ctx.fillRect(0, 0, a, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(a, 0, a, h);
+                ctx.fillStyle = '#ce2b37';
+                ctx.fillRect(a * 2, 0, w - a * 2, h);
+            },
+            ES(ctx, w, h) {
+                const t = Math.round(h * 0.25);
+                const b = h - 2 * t;
+                ctx.fillStyle = '#aa151b';
+                ctx.fillRect(0, 0, w, t);
+                ctx.fillStyle = '#f1bf00';
+                ctx.fillRect(0, t, w, b);
+                ctx.fillStyle = '#aa151b';
+                ctx.fillRect(0, t + b, w, t);
+            },
+            GR(ctx, w, h) {
+                const sh = h / 9;
+                for (let i = 0; i < 9; i++) {
+                    ctx.fillStyle = i % 2 === 0 ? '#0d5eaf' : '#fff';
+                    ctx.fillRect(0, i * sh, w, sh + 0.5);
                 }
-            })
-            .catch(() => {});
+                const cw = Math.round(w * 0.42);
+                const ch = (5 * h) / 9;
+                ctx.fillStyle = '#0d5eaf';
+                ctx.fillRect(0, 0, cw, ch);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(cw * 0.32, 0, cw * 0.22, ch);
+                ctx.fillRect(0, ch * 0.4, cw, ch * 0.2);
+            },
+            TR(ctx, w, h) {
+                ctx.fillStyle = '#e30a17';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(w * 0.42, h * 0.5, h * 0.38, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#e30a17';
+                ctx.beginPath();
+                ctx.arc(w * 0.52, h * 0.5, h * 0.31, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#fff';
+                drawStar(ctx, w * 0.71, h * 0.5, h * 0.11, h * 0.042, 5, 0);
+            },
+            EG(ctx, w, h) {
+                const s = h / 3;
+                ctx.fillStyle = '#ce1126';
+                ctx.fillRect(0, 0, w, s);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, s, w, s);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 2 * s, w, h - 2 * s);
+            },
+            NG(ctx, w, h) {
+                const a = Math.round(w / 3);
+                ctx.fillStyle = '#008751';
+                ctx.fillRect(0, 0, a, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(a, 0, a, h);
+                ctx.fillStyle = '#008751';
+                ctx.fillRect(a * 2, 0, w - a * 2, h);
+            },
+            KE(ctx, w, h) {
+                const sh = [4, 1, 4, 1, 4];
+                let y = 0;
+                const colors = ['#000', '#fff', '#bb0000', '#fff', '#006600'];
+                for (let i = 0; i < 5; i++) {
+                    ctx.fillStyle = colors[i];
+                    ctx.fillRect(0, y, w, sh[i]);
+                    y += sh[i];
+                }
+                ctx.fillStyle = '#000';
+                ctx.fillRect(w / 2 - 2, 5, 4, 4);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(w / 2 - 1, 6, 2, 2);
+            },
+            ZA(ctx, w, h) {
+                const sx = (n) => (n * w) / 20;
+                const sy = (n) => (n * h) / 14;
+                ctx.fillStyle = '#001489';
+                ctx.beginPath();
+                ctx.moveTo(sx(7), sy(14));
+                ctx.lineTo(sx(20), sy(14));
+                ctx.lineTo(sx(20), sy(7.5));
+                ctx.lineTo(sx(7), sy(7));
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = '#e03c31';
+                ctx.beginPath();
+                ctx.moveTo(sx(7), sy(0));
+                ctx.lineTo(sx(20), sy(0));
+                ctx.lineTo(sx(20), sy(6.5));
+                ctx.lineTo(sx(7), sy(7));
+                ctx.closePath();
+                ctx.fill();
+                ctx.fillStyle = '#007749';
+                ctx.beginPath();
+                ctx.moveTo(sx(0), sy(14));
+                ctx.lineTo(sx(7), sy(7));
+                ctx.lineTo(sx(0), sy(0));
+                ctx.lineTo(sx(5.5), sy(0));
+                ctx.lineTo(sx(11), sy(7));
+                ctx.lineTo(sx(5.5), sy(14));
+                ctx.closePath();
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(0, h);
+                ctx.lineTo(sx(6.5), sy(7));
+                ctx.closePath();
+                ctx.fillStyle = '#000';
+                ctx.fill();
+                ctx.strokeStyle = '#ffb915';
+                ctx.lineWidth = 0.85;
+                ctx.stroke();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 0.55;
+                ctx.beginPath();
+                ctx.moveTo(sx(6.5), sy(7));
+                ctx.lineTo(sx(11), sy(7));
+                ctx.stroke();
+            },
+            IN(ctx, w, h) {
+                const s = h / 3;
+                ctx.fillStyle = '#ff9933';
+                ctx.fillRect(0, 0, w, s);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, s, w, s);
+                ctx.fillStyle = '#138808';
+                ctx.fillRect(0, 2 * s, w, h - 2 * s);
+                ctx.strokeStyle = '#000080';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.16, 0, Math.PI * 2);
+                ctx.stroke();
+                for (let i = 0; i < 24; i++) {
+                    const a = (i * Math.PI * 2) / 24;
+                    ctx.beginPath();
+                    ctx.moveTo(w / 2 + Math.cos(a) * 1.2, h / 2 + Math.sin(a) * 1.2);
+                    ctx.lineTo(w / 2 + Math.cos(a) * (Math.min(w, h) * 0.14), h / 2 + Math.sin(a) * (Math.min(w, h) * 0.14));
+                    ctx.stroke();
+                }
+            },
+            CN(ctx, w, h) {
+                ctx.fillStyle = '#de2910';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#ffde00';
+                drawStar(ctx, w * 0.18, h * 0.28, h * 0.14, h * 0.055, 5, 0);
+                const rs = h * 0.055;
+                const pts = [
+                    [w * 0.34, h * 0.14],
+                    [w * 0.4, h * 0.22],
+                    [w * 0.38, h * 0.34],
+                    [w * 0.32, h * 0.4],
+                ];
+                pts.forEach(([px, py]) => drawStar(ctx, px, py, rs, rs * 0.4, 5, -0.35));
+            },
+            TH(ctx, w, h) {
+                const b = [2, 2, 6, 2, 2];
+                const cols = ['#ed1c24', '#fff', '#241d4f', '#fff', '#ed1c24'];
+                let y = 0;
+                for (let i = 0; i < 5; i++) {
+                    ctx.fillStyle = cols[i];
+                    ctx.fillRect(0, y, w, b[i]);
+                    y += b[i];
+                }
+            },
+            VN(ctx, w, h) {
+                ctx.fillStyle = '#da251d';
+                ctx.fillRect(0, 0, w, h);
+                ctx.fillStyle = '#ffff00';
+                drawStar(ctx, w / 2, h / 2, h * 0.42, h * 0.18, 5, 0);
+            },
+            AU(ctx, w, h) {
+                ctx.fillStyle = '#012169';
+                ctx.fillRect(0, 0, w, h);
+                const uw = Math.round(w * 0.45);
+                const uh = Math.round(h * 0.52);
+                drawUnionJackMini(ctx, 0, 0, uw, uh);
+                ctx.fillStyle = '#fff';
+                ctx.beginPath();
+                ctx.arc(uw - 1, h - 2.5, 1.8, 0, Math.PI * 2);
+                ctx.fill();
+                const sx = [
+                    [14, 3],
+                    [17, 6],
+                    [15.5, 9],
+                    [12.5, 11],
+                ];
+                sx.forEach(([px, py]) => {
+                    ctx.fillStyle = '#fff';
+                    ctx.beginPath();
+                    ctx.arc(px, py, 1.2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#e4002b';
+                    ctx.beginPath();
+                    ctx.arc(px, py, 0.65, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            },
+            NZ(ctx, w, h) {
+                ctx.fillStyle = '#00247d';
+                ctx.fillRect(0, 0, w, h);
+                const uw = Math.round(w * 0.45);
+                const uh = Math.round(h * 0.52);
+                drawUnionJackMini(ctx, 0, 0, uw, uh);
+                const stars = [
+                    [14.5, 3],
+                    [17, 6],
+                    [15, 9],
+                    [12.5, 11.5],
+                ];
+                stars.forEach(([px, py]) => {
+                    ctx.fillStyle = '#fff';
+                    drawStar(ctx, px, py, 2.2, 0.85, 5, Math.PI / 4);
+                    ctx.fillStyle = '#cc142b';
+                    drawStar(ctx, px, py, 1.45, 0.52, 5, Math.PI / 4);
+                });
+            },
+            CA(ctx, w, h) {
+                const rw = Math.round(w * 0.28);
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(0, 0, rw, h);
+                ctx.fillRect(w - rw, 0, rw, h);
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(rw, 0, w - 2 * rw, h);
+                ctx.fillStyle = '#ff0000';
+                ctx.beginPath();
+                ctx.moveTo(w / 2, h * 0.15);
+                ctx.lineTo(w / 2 + w * 0.16, h * 0.38);
+                ctx.lineTo(w / 2 + w * 0.1, h * 0.38);
+                ctx.lineTo(w / 2 + w * 0.14, h * 0.62);
+                ctx.lineTo(w / 2, h * 0.48);
+                ctx.lineTo(w / 2 - w * 0.14, h * 0.62);
+                ctx.lineTo(w / 2 - w * 0.1, h * 0.38);
+                ctx.lineTo(w / 2 - w * 0.16, h * 0.38);
+                ctx.closePath();
+                ctx.fill();
+            },
+        };
 
-        // Play on click
-        box.querySelector('.play-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            const trackUrl = e.currentTarget.dataset.url;
-            scIframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(trackUrl)}&auto_play=true&color=%23000000&hide_related=true&show_comments=false&show_user=false&show_reposts=false`;
-            scPlayer.classList.add('active');
-        });
-    }
+        function drawAnimatedFlag(countryIndex, time) {
+            const flagCanvas = document.getElementById('flag-canvas');
+            const flagCtx = flagCanvas.getContext('2d');
+            const country = countries[countryIndex];
+            if (!country) return;
 
-    grid.appendChild(box);
-}
-</script>
-<script src="router.js"></script>
+            const w = flagCanvas.width;
+            const h = flagCanvas.height;
+            flagCtx.setTransform(1, 0, 0, 1, 0, 0);
+            flagCtx.clearRect(0, 0, w, h);
+
+            const drift = Math.sin(time * 0.004) * 0.4;
+            flagCtx.save();
+            flagCtx.beginPath();
+            flagCtx.rect(0, 0, w, h);
+            flagCtx.clip();
+            flagCtx.translate(drift, 0);
+
+            const draw = FLAG_DRAWERS[country.code];
+            if (draw) {
+                draw(flagCtx, w, h);
+            } else {
+                flagCtx.fillStyle = '#ccc';
+                flagCtx.fillRect(0, 0, w, h);
+            }
+            flagCtx.restore();
+        }
+
+        const globeCanvas = document.getElementById('globe');
+        const globeCtx = globeCanvas.getContext('2d');
+        const GLOBE_CSS = 60;
+        let globeRotation = 0;
+        let flagTime = 0;
+
+        function resizeGlobeCanvas() {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            globeCanvas.style.width = GLOBE_CSS + 'px';
+            globeCanvas.style.height = GLOBE_CSS + 'px';
+            globeCanvas.width = Math.round(GLOBE_CSS * dpr);
+            globeCanvas.height = Math.round(GLOBE_CSS * dpr);
+            globeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function spherePoint(phi, lam) {
+            const cp = Math.cos(phi);
+            return [cp * Math.cos(lam), Math.sin(phi), cp * Math.sin(lam)];
+        }
+
+        function rotateY(x, y, z, ang) {
+            const c = Math.cos(ang);
+            const s = Math.sin(ang);
+            return [x * c + z * s, y, -x * s + z * c];
+        }
+
+        function drawGlobe() {
+            const w = GLOBE_CSS;
+            const h = GLOBE_CSS;
+            globeCtx.clearRect(0, 0, w, h);
+
+            const cx = w / 2;
+            const cy = h / 2;
+            const scale = (Math.min(w, h) / 2) * 0.9;
+            const rot = globeRotation;
+
+            function proj(X, Y) {
+                return [cx + X * scale, cy - Y * scale];
+            }
+
+            const meridians = 12;
+            const merSteps = 56;
+
+            for (let m = 0; m < meridians; m++) {
+                const lam = (m / meridians) * Math.PI * 2;
+                for (let s = 0; s < merSteps; s++) {
+                    const phi0 = -Math.PI / 2 + (Math.PI * s) / merSteps;
+                    const phi1 = -Math.PI / 2 + (Math.PI * (s + 1)) / merSteps;
+                    let p0 = spherePoint(phi0, lam);
+                    let p1 = spherePoint(phi1, lam);
+                    p0 = rotateY(p0[0], p0[1], p0[2], rot);
+                    p1 = rotateY(p1[0], p1[1], p1[2], rot);
+                    const avgz = (p0[2] + p1[2]) / 2;
+                    globeCtx.globalAlpha = avgz >= 0 ? 1 : 0.22;
+                    globeCtx.strokeStyle = '#000';
+                    globeCtx.lineWidth = avgz >= 0 ? 0.7 : 0.45;
+                    globeCtx.beginPath();
+                    globeCtx.moveTo(...proj(p0[0], p0[1]));
+                    globeCtx.lineTo(...proj(p1[0], p1[1]));
+                    globeCtx.stroke();
+                }
+            }
+
+            const latDegs = [-60, -30, 0, 30, 60];
+            const parSteps = 72;
+            for (const deg of latDegs) {
+                const phi = (deg * Math.PI) / 180;
+                const equator = Math.abs(phi) < 0.001;
+                for (let s = 0; s < parSteps; s++) {
+                    const lam0 = (2 * Math.PI * s) / parSteps;
+                    const lam1 = (2 * Math.PI * (s + 1)) / parSteps;
+                    let p0 = spherePoint(phi, lam0);
+                    let p1 = spherePoint(phi, lam1);
+                    p0 = rotateY(p0[0], p0[1], p0[2], rot);
+                    p1 = rotateY(p1[0], p1[1], p1[2], rot);
+                    const avgz = (p0[2] + p1[2]) / 2;
+                    globeCtx.globalAlpha = avgz >= 0 ? 1 : 0.22;
+                    globeCtx.strokeStyle = '#000';
+                    globeCtx.lineWidth = equator
+                        ? avgz >= 0
+                            ? 1.05
+                            : 0.5
+                        : avgz >= 0
+                          ? 0.6
+                          : 0.4;
+                    globeCtx.beginPath();
+                    globeCtx.moveTo(...proj(p0[0], p0[1]));
+                    globeCtx.lineTo(...proj(p1[0], p1[1]));
+                    globeCtx.stroke();
+                }
+            }
+
+            globeCtx.globalAlpha = 1;
+            globeCtx.strokeStyle = '#000';
+            globeCtx.lineWidth = 1;
+            globeCtx.beginPath();
+            globeCtx.arc(cx, cy, scale, 0, Math.PI * 2);
+            globeCtx.stroke();
+        }
+
+        resizeGlobeCanvas();
+        window.addEventListener('resize', resizeGlobeCanvas);
+
+        function animate() {
+            globeRotation += 0.0085;
+            flagTime += 1;
+            drawGlobe();
+            
+            // Get current/stored country index
+            const countryIndex = parseInt(localStorage.getItem('selectedCountryIndex') || '0');
+            drawAnimatedFlag(countryIndex, flagTime);
+            
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        function updateDateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            
+            document.getElementById('datetime').textContent = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+
+        // Generate random location on page load
+        function generateRandomLocation() {
+            const countryIndex = Math.floor(Math.random() * countries.length);
+            const country = countries[countryIndex];
+            
+            // Store for persistent flag animation
+            localStorage.setItem('selectedCountryIndex', countryIndex);
+            
+            document.getElementById('location-text').textContent = country.name;
+            drawAnimatedFlag(countryIndex, 0);
+        }
+
+        // Generate random location on page load
+        generateRandomLocation();
+
+        // Update time every second
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+    </script>
+    <script src="router.js"></script>
 </body>
 </html>
