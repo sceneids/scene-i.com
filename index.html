@@ -62,8 +62,11 @@
 
         #barcode-container {
             position: fixed;
-            bottom: 20px;
-            right: 40px;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 118px;
+            height: 100vh;
             z-index: 1;
             pointer-events: none;
             line-height: 0;
@@ -72,6 +75,19 @@
         canvas#barcode {
             display: block;
             background: #fff;
+            height: 100%;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .barcode-link {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            display: block;
+            z-index: 2;
+            cursor: pointer;
+            pointer-events: auto;
         }
 
         nav {
@@ -121,6 +137,8 @@
 
     <div id="barcode-container">
         <canvas id="barcode" width="300" height="110"></canvas>
+        <a class="barcode-link" href="gallery.html" data-bar-link="0" aria-label="Gallery"></a>
+        <a class="barcode-link" href="mixes.html" data-bar-link="1" aria-label="Mixes"></a>
     </div>
 
     <div id="globe-container">
@@ -512,6 +530,8 @@
         // EAN-13 barcode (valid checksum), centered white rectangle with quiet zones
         const barcodeCanvas = document.getElementById('barcode');
         const barcodeCtx = barcodeCanvas.getContext('2d');
+        const barcodeLinks = Array.from(document.querySelectorAll('.barcode-link'));
+        let activeBarcodeLink = null;
         const EAN_L = [
             '0001101', '0011001', '0010011', '0111101', '0100011',
             '0110001', '0101111', '0111011', '0110111', '0101001',
@@ -546,10 +566,58 @@
             return bits;
         }
 
-        function drawBarcode() {
+        function getBlackBarcodeRuns(bits, xStart, moduleW) {
+            const runs = [];
+            let runStart = null;
+            for (let i = 0; i <= bits.length; i++) {
+                if (bits[i] === '1') {
+                    if (runStart === null) runStart = i;
+                } else if (runStart !== null) {
+                    runs.push({
+                        x: xStart + runStart * moduleW,
+                        width: (i - runStart) * moduleW,
+                    });
+                    runStart = null;
+                }
+            }
+            return runs;
+        }
+
+        function nearestRunIndex(runs, ratio) {
+            const target = Math.floor(runs.length * ratio);
+            return Math.max(0, Math.min(runs.length - 1, target));
+        }
+
+        function drawFlashingBarcodeNumbers(run, cssH, code, now) {
+            const flashOn = Math.floor(now / 120) % 2 === 0;
+            if (!flashOn) return;
+
+            barcodeCtx.save();
+            barcodeCtx.beginPath();
+            barcodeCtx.rect(run.x, 0, run.width, cssH);
+            barcodeCtx.clip();
+            barcodeCtx.fillStyle = '#fff';
+            barcodeCtx.font = '700 10px "Courier New", Courier, monospace';
+            barcodeCtx.textAlign = 'left';
+            barcodeCtx.textBaseline = 'middle';
+
+            const centerX = run.x + run.width / 2;
+            const text = code.repeat(Math.ceil(cssH / 42));
+            for (let y = -20; y < cssH + 120; y += 86) {
+                barcodeCtx.save();
+                barcodeCtx.translate(centerX, y);
+                barcodeCtx.rotate(-Math.PI / 2);
+                barcodeCtx.fillText(text, 0, 0);
+                barcodeCtx.restore();
+            }
+            barcodeCtx.restore();
+        }
+
+        function drawBarcode(now = performance.now()) {
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            const cssW = 300;
-            const cssH = 110;
+            const containerRect = barcodeCanvas.parentElement.getBoundingClientRect();
+            const cssW = Math.max(90, Math.round(containerRect.width));
+            const cssH = Math.max(1, Math.round(window.innerHeight));
             barcodeCanvas.style.width = cssW + 'px';
             barcodeCanvas.style.height = cssH + 'px';
             barcodeCanvas.width = Math.round(cssW * dpr);
@@ -558,25 +626,33 @@
 
             const code = '5901234123457';
             const bits = encodeEAN13Bits(code);
-            const quietModules = 9;
+            const quietModules = 7;
             const dataModules = bits.length;
             const totalModules = quietModules * 2 + dataModules;
-            const symbolScale = 0.58;
-            const symbolWidth = cssW * symbolScale;
+            const symbolWidth = cssW - 20;
             const moduleW = symbolWidth / totalModules;
-            const offsetX = (cssW - symbolWidth) / 2;
-            const padTop = 14;
-            const barHeight = 54;
-            const textY = padTop + barHeight + 16;
+            const offsetX = 10;
+            const xStart = offsetX + quietModules * moduleW;
+            const runs = getBlackBarcodeRuns(bits, xStart, moduleW);
+            const linkedRuns = [
+                runs[nearestRunIndex(runs, 0.28)],
+                runs[nearestRunIndex(runs, 0.68)],
+            ];
 
             barcodeCtx.fillStyle = '#fff';
             barcodeCtx.fillRect(0, 0, cssW, cssH);
 
-            let x = offsetX + quietModules * moduleW;
+            let x = xStart;
             barcodeCtx.fillStyle = '#000';
             for (let i = 0; i < bits.length; i++) {
                 if (bits[i] === '1') {
-                    barcodeCtx.fillRect(x, padTop, moduleW, barHeight);
+                    const linkedIndex = linkedRuns.findIndex((run) => (
+                        x >= run.x - 0.001 && x < run.x + run.width - 0.001
+                    ));
+                    const magnified = linkedIndex === activeBarcodeLink;
+                    const width = magnified ? moduleW * 2.8 : moduleW;
+                    const drawX = magnified ? x - (width - moduleW) / 2 : x;
+                    barcodeCtx.fillRect(drawX, 0, width, cssH);
                 }
                 x += moduleW;
             }
@@ -584,14 +660,51 @@
             barcodeCtx.fillStyle = '#000';
             barcodeCtx.font = '400 11px "Courier New", Courier, monospace';
             barcodeCtx.textAlign = 'center';
-            barcodeCtx.textBaseline = 'alphabetic';
-            const leftGroup = code.slice(1, 7);
-            const rightGroup = code.slice(7);
-            barcodeCtx.fillText(`${code[0]} ${leftGroup} ${rightGroup}`, cssW / 2, textY);
+            barcodeCtx.textBaseline = 'middle';
+            barcodeCtx.save();
+            barcodeCtx.translate(17, cssH / 2);
+            barcodeCtx.rotate(-Math.PI / 2);
+            barcodeCtx.fillText(code, 0, 0);
+            barcodeCtx.restore();
+
+            linkedRuns.forEach((run, index) => {
+                if (!run || !barcodeLinks[index]) return;
+                const active = index === activeBarcodeLink;
+                const width = active ? Math.max(18, run.width * 2.8) : Math.max(12, run.width);
+                const left = Math.max(0, Math.min(cssW - width, run.x + run.width / 2 - width / 2));
+                barcodeLinks[index].style.left = left + 'px';
+                barcodeLinks[index].style.width = width + 'px';
+            });
+
+            if (activeBarcodeLink !== null && linkedRuns[activeBarcodeLink]) {
+                const run = linkedRuns[activeBarcodeLink];
+                const width = Math.max(18, run.width * 2.8);
+                const x = Math.max(0, Math.min(cssW - width, run.x + run.width / 2 - width / 2));
+                drawFlashingBarcodeNumbers({ x, width }, cssH, code, now);
+            }
         }
 
+        barcodeLinks.forEach((link, index) => {
+            link.addEventListener('mouseenter', () => {
+                activeBarcodeLink = index;
+                drawBarcode();
+            });
+            link.addEventListener('mouseleave', () => {
+                activeBarcodeLink = null;
+                drawBarcode();
+            });
+            link.addEventListener('focus', () => {
+                activeBarcodeLink = index;
+                drawBarcode();
+            });
+            link.addEventListener('blur', () => {
+                activeBarcodeLink = null;
+                drawBarcode();
+            });
+        });
+
         drawBarcode();
-        window.addEventListener('resize', drawBarcode);
+        window.addEventListener('resize', () => drawBarcode());
 
         const globeCanvas = document.getElementById('globe');
         const globeCtx = globeCanvas.getContext('2d');
@@ -704,6 +817,9 @@
             // Get current/stored country index
             const countryIndex = parseInt(localStorage.getItem('selectedCountryIndex') || '0');
             drawAnimatedFlag(countryIndex, flagTime);
+            if (activeBarcodeLink !== null) {
+                drawBarcode();
+            }
             
             requestAnimationFrame(animate);
         }
