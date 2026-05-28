@@ -8,14 +8,13 @@
     <style>
         #globe-container {
             position: fixed;
-            top: 50%;
-            right: 0;
-            width: 118px;
-            transform: translateY(-50%);
+            right: 28px;
+            bottom: 18px;
+            width: 82px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
         }
 
         canvas#globe {
@@ -25,10 +24,11 @@
 
         #globe-label {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 11px;
+            font-size: 8px;
             color: #000;
             text-align: center;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
+            line-height: 1.15;
         }
 
         #location-container {
@@ -63,12 +63,11 @@
 
         #barcode-container {
             position: fixed;
-            top: 0;
+            top: 50%;
             left: 50%;
-            bottom: 0;
-            width: 118px;
-            height: 100vh;
-            transform: translateX(-50%);
+            width: clamp(280px, 34vw, 420px);
+            height: clamp(104px, 13vw, 150px);
+            transform: translate(-50%, -50%);
             z-index: 1;
             pointer-events: none;
             line-height: 0;
@@ -600,17 +599,13 @@
             barcodeCtx.clip();
             barcodeCtx.fillStyle = '#fff';
             barcodeCtx.font = '700 10px "Helvetica Neue", Helvetica, Arial, sans-serif';
-            barcodeCtx.textAlign = 'left';
+            barcodeCtx.textAlign = 'center';
             barcodeCtx.textBaseline = 'middle';
 
             const centerX = run.x + run.width / 2;
-            const text = code.repeat(Math.ceil(cssH / 42));
-            for (let y = -20; y < cssH + 120; y += 86) {
-                barcodeCtx.save();
-                barcodeCtx.translate(centerX, y);
-                barcodeCtx.rotate(-Math.PI / 2);
-                barcodeCtx.fillText(text, 0, 0);
-                barcodeCtx.restore();
+            const text = code.repeat(2);
+            for (let y = 18; y < cssH - 14; y += 26) {
+                barcodeCtx.fillText(text, centerX, y);
             }
             barcodeCtx.restore();
         }
@@ -619,7 +614,7 @@
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
             const containerRect = barcodeCanvas.parentElement.getBoundingClientRect();
             const cssW = Math.max(90, Math.round(containerRect.width));
-            const cssH = Math.max(1, Math.round(window.innerHeight));
+            const cssH = Math.max(80, Math.round(containerRect.height));
             barcodeCanvas.style.width = cssW + 'px';
             barcodeCanvas.style.height = cssH + 'px';
             barcodeCanvas.width = Math.round(cssW * dpr);
@@ -631,10 +626,14 @@
             const quietModules = 7;
             const dataModules = bits.length;
             const totalModules = quietModules * 2 + dataModules;
-            const symbolWidth = cssW - 20;
+            const paddingX = Math.max(16, cssW * 0.06);
+            const paddingY = Math.max(12, cssH * 0.1);
+            const labelSpace = 18;
+            const barTop = paddingY;
+            const barHeight = Math.max(48, cssH - paddingY * 2 - labelSpace);
+            const symbolWidth = cssW - paddingX * 2;
             const moduleW = symbolWidth / totalModules;
-            const offsetX = 10;
-            const xStart = offsetX + quietModules * moduleW;
+            const xStart = paddingX + quietModules * moduleW;
             const runs = getBlackBarcodeRuns(bits, xStart, moduleW);
             const linkedRuns = [
                 runs[nearestRunIndex(runs, 0.28)],
@@ -654,7 +653,7 @@
                     const magnified = linkedIndex === activeBarcodeLink;
                     const width = magnified ? moduleW * 2.8 : moduleW;
                     const drawX = magnified ? x - (width - moduleW) / 2 : x;
-                    barcodeCtx.fillRect(drawX, 0, width, cssH);
+                    barcodeCtx.fillRect(drawX, barTop, width, barHeight);
                 }
                 x += moduleW;
             }
@@ -662,12 +661,8 @@
             barcodeCtx.fillStyle = '#000';
             barcodeCtx.font = '400 11px "Helvetica Neue", Helvetica, Arial, sans-serif';
             barcodeCtx.textAlign = 'center';
-            barcodeCtx.textBaseline = 'middle';
-            barcodeCtx.save();
-            barcodeCtx.translate(17, cssH / 2);
-            barcodeCtx.rotate(-Math.PI / 2);
-            barcodeCtx.fillText(code, 0, 0);
-            barcodeCtx.restore();
+            barcodeCtx.textBaseline = 'alphabetic';
+            barcodeCtx.fillText(code, cssW / 2, cssH - paddingY + 2);
 
             linkedRuns.forEach((run, index) => {
                 if (!run || !barcodeLinks[index]) return;
@@ -710,7 +705,7 @@
 
         const globeCanvas = document.getElementById('globe');
         const globeCtx = globeCanvas.getContext('2d');
-        const GLOBE_CSS = 60;
+        const GLOBE_CSS = 38;
         let globeRotation = 0;
         let flagTime = 0;
 
