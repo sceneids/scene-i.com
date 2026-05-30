@@ -532,7 +532,7 @@
             flagCtx.restore();
         }
 
-        // EAN-13 barcode (valid checksum), centered white rectangle with quiet zones
+        // Image-sliced barcode mark, centered with quiet zones
         const barcodeContainer = document.getElementById('barcode-container');
         const barcodeCanvas = document.getElementById('barcode');
         const barcodeCtx = barcodeCanvas.getContext('2d');
@@ -542,6 +542,9 @@
             { href: 'gallery.html', label: 'Gallery' },
             { href: 'mixes.html', label: 'Mixes' },
         ];
+        const barcodeImage = new Image();
+        barcodeImage.decoding = 'async';
+        barcodeImage.src = 'squaop.png';
         const EAN_L = [
             '0001101', '0011001', '0010011', '0111101', '0100011',
             '0110001', '0101111', '0111011', '0110111', '0101001',
@@ -673,6 +676,25 @@
             barcodeCtx.restore();
         }
 
+        function drawBarcodeImageStrips(runs, imageRect) {
+            if (!barcodeImage.complete || barcodeImage.naturalWidth === 0) return;
+
+            runs.forEach((run) => {
+                barcodeCtx.save();
+                barcodeCtx.beginPath();
+                barcodeCtx.rect(run.drawX, imageRect.y, run.drawWidth, imageRect.height);
+                barcodeCtx.clip();
+                barcodeCtx.drawImage(
+                    barcodeImage,
+                    imageRect.x,
+                    imageRect.y,
+                    imageRect.width,
+                    imageRect.height,
+                );
+                barcodeCtx.restore();
+            });
+        }
+
         function drawBarcode() {
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
             const containerRect = barcodeCanvas.parentElement.getBoundingClientRect();
@@ -691,14 +713,19 @@
             const totalModules = quietModules * 2 + dataModules;
             const paddingX = Math.max(16, cssW * 0.06);
             const paddingY = Math.max(12, cssH * 0.1);
-            const labelSpace = 18;
             const barTop = paddingY;
-            const barHeight = Math.max(48, cssH - paddingY * 2 - labelSpace);
+            const barHeight = Math.max(48, cssH - paddingY * 2);
             const symbolWidth = cssW - paddingX * 2;
             const moduleW = symbolWidth / totalModules;
             const xStart = paddingX + quietModules * moduleW;
             const runs = getBlackBarcodeRuns(bits, xStart, moduleW);
             const visualRuns = getVisualBarcodeRuns(runs, moduleW);
+            const imageRect = {
+                x: xStart,
+                y: barTop,
+                width: dataModules * moduleW,
+                height: barHeight,
+            };
 
             barcodeCtx.fillStyle = '#fff';
             barcodeCtx.fillRect(0, 0, cssW, cssH);
@@ -707,21 +734,13 @@
                 drawActiveBarcodeCue(visualRuns[activeBarcodeRun], barTop, barHeight);
             }
 
-            barcodeCtx.fillStyle = '#000';
-            visualRuns.forEach((run) => {
-                barcodeCtx.fillRect(run.drawX, barTop, run.drawWidth, barHeight);
-            });
-
-            barcodeCtx.fillStyle = '#000';
-            barcodeCtx.font = '400 11px "Lexend Deca", Arial, sans-serif';
-            barcodeCtx.textAlign = 'center';
-            barcodeCtx.textBaseline = 'alphabetic';
-            barcodeCtx.fillText(code, cssW / 2, cssH - paddingY + 2);
+            drawBarcodeImageStrips(visualRuns, imageRect);
 
             syncBarcodeLinks(visualRuns, { cssW, moduleW, barTop, barHeight });
         }
 
         drawBarcode();
+        barcodeImage.addEventListener('load', drawBarcode);
         window.addEventListener('resize', () => drawBarcode());
 
         const globeCanvas = document.getElementById('globe');
