@@ -3,901 +3,122 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>scene i</title>
     <style>
-        #globe-container {
-            position: fixed;
-            right: 18px;
-            bottom: 12px;
-            width: 36px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            opacity: 0.58;
+        * {
+            box-sizing: border-box;
         }
 
-        canvas#globe {
-            display: block;
-            background: transparent;
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
         }
 
-        #globe-label {
-            font-family: "Lexend Deca", Arial, sans-serif;
-            font-size: 4px;
-            color: #000;
-            text-align: center;
-            letter-spacing: 0;
-            line-height: 1.05;
-        }
-
-        #location-container {
-            position: fixed;
-            bottom: 12px;
-            left: 18px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 2px;
-            opacity: 0.58;
-            transform: scale(0.78);
-            transform-origin: left bottom;
-        }
-
-        #datetime {
-            font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-            font-size: 4px;
-            color: #000;
-            letter-spacing: 0;
-            line-height: 1.05;
-        }
-
-        #flag-location {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            font-family: "Lexend Deca", Arial, sans-serif;
-            font-size: 4px;
-            color: #000;
-            line-height: 1.05;
-        }
-
-        #flag {
-            font-size: 6px;
-        }
-
-        #barcode-container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: min(clamp(320px, 42vw, 520px), calc(100vw - 56px));
-            height: clamp(112px, 14vw, 164px);
-            transform: translate(-50%, -50%);
-            z-index: 1;
-            pointer-events: none;
-            line-height: 0;
-        }
-
-        canvas#barcode {
-            display: block;
+        body {
+            overflow: hidden;
             background: #fff;
-            height: 100%;
-            width: 100%;
-            pointer-events: none;
-        }
-
-        .barcode-link {
-            position: absolute;
-            display: block;
-            z-index: 2;
-            cursor: pointer;
-            pointer-events: auto;
-            border-radius: 999px;
-            outline: none;
-            transition: box-shadow 0.16s ease;
-        }
-
-        .barcode-link:focus-visible {
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.28);
-        }
-
-        nav {
-            position: fixed;
-            top: 28px;
-            left: 40px;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        nav a {
-            font-family: "Lexend Deca", Arial, sans-serif;
-            font-size: 16px;
             color: #000;
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .floating-link {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1;
+            display: inline-block;
+            color: #000;
+            font-family: "Times New Roman", Times, serif;
+            font-size: clamp(12px, 1.4vw, 18px);
+            line-height: 1;
             text-decoration: none;
-            cursor: pointer;
-            opacity: 1;
-            transition: opacity 0.2s ease;
+            text-transform: lowercase;
+            white-space: nowrap;
+            will-change: transform;
         }
 
-        nav a:hover {
-            opacity: 0.4;
+        .floating-link:hover,
+        .floating-link:focus-visible {
+            text-decoration: underline;
         }
 
-        #flag-canvas {
-            width: 8px;
-            height: 6px;
-            flex-shrink: 0;
+        .floating-link:focus-visible {
+            outline: 1px solid #000;
+            outline-offset: 3px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .floating-link {
+                transform: translate3d(var(--still-x), var(--still-y), 0);
+            }
         }
     </style>
 </head>
 <body>
-    <nav>
-        <a href="gallery.html">gallery</a>
-        <a href="mixes.html">mixes</a>
-    </nav>
-
-    <div id="location-container">
-        <div id="datetime"></div>
-        <div id="flag-location">
-            <canvas id="flag-canvas" width="20" height="14"></canvas>
-            <span id="location-text">loading...</span>
-        </div>
-    </div>
-
-    <div id="barcode-container">
-        <canvas id="barcode" width="300" height="110"></canvas>
-    </div>
-
-    <div id="globe-container">
-        <canvas id="globe" width="60" height="60"></canvas>
-        <div id="globe-label">Free Thinking Federation &copy;</div>
-    </div>
+    <a class="floating-link" href="gallery.html" data-x="0.16" data-y="0.22" data-vx="18" data-vy="14" style="--still-x: 16vw; --still-y: 22vh;">gallery</a>
+    <a class="floating-link" href="mixes.html" data-x="0.72" data-y="0.56" data-vx="-15" data-vy="20" style="--still-x: 72vw; --still-y: 56vh;">mixes</a>
+    <a class="floating-link" href="alt2.html" data-x="0.43" data-y="0.78" data-vx="13" data-vy="-18" style="--still-x: 43vw; --still-y: 78vh;">i</a>
 
     <script>
-        const countries = [
-            { name: 'Japan', code: 'JP' },
-            { name: 'Brazil', code: 'BR' },
-            { name: 'Mexico', code: 'MX' },
-            { name: 'France', code: 'FR' },
-            { name: 'Germany', code: 'DE' },
-            { name: 'Italy', code: 'IT' },
-            { name: 'Spain', code: 'ES' },
-            { name: 'Greece', code: 'GR' },
-            { name: 'Turkey', code: 'TR' },
-            { name: 'Egypt', code: 'EG' },
-            { name: 'Nigeria', code: 'NG' },
-            { name: 'Kenya', code: 'KE' },
-            { name: 'South Africa', code: 'ZA' },
-            { name: 'India', code: 'IN' },
-            { name: 'China', code: 'CN' },
-            { name: 'Thailand', code: 'TH' },
-            { name: 'Vietnam', code: 'VN' },
-            { name: 'Australia', code: 'AU' },
-            { name: 'New Zealand', code: 'NZ' },
-            { name: 'Canada', code: 'CA' },
-        ];
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const floatingLinks = Array.from(document.querySelectorAll('.floating-link'));
+        const words = floatingLinks.map((element) => ({
+            element,
+            x: Number(element.dataset.x) * window.innerWidth,
+            y: Number(element.dataset.y) * window.innerHeight,
+            vx: Number(element.dataset.vx),
+            vy: Number(element.dataset.vy),
+        }));
 
-        function drawStar(ctx, cx, cy, outerR, innerR, points, rotation) {
-            ctx.beginPath();
-            for (let i = 0; i < points * 2; i++) {
-                const r = i % 2 === 0 ? outerR : innerR;
-                const a = rotation + (i * Math.PI) / points;
-                const x = cx + Math.cos(a - Math.PI / 2) * r;
-                const y = cy + Math.sin(a - Math.PI / 2) * r;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
+        function keepInBounds(word) {
+            const rect = word.element.getBoundingClientRect();
+            const maxX = window.innerWidth - rect.width;
+            const maxY = window.innerHeight - rect.height;
+
+            if (word.x <= 0 || word.x >= maxX) {
+                word.vx *= -1;
+                word.x = Math.min(Math.max(word.x, 0), maxX);
             }
-            ctx.closePath();
-            ctx.fill();
+
+            if (word.y <= 0 || word.y >= maxY) {
+                word.vy *= -1;
+                word.y = Math.min(Math.max(word.y, 0), maxY);
+            }
         }
 
-        function drawUnionJackMini(ctx, x, y, sw, sh) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.fillStyle = '#012169';
-            ctx.fillRect(0, 0, sw, sh);
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(0, Math.floor(sh / 3), sw, Math.ceil(sh / 3));
-            ctx.fillRect(Math.floor(sw / 3), 0, Math.ceil(sw / 3), sh);
-            ctx.fillStyle = '#c8102e';
-            ctx.fillRect(0, Math.floor(sh / 2) - 0.5, sw, 2);
-            ctx.fillRect(Math.floor(sw / 2) - 0.5, 0, 2, sh);
-            ctx.restore();
+        function render(word) {
+            word.element.style.transform = `translate3d(${word.x}px, ${word.y}px, 0)`;
         }
 
-        const FLAG_DRAWERS = {
-            JP(ctx, w, h) {
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(0, 0, w, h);
-                ctx.fillStyle = '#bc002d';
-                ctx.beginPath();
-                ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.38, 0, Math.PI * 2);
-                ctx.fill();
-            },
-            BR(ctx, w, h) {
-                ctx.fillStyle = '#009c3b';
-                ctx.fillRect(0, 0, w, h);
-                ctx.fillStyle = '#ffdf00';
-                ctx.beginPath();
-                ctx.moveTo(w / 2, 0.5);
-                ctx.lineTo(w - 0.5, h / 2);
-                ctx.lineTo(w / 2, h - 0.5);
-                ctx.lineTo(0.5, h / 2);
-                ctx.closePath();
-                ctx.fill();
-                ctx.fillStyle = '#002776';
-                ctx.beginPath();
-                ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.26, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 0.9;
-                ctx.beginPath();
-                ctx.arc(w / 2, h * 0.52, Math.min(w, h) * 0.22, 1.05 * Math.PI, 1.95 * Math.PI);
-                ctx.stroke();
-            },
-            MX(ctx, w, h) {
-                const a = Math.round(w / 3);
-                ctx.fillStyle = '#006847';
-                ctx.fillRect(0, 0, a, h);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(a, 0, a, h);
-                ctx.fillStyle = '#ce1126';
-                ctx.fillRect(a * 2, 0, w - a * 2, h);
-            },
-            FR(ctx, w, h) {
-                const a = Math.round(w / 3);
-                ctx.fillStyle = '#002395';
-                ctx.fillRect(0, 0, a, h);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(a, 0, a, h);
-                ctx.fillStyle = '#ed2939';
-                ctx.fillRect(a * 2, 0, w - a * 2, h);
-            },
-            DE(ctx, w, h) {
-                const s = h / 3;
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 0, w, s);
-                ctx.fillStyle = '#dd0000';
-                ctx.fillRect(0, s, w, s);
-                ctx.fillStyle = '#ffce00';
-                ctx.fillRect(0, 2 * s, w, h - 2 * s);
-            },
-            IT(ctx, w, h) {
-                const a = Math.round(w / 3);
-                ctx.fillStyle = '#009246';
-                ctx.fillRect(0, 0, a, h);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(a, 0, a, h);
-                ctx.fillStyle = '#ce2b37';
-                ctx.fillRect(a * 2, 0, w - a * 2, h);
-            },
-            ES(ctx, w, h) {
-                const t = Math.round(h * 0.25);
-                const b = h - 2 * t;
-                ctx.fillStyle = '#aa151b';
-                ctx.fillRect(0, 0, w, t);
-                ctx.fillStyle = '#f1bf00';
-                ctx.fillRect(0, t, w, b);
-                ctx.fillStyle = '#aa151b';
-                ctx.fillRect(0, t + b, w, t);
-            },
-            GR(ctx, w, h) {
-                const sh = h / 9;
-                for (let i = 0; i < 9; i++) {
-                    ctx.fillStyle = i % 2 === 0 ? '#0d5eaf' : '#fff';
-                    ctx.fillRect(0, i * sh, w, sh + 0.5);
-                }
-                const cw = Math.round(w * 0.42);
-                const ch = (5 * h) / 9;
-                ctx.fillStyle = '#0d5eaf';
-                ctx.fillRect(0, 0, cw, ch);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(cw * 0.32, 0, cw * 0.22, ch);
-                ctx.fillRect(0, ch * 0.4, cw, ch * 0.2);
-            },
-            TR(ctx, w, h) {
-                ctx.fillStyle = '#e30a17';
-                ctx.fillRect(0, 0, w, h);
-                ctx.fillStyle = '#fff';
-                ctx.beginPath();
-                ctx.arc(w * 0.42, h * 0.5, h * 0.38, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#e30a17';
-                ctx.beginPath();
-                ctx.arc(w * 0.52, h * 0.5, h * 0.31, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#fff';
-                drawStar(ctx, w * 0.71, h * 0.5, h * 0.11, h * 0.042, 5, 0);
-            },
-            EG(ctx, w, h) {
-                const s = h / 3;
-                ctx.fillStyle = '#ce1126';
-                ctx.fillRect(0, 0, w, s);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(0, s, w, s);
-                ctx.fillStyle = '#000';
-                ctx.fillRect(0, 2 * s, w, h - 2 * s);
-            },
-            NG(ctx, w, h) {
-                const a = Math.round(w / 3);
-                ctx.fillStyle = '#008751';
-                ctx.fillRect(0, 0, a, h);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(a, 0, a, h);
-                ctx.fillStyle = '#008751';
-                ctx.fillRect(a * 2, 0, w - a * 2, h);
-            },
-            KE(ctx, w, h) {
-                const sh = [4, 1, 4, 1, 4];
-                let y = 0;
-                const colors = ['#000', '#fff', '#bb0000', '#fff', '#006600'];
-                for (let i = 0; i < 5; i++) {
-                    ctx.fillStyle = colors[i];
-                    ctx.fillRect(0, y, w, sh[i]);
-                    y += sh[i];
-                }
-                ctx.fillStyle = '#000';
-                ctx.fillRect(w / 2 - 2, 5, 4, 4);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(w / 2 - 1, 6, 2, 2);
-            },
-            ZA(ctx, w, h) {
-                const sx = (n) => (n * w) / 20;
-                const sy = (n) => (n * h) / 14;
-                ctx.fillStyle = '#001489';
-                ctx.beginPath();
-                ctx.moveTo(sx(7), sy(14));
-                ctx.lineTo(sx(20), sy(14));
-                ctx.lineTo(sx(20), sy(7.5));
-                ctx.lineTo(sx(7), sy(7));
-                ctx.closePath();
-                ctx.fill();
-                ctx.fillStyle = '#e03c31';
-                ctx.beginPath();
-                ctx.moveTo(sx(7), sy(0));
-                ctx.lineTo(sx(20), sy(0));
-                ctx.lineTo(sx(20), sy(6.5));
-                ctx.lineTo(sx(7), sy(7));
-                ctx.closePath();
-                ctx.fill();
-                ctx.fillStyle = '#007749';
-                ctx.beginPath();
-                ctx.moveTo(sx(0), sy(14));
-                ctx.lineTo(sx(7), sy(7));
-                ctx.lineTo(sx(0), sy(0));
-                ctx.lineTo(sx(5.5), sy(0));
-                ctx.lineTo(sx(11), sy(7));
-                ctx.lineTo(sx(5.5), sy(14));
-                ctx.closePath();
-                ctx.fill();
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                ctx.lineTo(0, h);
-                ctx.lineTo(sx(6.5), sy(7));
-                ctx.closePath();
-                ctx.fillStyle = '#000';
-                ctx.fill();
-                ctx.strokeStyle = '#ffb915';
-                ctx.lineWidth = 0.85;
-                ctx.stroke();
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 0.55;
-                ctx.beginPath();
-                ctx.moveTo(sx(6.5), sy(7));
-                ctx.lineTo(sx(11), sy(7));
-                ctx.stroke();
-            },
-            IN(ctx, w, h) {
-                const s = h / 3;
-                ctx.fillStyle = '#ff9933';
-                ctx.fillRect(0, 0, w, s);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(0, s, w, s);
-                ctx.fillStyle = '#138808';
-                ctx.fillRect(0, 2 * s, w, h - 2 * s);
-                ctx.strokeStyle = '#000080';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.arc(w / 2, h / 2, Math.min(w, h) * 0.16, 0, Math.PI * 2);
-                ctx.stroke();
-                for (let i = 0; i < 24; i++) {
-                    const a = (i * Math.PI * 2) / 24;
-                    ctx.beginPath();
-                    ctx.moveTo(w / 2 + Math.cos(a) * 1.2, h / 2 + Math.sin(a) * 1.2);
-                    ctx.lineTo(w / 2 + Math.cos(a) * (Math.min(w, h) * 0.14), h / 2 + Math.sin(a) * (Math.min(w, h) * 0.14));
-                    ctx.stroke();
-                }
-            },
-            CN(ctx, w, h) {
-                ctx.fillStyle = '#de2910';
-                ctx.fillRect(0, 0, w, h);
-                ctx.fillStyle = '#ffde00';
-                drawStar(ctx, w * 0.18, h * 0.28, h * 0.14, h * 0.055, 5, 0);
-                const rs = h * 0.055;
-                const pts = [
-                    [w * 0.34, h * 0.14],
-                    [w * 0.4, h * 0.22],
-                    [w * 0.38, h * 0.34],
-                    [w * 0.32, h * 0.4],
-                ];
-                pts.forEach(([px, py]) => drawStar(ctx, px, py, rs, rs * 0.4, 5, -0.35));
-            },
-            TH(ctx, w, h) {
-                const b = [2, 2, 6, 2, 2];
-                const cols = ['#ed1c24', '#fff', '#241d4f', '#fff', '#ed1c24'];
-                let y = 0;
-                for (let i = 0; i < 5; i++) {
-                    ctx.fillStyle = cols[i];
-                    ctx.fillRect(0, y, w, b[i]);
-                    y += b[i];
-                }
-            },
-            VN(ctx, w, h) {
-                ctx.fillStyle = '#da251d';
-                ctx.fillRect(0, 0, w, h);
-                ctx.fillStyle = '#ffff00';
-                drawStar(ctx, w / 2, h / 2, h * 0.42, h * 0.18, 5, 0);
-            },
-            AU(ctx, w, h) {
-                ctx.fillStyle = '#012169';
-                ctx.fillRect(0, 0, w, h);
-                const uw = Math.round(w * 0.45);
-                const uh = Math.round(h * 0.52);
-                drawUnionJackMini(ctx, 0, 0, uw, uh);
-                ctx.fillStyle = '#fff';
-                ctx.beginPath();
-                ctx.arc(uw - 1, h - 2.5, 1.8, 0, Math.PI * 2);
-                ctx.fill();
-                const sx = [
-                    [14, 3],
-                    [17, 6],
-                    [15.5, 9],
-                    [12.5, 11],
-                ];
-                sx.forEach(([px, py]) => {
-                    ctx.fillStyle = '#fff';
-                    ctx.beginPath();
-                    ctx.arc(px, py, 1.2, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.fillStyle = '#e4002b';
-                    ctx.beginPath();
-                    ctx.arc(px, py, 0.65, 0, Math.PI * 2);
-                    ctx.fill();
+        words.forEach(render);
+
+        if (!reduceMotion) {
+            let lastTime = performance.now();
+
+            function moveWords(time) {
+                const seconds = Math.min((time - lastTime) / 1000, 0.05);
+                lastTime = time;
+
+                words.forEach((word) => {
+                    word.x += word.vx * seconds;
+                    word.y += word.vy * seconds;
+                    keepInBounds(word);
+                    render(word);
                 });
-            },
-            NZ(ctx, w, h) {
-                ctx.fillStyle = '#00247d';
-                ctx.fillRect(0, 0, w, h);
-                const uw = Math.round(w * 0.45);
-                const uh = Math.round(h * 0.52);
-                drawUnionJackMini(ctx, 0, 0, uw, uh);
-                const stars = [
-                    [14.5, 3],
-                    [17, 6],
-                    [15, 9],
-                    [12.5, 11.5],
-                ];
-                stars.forEach(([px, py]) => {
-                    ctx.fillStyle = '#fff';
-                    drawStar(ctx, px, py, 2.2, 0.85, 5, Math.PI / 4);
-                    ctx.fillStyle = '#cc142b';
-                    drawStar(ctx, px, py, 1.45, 0.52, 5, Math.PI / 4);
-                });
-            },
-            CA(ctx, w, h) {
-                const rw = Math.round(w * 0.28);
-                ctx.fillStyle = '#ff0000';
-                ctx.fillRect(0, 0, rw, h);
-                ctx.fillRect(w - rw, 0, rw, h);
-                ctx.fillStyle = '#fff';
-                ctx.fillRect(rw, 0, w - 2 * rw, h);
-                ctx.fillStyle = '#ff0000';
-                ctx.beginPath();
-                ctx.moveTo(w / 2, h * 0.15);
-                ctx.lineTo(w / 2 + w * 0.16, h * 0.38);
-                ctx.lineTo(w / 2 + w * 0.1, h * 0.38);
-                ctx.lineTo(w / 2 + w * 0.14, h * 0.62);
-                ctx.lineTo(w / 2, h * 0.48);
-                ctx.lineTo(w / 2 - w * 0.14, h * 0.62);
-                ctx.lineTo(w / 2 - w * 0.1, h * 0.38);
-                ctx.lineTo(w / 2 - w * 0.16, h * 0.38);
-                ctx.closePath();
-                ctx.fill();
-            },
-        };
 
-        function drawAnimatedFlag(countryIndex, time) {
-            const flagCanvas = document.getElementById('flag-canvas');
-            const flagCtx = flagCanvas.getContext('2d');
-            const country = countries[countryIndex];
-            if (!country) return;
-
-            const w = flagCanvas.width;
-            const h = flagCanvas.height;
-            flagCtx.setTransform(1, 0, 0, 1, 0, 0);
-            flagCtx.clearRect(0, 0, w, h);
-
-            const drift = Math.sin(time * 0.004) * 0.4;
-            flagCtx.save();
-            flagCtx.beginPath();
-            flagCtx.rect(0, 0, w, h);
-            flagCtx.clip();
-            flagCtx.translate(drift, 0);
-
-            const draw = FLAG_DRAWERS[country.code];
-            if (draw) {
-                draw(flagCtx, w, h);
-            } else {
-                flagCtx.fillStyle = '#ccc';
-                flagCtx.fillRect(0, 0, w, h);
+                requestAnimationFrame(moveWords);
             }
-            flagCtx.restore();
+
+            requestAnimationFrame(moveWords);
         }
 
-        // Image-sliced barcode mark, centered with quiet zones
-        const barcodeContainer = document.getElementById('barcode-container');
-        const barcodeCanvas = document.getElementById('barcode');
-        const barcodeCtx = barcodeCanvas.getContext('2d');
-        let barcodeLinks = [];
-        let activeBarcodeRun = null;
-        const BAR_TARGETS = [
-            { href: 'gallery.html', label: 'Gallery' },
-            { href: 'mixes.html', label: 'Mixes' },
-        ];
-        const barcodeImage = new Image();
-        barcodeImage.decoding = 'async';
-        barcodeImage.src = 'squaop.png';
-        const EAN_L = [
-            '0001101', '0011001', '0010011', '0111101', '0100011',
-            '0110001', '0101111', '0111011', '0110111', '0101001',
-        ];
-        const EAN_G = [
-            '0100111', '0110011', '0011011', '0100001', '0011101',
-            '0111001', '0000101', '0010001', '0001001', '0010111',
-        ];
-        const EAN_R = [
-            '1110010', '1100110', '1101100', '1000010', '1011100',
-            '1001110', '1010000', '1000100', '1001000', '1110100',
-        ];
-        const EAN_PARITY = [
-            'LLLLLL', 'LLGLGG', 'LGLGLG', 'LGGLLG', 'LGGLGL',
-            'LGGGLL', 'LGLGGL', 'LGLLGG', 'LLGGGL', 'LLGGLG',
-        ];
-
-        function encodeEAN13Bits(code13) {
-            const d = code13.replace(/\D/g, '').split('').map(Number);
-            if (d.length !== 13) return '';
-            let bits = '101';
-            const parity = EAN_PARITY[d[0]];
-            for (let i = 0; i < 6; i++) {
-                const digit = d[i + 1];
-                bits += parity[i] === 'L' ? EAN_L[digit] : EAN_G[digit];
-            }
-            bits += '01010';
-            for (let i = 0; i < 6; i++) {
-                bits += EAN_R[d[i + 7]];
-            }
-            bits += '101';
-            return bits;
-        }
-
-        function getBlackBarcodeRuns(bits, xStart, moduleW) {
-            const runs = [];
-            let runStart = null;
-            for (let i = 0; i <= bits.length; i++) {
-                if (bits[i] === '1') {
-                    if (runStart === null) runStart = i;
-                } else if (runStart !== null) {
-                    runs.push({
-                        x: xStart + runStart * moduleW,
-                        width: (i - runStart) * moduleW,
-                    });
-                    runStart = null;
-                }
-            }
-            return runs;
-        }
-
-        function getInteractiveTarget(index, total) {
-            return BAR_TARGETS[index < total / 2 ? 0 : 1];
-        }
-
-        function getVisualBarcodeRuns(runs, moduleW) {
-            const normalExpansion = Math.min(moduleW * 0.2, 1.25);
-            const activeExpansion = Math.min(moduleW * 0.48, 2.2);
-            const minGap = Math.max(moduleW * 0.28, 0.9);
-
-            return runs.map((run, index) => {
-                const desiredExpansion = index === activeBarcodeRun ? activeExpansion : normalExpansion;
-                const prev = runs[index - 1];
-                const next = runs[index + 1];
-                const leftGap = prev ? run.x - (prev.x + prev.width) : Infinity;
-                const rightGap = next ? next.x - (run.x + run.width) : Infinity;
-                const leftExpansion = Number.isFinite(leftGap)
-                    ? Math.min(desiredExpansion, Math.max(0, (leftGap - minGap) / 2))
-                    : desiredExpansion;
-                const rightExpansion = Number.isFinite(rightGap)
-                    ? Math.min(desiredExpansion, Math.max(0, (rightGap - minGap) / 2))
-                    : desiredExpansion;
-                return {
-                    ...run,
-                    drawX: run.x - leftExpansion,
-                    drawWidth: run.width + leftExpansion + rightExpansion,
-                };
+        window.addEventListener('resize', () => {
+            words.forEach((word) => {
+                keepInBounds(word);
+                render(word);
             });
-        }
-
-        function setActiveBarcodeRun(index) {
-            if (activeBarcodeRun === index) return;
-            activeBarcodeRun = index;
-            drawBarcode();
-        }
-
-        function syncBarcodeLinks(runs, layout) {
-            if (barcodeLinks.length !== runs.length) {
-                barcodeLinks.forEach((link) => link.remove());
-                barcodeLinks = runs.map((_, index) => {
-                    const link = document.createElement('a');
-                    link.className = 'barcode-link';
-                    link.dataset.barIndex = String(index);
-                    link.addEventListener('mouseenter', () => setActiveBarcodeRun(index));
-                    link.addEventListener('mouseleave', () => setActiveBarcodeRun(null));
-                    link.addEventListener('focus', () => setActiveBarcodeRun(index));
-                    link.addEventListener('blur', () => setActiveBarcodeRun(null));
-                    barcodeContainer.appendChild(link);
-                    return link;
-                });
-            }
-
-            runs.forEach((run, index) => {
-                const target = getInteractiveTarget(index, runs.length);
-                const hitPadding = Math.min(layout.moduleW * 0.5, 4);
-                const prev = runs[index - 1];
-                const next = runs[index + 1];
-                const runRight = run.drawX + run.drawWidth;
-                const leftLimit = prev ? ((prev.drawX + prev.drawWidth) + run.drawX) / 2 : 0;
-                const rightLimit = next ? (runRight + next.drawX) / 2 : layout.cssW;
-                const left = Math.max(leftLimit, run.drawX - hitPadding);
-                const right = Math.min(rightLimit, runRight + hitPadding);
-                const link = barcodeLinks[index];
-                link.href = target.href;
-                link.setAttribute('aria-label', `${target.label} barcode bar ${index + 1}`);
-                link.title = target.label;
-                link.style.left = left + 'px';
-                link.style.top = layout.barTop + 'px';
-                link.style.width = Math.max(4, right - left) + 'px';
-                link.style.height = layout.barHeight + 'px';
-            });
-        }
-
-        function drawActiveBarcodeCue(run, barTop, barHeight) {
-            barcodeCtx.save();
-            barcodeCtx.globalAlpha = 0.1;
-            barcodeCtx.fillStyle = '#000';
-            barcodeCtx.fillRect(run.drawX - 2, barTop - 6, run.drawWidth + 4, barHeight + 12);
-            barcodeCtx.restore();
-        }
-
-        function drawBarcodeImageStrips(runs, imageRect) {
-            if (!barcodeImage.complete || barcodeImage.naturalWidth === 0) return;
-
-            runs.forEach((run) => {
-                barcodeCtx.save();
-                barcodeCtx.beginPath();
-                barcodeCtx.rect(run.drawX, imageRect.y, run.drawWidth, imageRect.height);
-                barcodeCtx.clip();
-                barcodeCtx.drawImage(
-                    barcodeImage,
-                    imageRect.x,
-                    imageRect.y,
-                    imageRect.width,
-                    imageRect.height,
-                );
-                barcodeCtx.restore();
-            });
-        }
-
-        function drawBarcode() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            const containerRect = barcodeCanvas.parentElement.getBoundingClientRect();
-            const cssW = Math.max(90, Math.round(containerRect.width));
-            const cssH = Math.max(80, Math.round(containerRect.height));
-            barcodeCanvas.style.width = cssW + 'px';
-            barcodeCanvas.style.height = cssH + 'px';
-            barcodeCanvas.width = Math.round(cssW * dpr);
-            barcodeCanvas.height = Math.round(cssH * dpr);
-            barcodeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-            const code = '5901234123457';
-            const bits = encodeEAN13Bits(code);
-            const quietModules = 7;
-            const dataModules = bits.length;
-            const totalModules = quietModules * 2 + dataModules;
-            const paddingX = Math.max(16, cssW * 0.06);
-            const paddingY = Math.max(12, cssH * 0.1);
-            const barTop = paddingY;
-            const barHeight = Math.max(48, cssH - paddingY * 2);
-            const symbolWidth = cssW - paddingX * 2;
-            const moduleW = symbolWidth / totalModules;
-            const xStart = paddingX + quietModules * moduleW;
-            const runs = getBlackBarcodeRuns(bits, xStart, moduleW);
-            const visualRuns = getVisualBarcodeRuns(runs, moduleW);
-            const imageRect = {
-                x: xStart,
-                y: barTop,
-                width: dataModules * moduleW,
-                height: barHeight,
-            };
-
-            barcodeCtx.fillStyle = '#fff';
-            barcodeCtx.fillRect(0, 0, cssW, cssH);
-
-            if (activeBarcodeRun !== null && visualRuns[activeBarcodeRun]) {
-                drawActiveBarcodeCue(visualRuns[activeBarcodeRun], barTop, barHeight);
-            }
-
-            drawBarcodeImageStrips(visualRuns, imageRect);
-
-            syncBarcodeLinks(visualRuns, { cssW, moduleW, barTop, barHeight });
-        }
-
-        drawBarcode();
-        barcodeImage.addEventListener('load', drawBarcode);
-        window.addEventListener('resize', () => drawBarcode());
-
-        const globeCanvas = document.getElementById('globe');
-        const globeCtx = globeCanvas.getContext('2d');
-        const GLOBE_CSS = 18;
-        let globeRotation = 0;
-        let flagTime = 0;
-
-        function resizeGlobeCanvas() {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            globeCanvas.style.width = GLOBE_CSS + 'px';
-            globeCanvas.style.height = GLOBE_CSS + 'px';
-            globeCanvas.width = Math.round(GLOBE_CSS * dpr);
-            globeCanvas.height = Math.round(GLOBE_CSS * dpr);
-            globeCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        }
-
-        function spherePoint(phi, lam) {
-            const cp = Math.cos(phi);
-            return [cp * Math.cos(lam), Math.sin(phi), cp * Math.sin(lam)];
-        }
-
-        function rotateY(x, y, z, ang) {
-            const c = Math.cos(ang);
-            const s = Math.sin(ang);
-            return [x * c + z * s, y, -x * s + z * c];
-        }
-
-        function drawGlobe() {
-            const w = GLOBE_CSS;
-            const h = GLOBE_CSS;
-            globeCtx.clearRect(0, 0, w, h);
-
-            const cx = w / 2;
-            const cy = h / 2;
-            const scale = (Math.min(w, h) / 2) * 0.9;
-            const rot = globeRotation;
-
-            function proj(X, Y) {
-                return [cx + X * scale, cy - Y * scale];
-            }
-
-            const meridians = 12;
-            const merSteps = 56;
-
-            for (let m = 0; m < meridians; m++) {
-                const lam = (m / meridians) * Math.PI * 2;
-                for (let s = 0; s < merSteps; s++) {
-                    const phi0 = -Math.PI / 2 + (Math.PI * s) / merSteps;
-                    const phi1 = -Math.PI / 2 + (Math.PI * (s + 1)) / merSteps;
-                    let p0 = spherePoint(phi0, lam);
-                    let p1 = spherePoint(phi1, lam);
-                    p0 = rotateY(p0[0], p0[1], p0[2], rot);
-                    p1 = rotateY(p1[0], p1[1], p1[2], rot);
-                    const avgz = (p0[2] + p1[2]) / 2;
-                    globeCtx.globalAlpha = avgz >= 0 ? 1 : 0.22;
-                    globeCtx.strokeStyle = '#000';
-                    globeCtx.lineWidth = avgz >= 0 ? 0.7 : 0.45;
-                    globeCtx.beginPath();
-                    globeCtx.moveTo(...proj(p0[0], p0[1]));
-                    globeCtx.lineTo(...proj(p1[0], p1[1]));
-                    globeCtx.stroke();
-                }
-            }
-
-            const latDegs = [-60, -30, 0, 30, 60];
-            const parSteps = 72;
-            for (const deg of latDegs) {
-                const phi = (deg * Math.PI) / 180;
-                const equator = Math.abs(phi) < 0.001;
-                for (let s = 0; s < parSteps; s++) {
-                    const lam0 = (2 * Math.PI * s) / parSteps;
-                    const lam1 = (2 * Math.PI * (s + 1)) / parSteps;
-                    let p0 = spherePoint(phi, lam0);
-                    let p1 = spherePoint(phi, lam1);
-                    p0 = rotateY(p0[0], p0[1], p0[2], rot);
-                    p1 = rotateY(p1[0], p1[1], p1[2], rot);
-                    const avgz = (p0[2] + p1[2]) / 2;
-                    globeCtx.globalAlpha = avgz >= 0 ? 1 : 0.22;
-                    globeCtx.strokeStyle = '#000';
-                    globeCtx.lineWidth = equator
-                        ? avgz >= 0
-                            ? 1.05
-                            : 0.5
-                        : avgz >= 0
-                          ? 0.6
-                          : 0.4;
-                    globeCtx.beginPath();
-                    globeCtx.moveTo(...proj(p0[0], p0[1]));
-                    globeCtx.lineTo(...proj(p1[0], p1[1]));
-                    globeCtx.stroke();
-                }
-            }
-
-            globeCtx.globalAlpha = 1;
-            globeCtx.strokeStyle = '#000';
-            globeCtx.lineWidth = 1;
-            globeCtx.beginPath();
-            globeCtx.arc(cx, cy, scale, 0, Math.PI * 2);
-            globeCtx.stroke();
-        }
-
-        resizeGlobeCanvas();
-        window.addEventListener('resize', resizeGlobeCanvas);
-
-        function animate() {
-            globeRotation += 0.0085;
-            flagTime += 1;
-            drawGlobe();
-            
-            // Get current/stored country index
-            const countryIndex = parseInt(localStorage.getItem('selectedCountryIndex') || '0');
-            drawAnimatedFlag(countryIndex, flagTime);
-            if (activeBarcodeRun !== null) {
-                drawBarcode();
-            }
-            
-            requestAnimationFrame(animate);
-        }
-
-        animate();
-
-        function updateDateTime() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const year = now.getFullYear();
-            
-            document.getElementById('datetime').textContent = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        }
-
-        // Generate random location on page load
-        function generateRandomLocation() {
-            const countryIndex = Math.floor(Math.random() * countries.length);
-            const country = countries[countryIndex];
-            
-            // Store for persistent flag animation
-            localStorage.setItem('selectedCountryIndex', countryIndex);
-            
-            document.getElementById('location-text').textContent = country.name;
-            drawAnimatedFlag(countryIndex, 0);
-        }
-
-        // Generate random location on page load
-        generateRandomLocation();
-
-        // Update time every second
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
+        });
     </script>
 </body>
 </html>
