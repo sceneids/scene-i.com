@@ -38,11 +38,6 @@
             will-change: transform;
         }
 
-        .floating-link:hover,
-        .floating-link:focus-visible {
-            text-decoration: underline;
-        }
-
         .floating-link:focus-visible {
             outline: 1px solid #000;
             outline-offset: 3px;
@@ -56,7 +51,6 @@
     </style>
 </head>
 <body>
-    <a class="floating-link" href="gallery.html" data-x="0.16" data-y="0.22" data-vx="18" data-vy="14" style="--still-x: 16vw; --still-y: 22vh;">gallery</a>
     <a class="floating-link" href="mixes.html" data-x="0.72" data-y="0.56" data-vx="-15" data-vy="20" style="--still-x: 72vw; --still-y: 56vh;">mixes</a>
     <a class="floating-link" href="alt2.html" data-x="0.43" data-y="0.78" data-vx="13" data-vy="-18" style="--still-x: 43vw; --still-y: 78vh;">i</a>
 
@@ -69,7 +63,10 @@
             y: Number(element.dataset.y) * window.innerHeight,
             vx: Number(element.dataset.vx),
             vy: Number(element.dataset.vy),
+            pointerPaused: false,
+            focusPaused: false,
         }));
+        let pointer = null;
 
         function keepInBounds(word) {
             const rect = word.element.getBoundingClientRect();
@@ -91,6 +88,48 @@
             word.element.style.transform = `translate3d(${word.x}px, ${word.y}px, 0)`;
         }
 
+        function syncPointerPause(word) {
+            if (!pointer) {
+                word.pointerPaused = false;
+                return;
+            }
+
+            const topElement = document.elementFromPoint(pointer.x, pointer.y);
+            word.pointerPaused = topElement === word.element || word.element.contains(topElement);
+        }
+
+        function isPaused(word) {
+            return word.pointerPaused || word.focusPaused;
+        }
+
+        window.addEventListener('pointermove', (event) => {
+            pointer = { x: event.clientX, y: event.clientY };
+            words.forEach(syncPointerPause);
+        });
+
+        window.addEventListener('pointerleave', () => {
+            pointer = null;
+            words.forEach(syncPointerPause);
+        });
+
+        words.forEach((word) => {
+            word.element.addEventListener('pointerenter', () => {
+                word.pointerPaused = true;
+            });
+
+            word.element.addEventListener('pointerleave', () => {
+                syncPointerPause(word);
+            });
+
+            word.element.addEventListener('focus', () => {
+                word.focusPaused = true;
+            });
+
+            word.element.addEventListener('blur', () => {
+                word.focusPaused = false;
+            });
+        });
+
         words.forEach(render);
 
         if (!reduceMotion) {
@@ -101,10 +140,17 @@
                 lastTime = time;
 
                 words.forEach((word) => {
+                    syncPointerPause(word);
+
+                    if (isPaused(word)) {
+                        return;
+                    }
+
                     word.x += word.vx * seconds;
                     word.y += word.vy * seconds;
                     keepInBounds(word);
                     render(word);
+                    syncPointerPause(word);
                 });
 
                 requestAnimationFrame(moveWords);
