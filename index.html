@@ -22,149 +22,109 @@
             font-family: "Times New Roman", Times, serif;
         }
 
-        .floating-link {
+        .home-mark {
             position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 1;
+            inset: 0;
+            display: grid;
+            place-items: center;
+        }
+
+        .center-i {
+            color: #000;
+            font-size: clamp(48px, 8vw, 82px);
+            font-weight: 400;
+            line-height: 1;
+            text-decoration: none;
+            text-transform: lowercase;
+        }
+
+        .center-i:focus-visible,
+        .orbit-link:focus-visible {
+            outline: 1px solid #000;
+            outline-offset: 4px;
+        }
+
+        .orbit-item {
+            --radius: clamp(94px, 17vw, 150px);
+            --duration: 16s;
+            --delay: 0s;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            width: 0;
+            height: 0;
+            animation: orbit var(--duration) linear infinite;
+            animation-delay: var(--delay);
+            transform-origin: 0 0;
+        }
+
+        .orbit-link {
             display: inline-block;
             color: #000;
-            font-family: "Times New Roman", Times, serif;
-            font-size: clamp(12px, 1.4vw, 18px);
+            font-size: clamp(14px, 1.6vw, 19px);
             line-height: 1;
             text-decoration: none;
             text-transform: lowercase;
             white-space: nowrap;
-            will-change: transform;
+            animation: counter-orbit var(--duration) linear infinite;
+            animation-delay: var(--delay);
+            transform: translateX(var(--radius)) rotate(0deg);
         }
 
-        .floating-link:focus-visible {
-            outline: 1px solid #000;
-            outline-offset: 3px;
+        .orbit-item:hover,
+        .orbit-item:focus-within,
+        .orbit-item:hover .orbit-link,
+        .orbit-item:focus-within .orbit-link {
+            animation-play-state: paused;
+        }
+
+        @keyframes orbit {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes counter-orbit {
+            from {
+                transform: translateX(var(--radius)) rotate(0deg);
+            }
+
+            to {
+                transform: translateX(var(--radius)) rotate(-360deg);
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .floating-link {
-                transform: translate3d(var(--still-x), var(--still-y), 0);
+            .orbit-item,
+            .orbit-link {
+                animation: none;
+            }
+
+            .orbit-item.mixes {
+                transform: rotate(0deg);
+            }
+
+            .orbit-item.contact {
+                transform: rotate(180deg);
             }
         }
     </style>
 </head>
 <body>
-    <a class="floating-link" href="mixes.html" data-x="0.72" data-y="0.56" data-vx="-15" data-vy="20" style="--still-x: 72vw; --still-y: 56vh;">mixes</a>
-    <a class="floating-link" href="alt2.html" data-x="0.43" data-y="0.78" data-vx="13" data-vy="-18" style="--still-x: 43vw; --still-y: 78vh;">i</a>
+    <main class="home-mark" aria-label="scene i">
+        <a class="center-i" href="alt2.html">i</a>
+    </main>
 
-    <script>
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const floatingLinks = Array.from(document.querySelectorAll('.floating-link'));
-        const words = floatingLinks.map((element) => ({
-            element,
-            x: Number(element.dataset.x) * window.innerWidth,
-            y: Number(element.dataset.y) * window.innerHeight,
-            vx: Number(element.dataset.vx),
-            vy: Number(element.dataset.vy),
-            pointerPaused: false,
-            focusPaused: false,
-        }));
-        let pointer = null;
+    <div class="orbit-item mixes">
+        <a class="orbit-link" href="mixes.html">mixes</a>
+    </div>
 
-        function keepInBounds(word) {
-            const rect = word.element.getBoundingClientRect();
-            const maxX = window.innerWidth - rect.width;
-            const maxY = window.innerHeight - rect.height;
-
-            if (word.x <= 0 || word.x >= maxX) {
-                word.vx *= -1;
-                word.x = Math.min(Math.max(word.x, 0), maxX);
-            }
-
-            if (word.y <= 0 || word.y >= maxY) {
-                word.vy *= -1;
-                word.y = Math.min(Math.max(word.y, 0), maxY);
-            }
-        }
-
-        function render(word) {
-            word.element.style.transform = `translate3d(${word.x}px, ${word.y}px, 0)`;
-        }
-
-        function syncPointerPause(word) {
-            if (!pointer) {
-                word.pointerPaused = false;
-                return;
-            }
-
-            const topElement = document.elementFromPoint(pointer.x, pointer.y);
-            word.pointerPaused = topElement === word.element || word.element.contains(topElement);
-        }
-
-        function isPaused(word) {
-            return word.pointerPaused || word.focusPaused;
-        }
-
-        window.addEventListener('pointermove', (event) => {
-            pointer = { x: event.clientX, y: event.clientY };
-            words.forEach(syncPointerPause);
-        });
-
-        window.addEventListener('pointerleave', () => {
-            pointer = null;
-            words.forEach(syncPointerPause);
-        });
-
-        words.forEach((word) => {
-            word.element.addEventListener('pointerenter', () => {
-                word.pointerPaused = true;
-            });
-
-            word.element.addEventListener('pointerleave', () => {
-                syncPointerPause(word);
-            });
-
-            word.element.addEventListener('focus', () => {
-                word.focusPaused = true;
-            });
-
-            word.element.addEventListener('blur', () => {
-                word.focusPaused = false;
-            });
-        });
-
-        words.forEach(render);
-
-        if (!reduceMotion) {
-            let lastTime = performance.now();
-
-            function moveWords(time) {
-                const seconds = Math.min((time - lastTime) / 1000, 0.05);
-                lastTime = time;
-
-                words.forEach((word) => {
-                    syncPointerPause(word);
-
-                    if (isPaused(word)) {
-                        return;
-                    }
-
-                    word.x += word.vx * seconds;
-                    word.y += word.vy * seconds;
-                    keepInBounds(word);
-                    render(word);
-                    syncPointerPause(word);
-                });
-
-                requestAnimationFrame(moveWords);
-            }
-
-            requestAnimationFrame(moveWords);
-        }
-
-        window.addEventListener('resize', () => {
-            words.forEach((word) => {
-                keepInBounds(word);
-                render(word);
-            });
-        });
-    </script>
+    <div class="orbit-item contact" style="--delay: -8s;">
+        <a class="orbit-link" href="contact.html">contact</a>
+    </div>
 </body>
 </html>
