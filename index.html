@@ -71,10 +71,8 @@
             transform: translateX(var(--radius)) rotate(0deg);
         }
 
-        .orbit-item:hover,
-        .orbit-item:focus-within,
-        .orbit-item:hover .orbit-link,
-        .orbit-item:focus-within .orbit-link {
+        body:has(.orbit-item:hover, .orbit-item:focus-within) .orbit-item,
+        body:has(.orbit-item:hover, .orbit-item:focus-within) .orbit-link {
             animation-play-state: paused;
         }
 
