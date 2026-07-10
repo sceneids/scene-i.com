@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>consume</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #fff;
+            color: #000;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            letter-spacing: 0;
+            text-transform: uppercase;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        a:hover,
+        a:focus-visible,
+        button:hover,
+        button:focus-visible {
+            text-decoration: underline;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 1px solid #000;
+            outline-offset: 3px;
+        }
+
+        .home-link {
+            position: fixed;
+            left: 18px;
+            top: 16px;
+            z-index: 2;
+            font-size: 14px;
+            line-height: 1;
+            text-transform: lowercase;
+        }
+
+        .selection-panel {
+            position: fixed;
+            left: 18px;
+            top: 68px;
+            z-index: 1;
+            width: min(220px, calc(100vw - 36px));
+        }
+
+        .selection-title {
+            margin: 0 0 18px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .selection-lines {
+            display: grid;
+            gap: 8px;
+            margin: 0 0 28px;
+        }
+
+        .selection-line {
+            display: block;
+            width: 100%;
+            height: 1px;
+            background: #000;
+            opacity: 0.25;
+        }
+
+        .subtotal {
+            margin: 0 0 14px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .checkout {
+            display: inline-block;
+            padding: 0;
+            border: 0;
+            background: none;
+            color: #000;
+            font: inherit;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .year-rail {
+            position: fixed;
+            left: 18px;
+            bottom: 18px;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            max-width: min(280px, calc(100vw - 36px));
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .store {
+            min-height: 100vh;
+            padding: 16px 18px 42px clamp(300px, 32vw, 460px);
+        }
+
+        .store-logo {
+            display: block;
+            width: fit-content;
+            margin: 0 0 42px;
+            font-size: clamp(18px, 3vw, 36px);
+            font-weight: 700;
+            line-height: 0.95;
+            text-transform: lowercase;
+        }
+
+        .store-list {
+            display: grid;
+            gap: clamp(42px, 8vw, 96px);
+            max-width: 720px;
+        }
+
+        .store-entry {
+            display: grid;
+            gap: 18px;
+            min-height: 190px;
+            padding-right: min(8vw, 80px);
+        }
+
+        .entry-head {
+            display: grid;
+            gap: 10px;
+            max-width: 420px;
+        }
+
+        .entry-line {
+            display: block;
+            height: 1px;
+            background: #000;
+        }
+
+        .entry-line.title {
+            width: min(360px, 72vw);
+            height: 2px;
+        }
+
+        .entry-line.short {
+            width: min(190px, 42vw);
+        }
+
+        .entry-copy {
+            display: grid;
+            gap: 9px;
+            max-width: 560px;
+        }
+
+        .entry-copy .entry-line:nth-child(1) {
+            width: 92%;
+        }
+
+        .entry-copy .entry-line:nth-child(2) {
+            width: 74%;
+        }
+
+        .entry-copy .entry-line:nth-child(3) {
+            width: 86%;
+        }
+
+        .entry-copy .entry-line:nth-child(4) {
+            width: 58%;
+        }
+
+        .entry-status {
+            width: min(120px, 36vw);
+            height: 2px;
+            margin-top: 12px;
+            background: #000;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                font-size: 11px;
+            }
+
+            .home-link,
+            .selection-panel,
+            .year-rail {
+                position: static;
+            }
+
+            .home-link {
+                display: inline-block;
+                margin: 16px 18px 0;
+            }
+
+            .selection-panel {
+                width: auto;
+                margin: 34px 18px 38px;
+            }
+
+            .year-rail {
+                margin: 0 18px 42px;
+            }
+
+            .store {
+                padding: 0 18px 42px;
+            }
+
+            .store-logo {
+                margin-bottom: 34px;
+            }
+
+            .store-entry {
+                padding-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="home-link" href="index.html">i</a>
+
+    <aside class="selection-panel" id="selection" aria-label="selection">
+        <h1 class="selection-title">selection:</h1>
+        <div class="selection-lines" aria-hidden="true">
+            <span class="selection-line"></span>
+            <span class="selection-line"></span>
+            <span class="selection-line"></span>
+        </div>
+        <p class="subtotal">subtotal: $-.--</p>
+        <button class="checkout" type="button">checkout</button>
+    </aside>
+
+    <main class="store">
+        <a class="store-logo" href="index.html">consume</a>
+
+        <section class="store-list" aria-label="store archive">
+            <article class="store-entry" id="2026" aria-label="empty store entry">
+                <div class="entry-head" aria-hidden="true">
+                    <span class="entry-line title"></span>
+                    <span class="entry-line short"></span>
+                </div>
+                <div class="entry-copy" aria-hidden="true">
+                    <span class="entry-line"></span>
+                    <span class="entry-line"></span>
+                    <span class="entry-line"></span>
+                    <span class="entry-line"></span>
+                </div>
+                <span class="entry-status" aria-hidden="true"></span>
+            </article>
+
+            <article class="store-entry" id="2025" aria-label="empty store entry">
+                <div class="entry-head" aria-hidden="true">
+                    <span class="entry-line title"></span>
+                    <span class="entry-line short"></span>
+                </div>
+                <div class="entry-copy" aria-hidden="true">
+                    <span class="entry-line"></span>
+                    <span class="entry-line"></span>
+                    <span class="entry-line"></span>
+                    <span class="entry-line"></span>
+                </div>
+                <span class="entry-status" aria-hidden="true"></span>
+            </article>
+
+            <article class="store-entry" id="2024" aria-label="empty store entry">
+                <div class="entry-head" aria-hidden="true">
+                    <span class="entry-line title"></span>
+                    <span class="entry-line short"></span>
+                </div>
+                <div class="entry-copy" aria-hidden="true">
+                    <span class="entry-line"></span>
+                    <span class="entry-line"></span>
+                    <span class="entry-line"></span>
+                    <span class="entry-line"></span>
+                </div>
+                <span class="entry-status" aria-hidden="true"></span>
+            </article>
+        </section>
+    </main>
+
+    <nav aria-label="archive">
+        <ul class="year-rail">
+            <li><a href="#selection">selection</a></li>
+            <li><a href="#2026">2026</a></li>
+            <li><a href="#2025">2025</a></li>
+            <li><a href="#2024">2024</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
