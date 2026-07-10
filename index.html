@@ -31,11 +31,16 @@
 
         .center-i {
             color: #000;
+            display: grid;
+            place-items: center;
+            width: clamp(48px, 8vw, 82px);
+            height: clamp(48px, 8vw, 82px);
             font-size: clamp(48px, 8vw, 82px);
             font-weight: 400;
             line-height: 1;
             text-decoration: none;
             text-transform: lowercase;
+            animation: center-i-style 12s step-end infinite;
         }
 
         .center-i:focus-visible,
@@ -96,7 +101,40 @@
             }
         }
 
+        @keyframes center-i-style {
+            0% {
+                color: #000;
+                font-family: "Times New Roman", Times, serif;
+            }
+
+            16.66% {
+                color: #c01818;
+                font-family: Georgia, "Times New Roman", serif;
+            }
+
+            33.33% {
+                color: #0b6f8a;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+
+            50% {
+                color: #6b3fc4;
+                font-family: "Courier New", Courier, monospace;
+            }
+
+            66.66% {
+                color: #1f7a35;
+                font-family: Verdana, Geneva, sans-serif;
+            }
+
+            83.33% {
+                color: #d15a00;
+                font-family: "Trebuchet MS", Arial, sans-serif;
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
+            .center-i,
             .orbit-item,
             .orbit-link {
                 animation: none;
