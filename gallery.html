@@ -19,23 +19,22 @@
       overflow: hidden;
       background: #fff;
       color: #000;
-      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      font-family: "Times New Roman", Times, serif;
       font-weight: 300;
       touch-action: none;
     }
 
     .home-i {
       position: fixed;
-      top: 18px;
+      top: 50%;
       left: 50%;
       z-index: 100;
       color: #000;
-      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-      font-size: clamp(12px, 1.2vw, 15px);
+      font-family: "Times New Roman", Times, serif;
+      font-size: 18px;
       line-height: 1;
       text-decoration: none;
-      transform: translateX(-50%);
-      animation: drift-home 12s ease-in-out infinite alternate;
+      transform: translate(-50%, -50%);
     }
 
     .home-i:hover,
@@ -104,7 +103,7 @@
       min-height: 36vh;
       padding: clamp(18px, 2.4vw, 30px);
       color: rgba(0, 0, 0, 0.24);
-      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      font-family: "Times New Roman", Times, serif;
       font-size: clamp(13px, 1.45vw, 20px);
       line-height: 1.15;
       letter-spacing: 0;
@@ -124,16 +123,6 @@
       transform: translate3d(0, -50%, 0);
     }
 
-    @keyframes drift-home {
-      from {
-        transform: translate3d(-50%, 0, 0);
-      }
-
-      to {
-        transform: translate3d(calc(-50% + 24px), 18px, 0);
-      }
-    }
-
     @media (max-width: 680px) {
       .photo-node {
         width: clamp(40px, 12.5vw, 58px);
@@ -147,11 +136,6 @@
       }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .home-i {
-        animation: none;
-      }
-    }
   </style>
 </head>
 <body>

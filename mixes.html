@@ -14,8 +14,26 @@
         body {
             background: #fff;
             color: #000;
-            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            font-family: "Times New Roman", Times, serif;
             font-weight: 300;
+        }
+
+        .site-home-i {
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            z-index: 10;
+            color: #000;
+            font-size: 18px;
+            line-height: 1;
+            text-decoration: none;
+            text-transform: lowercase;
+            transform: translate(-50%, -50%);
+        }
+
+        .site-home-i:hover,
+        .site-home-i:focus-visible {
+            text-decoration: underline;
         }
 
         #mix-dropdowns {
@@ -31,7 +49,7 @@
         }
 
         #mix-dropdowns details {
-            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            font-family: "Times New Roman", Times, serif;
             font-size: 13px;
             color: #000;
             width: 100%;
@@ -60,6 +78,8 @@
     </style>
 </head>
 <body>
+    <a class="site-home-i" href="index.html">i</a>
+
     <div id="mix-dropdowns">
         <details>
             <summary>03-06-2026</summary>
