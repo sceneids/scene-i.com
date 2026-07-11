@@ -33,9 +33,9 @@
             color: #000;
             display: grid;
             place-items: center;
-            width: 24px;
-            height: 24px;
-            font-size: 18px;
+            width: 44px;
+            height: 44px;
+            font-size: 34px;
             font-weight: 400;
             line-height: 1;
             text-decoration: none;
@@ -43,60 +43,85 @@
         }
 
         .center-i:focus-visible,
-        .home-link:focus-visible {
+        .orbit-link:focus-visible {
             outline: 1px solid #000;
             outline-offset: 4px;
         }
 
-        .home-link {
+        .orbit-item {
+            --radius: clamp(92px, 16vw, 148px);
+            --duration: 18s;
+            --delay: 0s;
             position: fixed;
+            left: 50%;
+            top: 50%;
+            width: 0;
+            height: 0;
+            animation: orbit var(--duration) linear infinite;
+            animation-delay: var(--delay);
+            transform-origin: 0 0;
+        }
+
+        .orbit-link {
+            display: inline-block;
             color: #000;
-            font-size: clamp(18px, 2vw, 28px);
-            font-weight: 700;
+            font-size: clamp(14px, 1.35vw, 17px);
+            font-weight: 400;
             line-height: 1;
             text-decoration: none;
             text-transform: lowercase;
             white-space: nowrap;
+            animation: counter-orbit var(--duration) linear infinite;
+            animation-delay: var(--delay);
+            transform: translateX(var(--radius)) rotate(0deg);
         }
 
-        .home-link:hover,
-        .home-link:focus-visible {
+        .orbit-link:hover,
+        .orbit-link:focus-visible {
             text-decoration: underline;
         }
 
-        .home-link.mixes {
-            left: calc(50% - clamp(170px, 18vw, 270px));
-            top: calc(50% - clamp(70px, 7vw, 120px));
+        body:has(.orbit-item:hover, .orbit-item:focus-within) .orbit-item,
+        body:has(.orbit-item:hover, .orbit-item:focus-within) .orbit-link {
+            animation-play-state: paused;
         }
 
-        .home-link.consume {
-            left: calc(50% + clamp(36px, 7vw, 130px));
-            top: calc(50% - clamp(130px, 12vw, 210px));
+        @keyframes orbit {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        .home-link.contact {
-            left: calc(50% + clamp(92px, 11vw, 190px));
-            top: calc(50% + clamp(34px, 5vw, 80px));
+        @keyframes counter-orbit {
+            from {
+                transform: translateX(var(--radius)) rotate(0deg);
+            }
+
+            to {
+                transform: translateX(var(--radius)) rotate(-360deg);
+            }
         }
 
-        @media (max-width: 680px) {
-            .home-link {
-                font-size: clamp(16px, 5.2vw, 22px);
+        @media (prefers-reduced-motion: reduce) {
+            .orbit-item,
+            .orbit-link {
+                animation: none;
             }
 
-            .home-link.mixes {
-                left: 18vw;
-                top: 38vh;
+            .orbit-item.mixes {
+                transform: rotate(0deg);
             }
 
-            .home-link.consume {
-                left: 53vw;
-                top: 30vh;
+            .orbit-item.consume {
+                transform: rotate(120deg);
             }
 
-            .home-link.contact {
-                left: 57vw;
-                top: 60vh;
+            .orbit-item.contact {
+                transform: rotate(240deg);
             }
         }
     </style>
@@ -106,8 +131,16 @@
         <a class="center-i" href="index.html">i</a>
     </main>
 
-    <a class="home-link mixes" href="mixes.html">mixes</a>
-    <a class="home-link consume" href="consume.html">consume</a>
-    <a class="home-link contact" href="contact.html">contact</a>
+    <div class="orbit-item mixes">
+        <a class="orbit-link" href="mixes.html">mixes</a>
+    </div>
+
+    <div class="orbit-item consume" style="--delay: -6s;">
+        <a class="orbit-link" href="consume.html">consume</a>
+    </div>
+
+    <div class="orbit-item contact" style="--delay: -12s;">
+        <a class="orbit-link" href="contact.html">contact</a>
+    </div>
 </body>
 </html>
