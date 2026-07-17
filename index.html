@@ -22,6 +22,27 @@
             font-family: "Times New Roman", Times, serif;
         }
 
+        .time-location {
+            position: fixed;
+            top: 18px;
+            left: 55%;
+            z-index: 10;
+            display: flex;
+            align-items: baseline;
+            gap: 30px;
+            color: #222;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 27px;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+        }
+
+        .local-time {
+            color: #aaa;
+        }
+
         .home-mark {
             position: fixed;
             inset: 0;
@@ -40,6 +61,15 @@
             line-height: 1;
             text-decoration: none;
             text-transform: lowercase;
+        }
+
+        .center-i:hover,
+        .center-i:focus-visible,
+        .orbit-link:hover,
+        .orbit-link:focus-visible {
+            color: #fff;
+            background: #000;
+            text-decoration: none;
         }
 
         .center-i:focus-visible,
@@ -74,11 +104,6 @@
             animation: counter-orbit var(--duration) linear infinite;
             animation-delay: var(--delay);
             transform: translateX(var(--radius)) rotate(0deg);
-        }
-
-        .orbit-link:hover,
-        .orbit-link:focus-visible {
-            text-decoration: underline;
         }
 
         body:has(.orbit-item:hover, .orbit-item:focus-within) .orbit-item,
@@ -134,9 +159,23 @@
                 transform: rotate(240deg);
             }
         }
+
+        @media (max-width: 650px) {
+            .time-location {
+                left: auto;
+                right: 20px;
+                gap: 16px;
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="time-location" aria-label="Local time and location">
+        <time class="local-time" id="local-time"></time>
+        <span id="visitor-location"></span>
+    </div>
+
     <main class="home-mark" aria-label="scene i">
         <a class="center-i" href="index.html">i</a>
     </main>
@@ -154,5 +193,38 @@
     </div>
 
     <footer class="copyright">&copy; 2026</footer>
+
+    <script>
+        const localTime = document.getElementById("local-time");
+        const visitorLocation = document.getElementById("visitor-location");
+        const visitorTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+        const localTimeFormat = new Intl.DateTimeFormat("en-US", {
+            timeZone: visitorTimeZone,
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        });
+
+        function getLocationName(timeZone) {
+            const timeZoneParts = timeZone.split("/");
+            const locationName = timeZoneParts[timeZoneParts.length - 1];
+
+            return locationName.replaceAll("_", " ");
+        }
+
+        function updateLocalTime() {
+            const now = new Date();
+            const timeParts = Object.fromEntries(
+                localTimeFormat.formatToParts(now).map(({ type, value }) => [type, value])
+            );
+
+            localTime.textContent = `${timeParts.hour}:${timeParts.minute} ${timeParts.dayPeriod}`;
+            localTime.dateTime = now.toISOString();
+        }
+
+        visitorLocation.textContent = getLocationName(visitorTimeZone);
+        updateLocalTime();
+        setInterval(updateLocalTime, 30000);
+    </script>
 </body>
 </html>
