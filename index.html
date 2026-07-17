@@ -19,7 +19,7 @@
             overflow: hidden;
             background: #fff;
             color: #000;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: "Courier New", Courier, monospace;
         }
 
         .time-location {
@@ -29,10 +29,10 @@
             z-index: 10;
             display: flex;
             align-items: baseline;
-            gap: 20px;
+            gap: 14px;
             color: #222;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 18px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 14px;
             font-weight: 700;
             line-height: 1;
             letter-spacing: -0.02em;
@@ -67,9 +67,11 @@
         .center-i:focus-visible,
         .orbit-link:hover,
         .orbit-link:focus-visible {
-            color: #000;
-            background: #fff;
-            mix-blend-mode: difference;
+            color: transparent;
+            background: linear-gradient(90deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-decoration: none;
         }
 
@@ -165,8 +167,8 @@
             .time-location {
                 left: auto;
                 right: 20px;
-                gap: 12px;
-                font-size: 15px;
+                gap: 10px;
+                font-size: 12px;
             }
         }
     </style>
