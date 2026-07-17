@@ -49,7 +49,7 @@
         }
 
         .orbit-item {
-            --radius: clamp(92px, 16vw, 148px);
+            --radius: clamp(82px, 11vw, 110px);
             --duration: 18s;
             --delay: 0s;
             position: fixed;
@@ -84,6 +84,16 @@
         body:has(.orbit-item:hover, .orbit-item:focus-within) .orbit-item,
         body:has(.orbit-item:hover, .orbit-item:focus-within) .orbit-link {
             animation-play-state: paused;
+        }
+
+        .copyright {
+            position: fixed;
+            left: 50%;
+            bottom: 18px;
+            margin: 0;
+            font-size: 11px;
+            line-height: 1;
+            transform: translateX(-50%);
         }
 
         @keyframes orbit {
@@ -142,5 +152,7 @@
     <div class="orbit-item contact" style="--delay: -12s;">
         <a class="orbit-link" href="contact.html">contact</a>
     </div>
+
+    <footer class="copyright">&copy; 2026</footer>
 </body>
 </html>
