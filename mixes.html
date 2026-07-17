@@ -51,32 +51,17 @@
             max-width: min(440px, calc(100vw - 80px));
         }
 
-        #mix-dropdowns details {
-            font-family: "Times New Roman", Times, serif;
-            font-size: 13px;
+        #mix-dropdowns .mix-link {
             color: #000;
-            width: 100%;
+            font-size: 13px;
+            line-height: 1;
+            text-decoration: none;
         }
 
-        #mix-dropdowns summary {
-            cursor: pointer;
-            list-style: none;
-        }
-
-        #mix-dropdowns summary::-webkit-details-marker {
-            display: none;
-        }
-
-        #mix-dropdowns .sc-wrap {
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        #mix-dropdowns iframe {
-            width: 100%;
-            height: 166px;
-            border: none;
-            display: block;
+        #mix-dropdowns .mix-link:hover,
+        #mix-dropdowns .mix-link:focus-visible {
+            color: #fff;
+            background: #000;
         }
     </style>
 </head>
@@ -84,20 +69,8 @@
     <a class="site-home-i" href="index.html">i</a>
 
     <div id="mix-dropdowns">
-        <details>
-            <summary>03-06-2026</summary>
-            <div class="sc-wrap">
-                <iframe title="SoundCloud 03-06-2026" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Findistinctscene300%2Fids-radio-w-saintgermane&amp;color=%23000000&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=false&amp;show_reposts=false"></iframe>
-            </div>
-        </details>
-        <details>
-            <summary>10-03-2025</summary>
-            <div class="sc-wrap">
-                <iframe title="SoundCloud 10-03-2025" allow="autoplay"
-                    src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fsoundcloud.com%2Findistinctscene0%2Fsaint-germane-w-hnko-30102025&amp;color=%23000000&amp;auto_play=false&amp;hide_related=true&amp;show_comments=false&amp;show_user=false&amp;show_reposts=false"></iframe>
-            </div>
-        </details>
+        <a class="mix-link" href="https://soundcloud.com/indistinctscenestudio/ids-radio-w-saintgermane">03-06-2026</a>
+        <a class="mix-link" href="https://soundcloud.com/indistinctscene0/saint-germane-w-hnko-30102025">10-03-2025</a>
     </div>
 </body>
 </html>
